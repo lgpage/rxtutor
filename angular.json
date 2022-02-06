@@ -20,6 +20,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "codemirror/mode/javascript/javascript"
+            ],
             "outputPath": "dist/rxtutor",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -103,9 +106,21 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "rxtutor"
+  "defaultProject": "rxtutor",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
