@@ -1,0 +1,45 @@
+<svg #svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 20">
+  <defs>
+    <marker
+      id="arrowhead"
+      markerWidth="6"
+      markerHeight="4"
+      refX="1"
+      refY="2"
+      orient="auto"
+    >
+      <polygon points="0 0, 6 2, 0 4" />
+    </marker>
+  </defs>
+
+  <line
+    x1="0"
+    x2="120"
+    y1="10"
+    y2="10"
+    stroke="black"
+    stroke-width="1"
+    marker-end="url(#arrowhead)"
+  ></line>
+
+  <line
+    [attr.x1]="10 * (i + 1)"
+    [attr.x2]="10 * (i + 1)"
+    y1="7"
+    y2="13"
+    stroke="black"
+    stroke-width="0.3"
+    stroke-dasharray="0.5 0.6"
+    *ngFor="let i of range(frames + 1)"
+  ></line>
+
+  <g
+    [attr.transform]="'translate(' + (position$ | async) + ', 10)'"
+    (pointerdown)="startDrag($event)"
+    (pointermove)="drag($event)"
+    (pointerup)="endDrag($event)"
+    (pointerleave)="endDrag($event)"
+  >
+    <circle r="4.5" />
+  </g>
+</svg>
