@@ -1,4 +1,11 @@
-<svg #svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 20">
+<svg
+  #svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 -5 150 30"
+  (pointermove)="drag($event)"
+  (pointerup)="endDrag($event)"
+  (pointerleave)="endDrag($event)"
+>
   <defs>
     <marker
       id="arrowhead"
@@ -30,16 +37,43 @@
     stroke="black"
     stroke-width="0.3"
     stroke-dasharray="0.5 0.6"
-    *ngFor="let i of range(frames + 1)"
+    *ngFor="let i of range(11)"
   ></line>
 
   <g
-    [attr.transform]="'translate(' + (position$ | async) + ', 10)'"
-    (pointerdown)="startDrag($event)"
+    [attr.transform]="'translate(' + node.x + ', 10)'"
+    (pointerdown)="startDrag(node)"
     (pointermove)="drag($event)"
     (pointerup)="endDrag($event)"
-    (pointerleave)="endDrag($event)"
+    *ngFor="let node of stream.nodesToRender$ | async"
   >
-    <circle r="4.5" />
+    <ng-container
+      [ngTemplateOutlet]="
+        node.type === 'next'
+          ? nextNode
+          : node.type === 'error'
+          ? errorNode
+          : completeNode
+      "
+    ></ng-container>
+
+    <ng-template #completeNode>
+      <line x1="0" x2="0" y1="-5" y2="5" stroke="blue" stroke-width="1"></line>
+    </ng-template>
+
+    <ng-template #errorNode>
+      <line x1="-2" x2="2" y1="-5" y2="5" stroke="red" stroke-width="1"></line>
+      <line x1="-2" x2="2" y1="5" y2="-5" stroke="red" stroke-width="1"></line>
+    </ng-template>
+
+    <ng-template #nextNode>
+      <circle
+        r="4.2"
+        [attr.fill]="color"
+        stroke="black"
+        stroke-width="0.3"
+      ></circle>
+      <text text-anchor="middle" y="1" font-size="3.5px">{{ node.text }}</text>
+    </ng-template>
   </g>
 </svg>

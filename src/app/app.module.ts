@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AppComponent } from './app.component';
+import { StreamControllerComponent } from './stream-controller/stream-controller.component';
 import { StreamComponent } from './stream/stream.component';
 
 @NgModule({
@@ -13,7 +14,8 @@ import { StreamComponent } from './stream/stream.component';
   ],
   declarations: [
     AppComponent,
-    StreamComponent
+    StreamComponent,
+    StreamControllerComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

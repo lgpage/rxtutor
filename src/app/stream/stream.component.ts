@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Stream, StreamNode } from '../stream';
 
 @Component({
   selector: 'app-stream',
@@ -7,49 +7,45 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
   styleUrls: ['./stream.component.scss']
 })
 export class StreamComponent {
-  protected _positionSubject$ = new BehaviorSubject<number>(15);
-  protected _cycleToDrag: EventTarget = null;
+  protected _node: StreamNode = null;
+
+  @Input() stream: Stream;
+  @Input() color = "rgb(62, 161, 203)";
 
   @ViewChild('svg') svg: ElementRef;
-
-  frames = 10;
-  position$ = this._positionSubject$.asObservable();
 
   protected getX(event: PointerEvent): number {
     const ctm: SVGMatrix = this.svg.nativeElement.getScreenCTM();
     return (event.clientX - ctm.e) / ctm.a;
   }
 
+  protected getBoundedX(x: number): number {
+    return Math.max(15, Math.min(105, x));
+  }
+
   range(size: number): number[] {
     return [...Array(size).keys()].map((x) => x);
   }
 
-  startDrag(event: Event): void {
-    this._cycleToDrag = event.target;
+  startDrag(node: StreamNode): void {
+    this._node = node;
   }
 
   drag(event: PointerEvent): void {
-    if (!!this._cycleToDrag) {
+    if (!!this._node) {
       event.preventDefault();
-
-      const x = Math.max(15, Math.min(105, this.getX(event)));
-      this._positionSubject$.next(x);
+      const x = this.getBoundedX(this.getX(event));
+      this.stream.updateNode({ ...this._node, x, index: 99 });
     }
   }
 
   endDrag(event: PointerEvent): void {
-    if (!!this._cycleToDrag) {
-      const x = 15 + Math.round((this.getX(event) - 15) / 10) * 10;
-      this._positionSubject$.next(x);
+    if (!!this._node) {
+      const x = this.getBoundedX(15 + Math.round((this.getX(event) - 15) / 10) * 10);
+      this.stream.updateNode({ ...this._node, x });
+      this.stream.correct();
     }
 
-    this._cycleToDrag = null;
+    this._node = null;
   }
-
-  // TODO: Update position to be an array / dictionary (need ids for each)
-  // TODO: Change circle colour and add text
-  // TODO: Update to take positions in as an input and color
-  // TODO: Create stream controller component
-    // - Add incrementor to add additional circles
-    // - Add input to add character prefix
 }
