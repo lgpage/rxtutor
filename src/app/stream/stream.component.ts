@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { getBoundedX, range } from '../helpers';
 import { Stream, StreamNode } from '../stream';
 
 @Component({
@@ -19,12 +20,8 @@ export class StreamComponent {
     return (event.clientX - ctm.e) / ctm.a;
   }
 
-  protected getBoundedX(x: number): number {
-    return Math.max(15, Math.min(105, x));
-  }
-
   range(size: number): number[] {
-    return [...Array(size).keys()].map((x) => x);
+    return range(size);
   }
 
   startDrag(node: StreamNode): void {
@@ -34,15 +31,13 @@ export class StreamComponent {
   drag(event: PointerEvent): void {
     if (!!this._node) {
       event.preventDefault();
-      const x = this.getBoundedX(this.getX(event));
+      const x = getBoundedX(this.getX(event));
       this.stream.updateNode({ ...this._node, x, index: 99 });
     }
   }
 
-  endDrag(event: PointerEvent): void {
+  endDrag(): void {
     if (!!this._node) {
-      const x = this.getBoundedX(15 + Math.round((this.getX(event) - 15) / 10) * 10);
-      this.stream.updateNode({ ...this._node, x });
       this.stream.correct();
     }
 

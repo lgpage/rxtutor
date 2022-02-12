@@ -1,5 +1,6 @@
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
+import { indexToX } from './helpers';
 import { Stream, StreamNode } from './stream';
 
 @Injectable({ providedIn: 'root' })
@@ -11,19 +12,19 @@ export class StreamBuilder {
   protected createNodes(indexes: number[], completeIndex?: number, errorIndex?: number, prefix?: string): StreamNode[] {
     const getPrefix = (x: number) => `${(prefix ?? "")[0] ?? ""}${x + 1}`;
 
-    const nodes: StreamNode[] = indexes.map((pos, i) =>
-      ({ id: guid(), index: i, text: getPrefix(i), type: 'next', x: 15 + (10 * pos) })
+    const nodes: StreamNode[] = indexes.map((ind, i) =>
+      ({ id: guid(), index: i, text: getPrefix(i), type: 'next', x: indexToX(ind) })
     );
 
     const i = nodes.length;
 
     if (this.isNumber(completeIndex) && completeIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: 'C', type: 'complete', x: 15 + (10 * completeIndex) }));
+      nodes.push(({ id: guid(), index: i, text: 'C', type: 'complete', x: indexToX(completeIndex) }));
       return nodes;
     }
 
     if (this.isNumber(errorIndex) && errorIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: 'E', type: 'error', x: 15 + (10 * errorIndex) }));
+      nodes.push(({ id: guid(), index: i, text: 'E', type: 'error', x: indexToX(errorIndex) }));
       return nodes;
     }
 
