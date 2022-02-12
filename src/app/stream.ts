@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, of, timer } from 'rxjs';
-import { filter, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
 import { getSnappedX, range, xToIndex } from './helpers';
 
 export interface StreamNode {
@@ -41,11 +41,25 @@ const getStreamSource = (nodes: StreamNode[]): Observable<string> => {
     }),
     filter((x) => !!x),
     tap((x) => {
-      if (x === 'E') {
-        throw 'E';
+      if (x === '#') {
+        throw 'error';
       }
     }),
   );
+}
+
+const getStreamMarbles = (nodes: StreamNode[]): string => {
+  const values = getStreamValues(nodes);
+  const stream = values.map((val) => {
+    if (!val) {
+      return '-';
+    }
+
+    const marbles = val.split(',');
+    return marbles.length > 1 ? `(${marbles.join('')})` : marbles[0];
+  }).join('');
+
+  return stream
 }
 
 export class Stream {
@@ -65,7 +79,13 @@ export class Stream {
 
   source$ = this.nodes$.pipe(
     mergeMap((nodes) => getStreamSource(nodes)),
-    takeWhile((v) => v !== 'C'),
+    takeWhile((v) => v !== '|'),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
+
+  marbles$ = this.nodes$.pipe(
+    map((nodes) => getStreamMarbles(nodes)),
+    distinctUntilChanged(),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 

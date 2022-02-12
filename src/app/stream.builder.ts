@@ -19,12 +19,12 @@ export class StreamBuilder {
     const i = nodes.length;
 
     if (this.isNumber(completeIndex) && completeIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: 'C', type: 'complete', x: indexToX(completeIndex) }));
+      nodes.push(({ id: guid(), index: i, text: '|', type: 'complete', x: indexToX(completeIndex) }));
       return nodes;
     }
 
     if (this.isNumber(errorIndex) && errorIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: 'E', type: 'error', x: indexToX(errorIndex) }));
+      nodes.push(({ id: guid(), index: i, text: '#', type: 'error', x: indexToX(errorIndex) }));
       return nodes;
     }
 
