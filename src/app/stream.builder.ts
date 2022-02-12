@@ -1,6 +1,6 @@
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
-import { indexToX } from './helpers';
+import { distribute, indexToX } from './helpers';
 import { Stream, StreamNode } from './stream';
 
 @Injectable({ providedIn: 'root' })
@@ -9,11 +9,15 @@ export class StreamBuilder {
     return x !== null && x !== undefined && !isNaN(+x);
   }
 
-  protected createNodes(indexes: number[], completeIndex?: number, errorIndex?: number, prefix?: string): StreamNode[] {
-    const getPrefix = (x: number) => `${(prefix ?? "")[0] ?? ""}${x + 1}`;
+  protected createNodes(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): StreamNode[] {
+    const getText = (x: number) => {
+      const asc = (start ?? '1').charCodeAt(0);
+      const next = String.fromCharCode(asc + x);
+      return next;
+    };
 
     const nodes: StreamNode[] = indexes.map((ind, i) =>
-      ({ id: guid(), index: i, text: getPrefix(i), type: 'next', x: indexToX(ind) })
+      ({ id: guid(), index: i, text: getText(i), type: 'next', x: indexToX(ind) })
     );
 
     const i = nodes.length;
@@ -31,10 +35,20 @@ export class StreamBuilder {
     return nodes;
   }
 
-  create(indexes: number[], completeIndex?: number, errorIndex?: number, prefix?: string): Stream {
-    const stream = new Stream(this.createNodes(indexes, completeIndex, errorIndex, prefix));
-    stream.correct();
-
+  create(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): Stream {
+    const stream = new Stream(this.createNodes(indexes, completeIndex, errorIndex, start));
     return stream;
+  }
+
+  getDistributedIndexes(size: number): number[] {
+    if (size === 0) {
+      return [];
+    }
+
+    return distribute(0, 9, size);
+  }
+
+  adjustStream(stream: Stream, indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): void {
+    stream.setNodes(this.createNodes(indexes, completeIndex, errorIndex, start));
   }
 }

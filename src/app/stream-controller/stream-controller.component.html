@@ -1,1 +1,71 @@
-<app-stream [stream]="stream"></app-stream>
+<div class="row">
+  <div class="col-10">
+    <app-stream [stream]="stream"></app-stream>
+  </div>
+  <div class="col-2 align-self-center">
+    <button mat-icon-button (click)="copyMarblesToClipboard()">
+      <mat-icon
+        [matTooltip]="stream.marbles$ | async"
+        matTooltipPosition="after"
+        matTooltipClass="marbles-tooltip"
+      >
+        info
+      </mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <form [formGroup]="formGroup">
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field>
+            <mat-select required formControlName="size">
+              <mat-option [value]="i" *ngFor="let i of range(10)">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+            <mat-label>Nodes</mat-label>
+            <mat-hint>Number of stream nodes</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3">
+          <mat-form-field>
+            <mat-select required formControlName="type">
+              <mat-option value="alpha">Alpha</mat-option>
+              <mat-option value="numeric">Numeric</mat-option>
+            </mat-select>
+            <mat-label>Type</mat-label>
+            <mat-hint>Node value type</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3">
+          <mat-form-field>
+            <mat-select required formControlName="start">
+              <mat-option [value]="s" *ngFor="let s of startOptions$ | async">
+                {{ s }}
+              </mat-option>
+            </mat-select>
+            <mat-label>Start</mat-label>
+            <mat-hint>Node values starts from</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-3">
+          <mat-form-field>
+            <mat-select required formControlName="complete">
+              <mat-option value="none">None</mat-option>
+              <mat-option value="complete">Complete</mat-option>
+              <mat-option value="error">Error</mat-option>
+            </mat-select>
+            <mat-label>Terminate</mat-label>
+            <mat-hint>How the stream terminates</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

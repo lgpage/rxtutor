@@ -1,7 +1,7 @@
 <svg
   #svg
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 -5 150 30"
+  viewBox="0 0 130 20"
   (pointermove)="drag($event)"
   (pointerup)="endDrag()"
   (pointerleave)="endDrag()"
@@ -45,6 +45,7 @@
     (pointerdown)="startDrag(node)"
     (pointermove)="drag($event)"
     (pointerup)="endDrag()"
+    class="node"
     *ngFor="let node of stream.nodesToRender$ | async"
   >
     <ng-container

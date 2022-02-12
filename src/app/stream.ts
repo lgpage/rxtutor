@@ -72,6 +72,16 @@ export class Stream {
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
+  next$: Observable<StreamNode[]> = this.nodes$.pipe(
+    map((nodes) => nodes.filter((n) => n.type === 'next')),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
+
+  terminate$: Observable<StreamNode> = this.nodes$.pipe(
+    map((nodes) => nodes[nodes.length - 1]),
+    map((node) => node.type === 'next' ? null : node),
+  );
+
   nodesToRender$: Observable<StreamNode[]> = this.entities$.pipe(
     map((entities) => Object.values(entities).sort((a, b) => a.index - b.index)),
     shareReplay({ refCount: true, bufferSize: 1 }),
@@ -90,7 +100,7 @@ export class Stream {
   );
 
   constructor(nodes: StreamNode[]) {
-    this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}));
+    this.setNodes(nodes);
   }
 
   protected excludeNodesAfterComplete(nodes: StreamNode[]): StreamNode[] {
@@ -111,6 +121,11 @@ export class Stream {
       const x = getSnappedX(n.x);
       return ({ ...n, x, index: xToIndex(n.x) });
     });
+  }
+
+  setNodes(nodes: StreamNode[]): void {
+    this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}));
+    this.correct();
   }
 
   updateNode(update: Partial<StreamNode> & { id: string }): void {
