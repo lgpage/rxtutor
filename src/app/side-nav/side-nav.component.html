@@ -1,0 +1,16 @@
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let group of groupedExamples">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ group.section }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <button
+      mat-button
+      class="w-100"
+      (click)="renderExample(example)"
+      *ngFor="let example of group.examples"
+    >
+      {{ example.name }}
+    </button>
+  </mat-expansion-panel>
+</mat-accordion>

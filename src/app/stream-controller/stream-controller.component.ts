@@ -116,7 +116,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
       debounceTime(300),
       map((nodes) => nodes.length),
       distinctUntilChanged(),
-      tap((size) => this.formGroup.get('size').setValue(size, { onlySelf: true, emitEvent: false })),
+      tap((size) => this.formGroup.get('size').setValue(size, { emitEvent: false })),
       takeUntil(this._onDestroySubject$),
     );
 
