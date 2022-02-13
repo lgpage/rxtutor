@@ -28,6 +28,7 @@ export class SideNavComponent implements OnInit {
     conditional: { section: 'Conditional Operators', sequence: 4 },
     mathematical: { section: 'Math Operators', sequence: 5 },
     utility: { section: 'Utility Operators', sequence: 6 },
+    other: { section: 'Other', sequence: 7 },
   };
 
   groupedExamples: SideNavExamples[];

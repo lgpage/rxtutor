@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Example, EXAMPLE, ExampleSection } from '../examples/interface';
+import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../examples/interface';
 import { Stream } from '../stream';
 import { SideNavComponent } from './side-nav.component';
 
@@ -25,6 +25,7 @@ describe('SideNavComponent', () => {
       ],
       declarations: [SideNavComponent],
       providers: [
+        { provide: START_EXAMPLE, useClass: MockExample, multi: true },
         { provide: EXAMPLE, useClass: MockExample, multi: true },
       ]
     }).compileComponents();

@@ -1,12 +1,10 @@
 import { combineLatest, merge, Observable, Subject } from 'rxjs';
-import {
-  debounceTime, distinctUntilChanged, first, map, skip, startWith, takeUntil, tap, withLatestFrom,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { range } from '../helpers';
+import { getFormValue, range } from '../helpers';
 import { StreamBuilder } from '../stream.builder';
 
 type CompleteType = 'none' | 'complete' | 'error';
@@ -27,7 +25,7 @@ interface StreamUpdate {
 export class StreamControllerComponent implements OnInit, OnDestroy {
   protected _onDestroySubject$ = new Subject<boolean>();
 
-  stream = this._streamBuilder.create([2, 5, 8], 10);
+  @Input() stream = this._streamBuilder.create([2, 5, 8], 10);
 
   formGroup = this._formBuilder.group({
     size: [3, Validators.required],
@@ -60,11 +58,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
   ) { }
 
   protected getFormValue<T = string>(key: string): Observable<T> {
-    return this.formGroup.get(key).valueChanges.pipe(
-      startWith(this.formGroup.get(key).value),
-      distinctUntilChanged(),
-      map((x) => x as T),
-    );
+    return getFormValue<T>(key, this.formGroup);
   }
 
   protected handleFormControlChanges(): void {

@@ -1,3 +1,7 @@
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 
 export const indexToX = (index: number) => 15 + (10 * index);
@@ -21,4 +25,12 @@ export const distribute = (start: number, stop: number, num: number): number[] =
   }
 
   return result;
+}
+
+export const getFormValue = <T = string>(key: string, formGroup: FormGroup): Observable<T> => {
+  return formGroup.get(key).valueChanges.pipe(
+    startWith(formGroup.get(key).value),
+    distinctUntilChanged(),
+    map((x) => x as T),
+  );
 }
