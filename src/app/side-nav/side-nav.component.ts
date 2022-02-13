@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Example, EXAMPLE, ExampleSection } from '../examples/interface';
+import { SandboxService } from '../sandbox.service';
 
 type GroupedExamples = Partial<{
   [section in ExampleSection]: Example[];
@@ -33,6 +34,7 @@ export class SideNavComponent implements OnInit {
 
   constructor(
     @Inject(EXAMPLE) protected _examples: Example[],
+    protected _sandboxSvc: SandboxService,
   ) { }
 
   protected groupExamples(): SideNavExamples[] {
@@ -52,5 +54,6 @@ export class SideNavComponent implements OnInit {
   }
 
   renderExample(example: Example): void {
+    this._sandboxSvc.renderExample(example);
   }
 }

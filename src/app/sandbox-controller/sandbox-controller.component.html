@@ -1,0 +1,26 @@
+<div class="row mt-2">
+  <div class="col">
+    <mat-card class="mat-elevation-z3">
+      <app-stream-controller></app-stream-controller>
+    </mat-card>
+  </div>
+</div>
+
+<!-- TODO: Plus button here -->
+
+<hr />
+
+<!-- TODO: Visualize button / Output observable here -->
+
+<hr />
+
+<div class="row mt-2">
+  <div class="col">
+    <form [formGroup]="formGroup">
+      <ngx-codemirror
+        [options]="codeMirrorOptions"
+        formControlName="code"
+      ></ngx-codemirror>
+    </form>
+  </div>
+</div>

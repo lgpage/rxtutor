@@ -2,34 +2,16 @@
   <mat-sidenav mode="side" opened>
     <app-side-nav></app-side-nav>
   </mat-sidenav>
+
   <mat-sidenav-content>
     <div class="container">
-      <div class="row mt-4">
+      <div class="row mt-2">
         <div class="col">
-          <mat-card class="mat-elevation-z3">
-            <app-stream-controller></app-stream-controller>
-          </mat-card>
+          <h4>Interactive sandbox for RxJS Observables</h4>
         </div>
       </div>
 
-      <!-- TODO: Plus button here -->
-
-      <hr />
-
-      <!-- TODO: Visualize button / Output observable here -->
-
-      <hr />
-
-      <div class="row mt-4">
-        <div class="col">
-          <form [formGroup]="formGroup">
-            <ngx-codemirror
-              [options]="codeMirrorOptions"
-              formControlName="code"
-            ></ngx-codemirror>
-          </form>
-        </div>
-      </div>
+      <app-sandbox-controller></app-sandbox-controller>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

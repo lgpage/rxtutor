@@ -36,6 +36,7 @@
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -45,13 +46,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "400kb"
                 }
               ],
               "fileReplacements": [
@@ -106,6 +107,7 @@
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css",
               "src/styles.scss"
             ],
             "scripts": []

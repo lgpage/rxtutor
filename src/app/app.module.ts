@@ -20,6 +20,7 @@ import { exampleProviders } from './examples';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { StreamControllerComponent } from './stream-controller/stream-controller.component';
 import { StreamComponent } from './stream/stream.component';
+import { SandboxControllerComponent } from './sandbox-controller/sandbox-controller.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { StreamComponent } from './stream/stream.component';
     StreamComponent,
     StreamControllerComponent,
     SideNavComponent,
+    SandboxControllerComponent,
   ],
   providers: [
     ...exampleProviders,
