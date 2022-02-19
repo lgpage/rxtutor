@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Stream } from '../stream';
+import { InputStream } from '../stream';
 import { StreamBuilder } from '../stream.builder';
 import { Example, ExampleSection } from './interface';
 
@@ -12,7 +12,7 @@ export class CombineLatestExample implements Example {
     protected _streamBuilder: StreamBuilder,
   ) { }
 
-  getSources(): Stream[] {
+  getSources(): InputStream[] {
     return [
       this._streamBuilder.create([2, 5, 8], 10),
       this._streamBuilder.create([2, 5, 8], 10),
@@ -20,6 +20,6 @@ export class CombineLatestExample implements Example {
   };
 
   getCode(): string {
-    return 'function visualize(rx, rxOp, one$, two$) {\n  return rx.combineLatest([one$, two$]);\n}';
+    return 'function visualize({ combineLatest }, rxOp, one$, two$) {\n  return combineLatest([one$, two$]);\n}';
   };
 }

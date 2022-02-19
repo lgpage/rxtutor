@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../examples/interface';
-import { Stream } from '../stream';
+import { InputStream } from '../stream';
 import { SideNavComponent } from './side-nav.component';
 
 class MockExample implements Example {
   name = 'MockExample';
   section: ExampleSection = 'combination';
 
-  getSources: () => Stream[];
+  getSources: () => InputStream[];
   getCode: () => string;
 }
 

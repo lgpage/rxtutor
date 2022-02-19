@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { StreamComponent } from '../stream/stream.component';
@@ -29,7 +28,6 @@ describe('StreamControllerComponent', () => {
         MockComponent(StreamComponent),
       ],
       providers: [
-        { provide: MatSnackBar, useValue: {} },
       ]
     }).compileComponents();
   }));

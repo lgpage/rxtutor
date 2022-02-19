@@ -63,43 +63,74 @@ const getStreamMarbles = (nodes: StreamNode[]): string => {
 }
 
 export class Stream {
+  entities$: Observable<{ [id: string]: StreamNode }>;
+  nodes$: Observable<StreamNode[]>;
+  next$: Observable<StreamNode[]>;
+  terminate$: Observable<StreamNode>;
+  nodesToRender$: Observable<StreamNode[]>;
+  source$: Observable<string>;
+  marbles$: Observable<string>;
+
+  constructor(entities$: Observable<{ [id: string]: StreamNode }>) {
+    this.entities$ = entities$;
+
+    this.nodes$ = this.entities$.pipe(
+      map((entities) => Object.values(entities).sort((a, b) => a.x - b.x)),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.next$ = this.nodes$.pipe(
+      map((nodes) => nodes.filter((n) => n.type === 'next')),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.terminate$ = this.nodes$.pipe(
+      map((nodes) => nodes[nodes.length - 1]),
+      map((node) => node.type === 'next' ? null : node),
+    );
+
+    this.nodesToRender$ = this.entities$.pipe(
+      map((entities) => Object.values(entities).sort((a, b) => a.index - b.index)),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.source$ = this.nodes$.pipe(
+      mergeMap((nodes) => getStreamSource(nodes)),
+      takeWhile((v) => v !== '|'),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.marbles$ = this.nodes$.pipe(
+      map((nodes) => getStreamMarbles(nodes)),
+      distinctUntilChanged(),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+  }
+}
+
+export class InputStream {
+  protected _stream: Stream;
   protected _nodesSubject$ = new BehaviorSubject<{ [id: string]: StreamNode }>(null);
 
   entities$ = this._nodesSubject$.asObservable().pipe(filter((x) => !!x));
 
-  nodes$: Observable<StreamNode[]> = this.entities$.pipe(
-    map((entities) => Object.values(entities).sort((a, b) => a.x - b.x)),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  );
-
-  next$: Observable<StreamNode[]> = this.nodes$.pipe(
-    map((nodes) => nodes.filter((n) => n.type === 'next')),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  );
-
-  terminate$: Observable<StreamNode> = this.nodes$.pipe(
-    map((nodes) => nodes[nodes.length - 1]),
-    map((node) => node.type === 'next' ? null : node),
-  );
-
-  nodesToRender$: Observable<StreamNode[]> = this.entities$.pipe(
-    map((entities) => Object.values(entities).sort((a, b) => a.index - b.index)),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  );
-
-  source$ = this.nodes$.pipe(
-    mergeMap((nodes) => getStreamSource(nodes)),
-    takeWhile((v) => v !== '|'),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  );
-
-  marbles$ = this.nodes$.pipe(
-    map((nodes) => getStreamMarbles(nodes)),
-    distinctUntilChanged(),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  );
+  nodes$: Observable<StreamNode[]>;
+  next$: Observable<StreamNode[]>;
+  terminate$: Observable<StreamNode>;
+  nodesToRender$: Observable<StreamNode[]>;
+  source$: Observable<string>;
+  marbles$: Observable<string>;
 
   constructor(nodes: StreamNode[]) {
+    this._stream = new Stream(this.entities$);
+
+    this.nodes$ = this._stream.nodes$;
+    this.next$ = this._stream.next$;
+    this.terminate$ = this._stream.terminate$;
+    this.nodesToRender$ = this._stream.nodesToRender$;
+    this.source$ = this._stream.source$;
+    this.marbles$ = this._stream.marbles$;
+
     this.setNodes(nodes);
   }
 

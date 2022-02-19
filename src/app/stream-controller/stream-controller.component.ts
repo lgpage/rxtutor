@@ -1,9 +1,7 @@
 import { combineLatest, merge, Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
-import { Clipboard } from '@angular/cdk/clipboard';
+import { debounceTime, distinctUntilChanged, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFormValue, range } from '../helpers';
 import { StreamBuilder } from '../stream.builder';
 
@@ -51,8 +49,6 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    protected _clipboard: Clipboard,
-    protected _snackBar: MatSnackBar,
     protected _formBuilder: FormBuilder,
     protected _streamBuilder: StreamBuilder,
   ) { }
@@ -124,18 +120,6 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
 
   range(size: number): number[] {
     return range(size);
-  }
-
-  openSnackBar(message: string, action?: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
-  }
-
-  copyMarblesToClipboard(): void {
-    this.stream.marbles$.pipe(
-      first(),
-      tap((marbles) => this._clipboard.copy(marbles)),
-      tap(() => this.openSnackBar('Marbles copied to the clipboard', 'Ok')),
-    ).subscribe();
   }
 
   ngOnDestroy(): void {

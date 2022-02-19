@@ -1,16 +1,52 @@
-<div class="row mt-2" *ngFor="let source of sources$ | async">
+<div class="row mt-2" *ngFor="let source of sources$ | async; index as i">
   <div class="col">
     <mat-card class="mat-elevation-z3">
+      <button
+        mat-icon-button
+        color="warn"
+        class="remove"
+        (click)="removeInputStream(i)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+
       <app-stream-controller [stream]="source"></app-stream-controller>
     </mat-card>
   </div>
 </div>
 
-<!-- TODO: Plus button here -->
+<div class="row">
+  <div class="col d-flex justify-content-center">
+    <button
+      mat-icon-button
+      matTooltip="Add another input stream"
+      (click)="addInputStream()"
+    >
+      <mat-icon>add_box</mat-icon>
+    </button>
+  </div>
+</div>
 
-<hr />
+<hr class="mt-0" />
 
-<!-- TODO: Visualize button / Output observable here -->
+<div class="row">
+  <div class="col" *ngIf="output$ | async; else visualize; let output">
+    <app-stream [stream]="output"></app-stream>
+  </div>
+
+  <ng-template #visualize>
+    <div class="col d-flex justify-content-center">
+      <button
+        mat-raised-button
+        color="primary"
+        matTooltip="Visualize output stream from code block below"
+        (click)="visualizeOutput()"
+      >
+        Visualize Output Stream
+      </button>
+    </div>
+  </ng-template>
+</div>
 
 <hr />
 

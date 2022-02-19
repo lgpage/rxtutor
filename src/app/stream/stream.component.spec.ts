@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Stream } from '../stream';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { InputStream } from '../stream';
 import { StreamComponent } from './stream.component';
 
 describe('StreamComponent', () => {
@@ -8,7 +11,14 @@ describe('StreamComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [StreamComponent]
+      imports: [
+        MatIconModule,
+        MatTooltipModule,
+      ],
+      declarations: [StreamComponent],
+      providers: [
+        { provide: MatSnackBar, useValue: {} },
+      ]
     }).compileComponents();
   }));
 
@@ -16,7 +26,7 @@ describe('StreamComponent', () => {
     fixture = TestBed.createComponent(StreamComponent);
 
     component = fixture.componentInstance;
-    component.stream = new Stream([]);
+    component.stream = new InputStream([]);
 
     fixture.detectChanges();
   });

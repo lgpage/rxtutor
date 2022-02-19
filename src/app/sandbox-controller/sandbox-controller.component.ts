@@ -1,18 +1,21 @@
-import * as rx from 'rxjs';
-import * as rxOp from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { getFormValue } from '../helpers';
 import { SandboxService } from '../sandbox.service';
-import { Stream } from '../stream';
+import { InputStream, Stream } from '../stream';
+import { StreamBuilder } from '../stream.builder';
 
 @Component({
   selector: 'app-sandbox-controller',
   templateUrl: './sandbox-controller.component.html',
+  styleUrls: ['./sandbox-controller.component.scss']
 })
 export class SandboxControllerComponent implements OnInit, OnDestroy {
-  protected _onDestroySubject$ = new rx.Subject<boolean>();
-  protected _sourcesSubject$ = new rx.BehaviorSubject<Stream[]>(null);
+  protected _onDestroySubject$ = new Subject<boolean>();
+  protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>(null);
+  protected _outputSubject$ = new BehaviorSubject<Stream>(null);
 
   codeMirrorOptions = {
     lineNumbers: true,
@@ -22,66 +25,59 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
 
   formGroup = this._formBuilder.group({ code: [null] });
 
-  sources$ = this._sourcesSubject$.asObservable().pipe(rxOp.filter((x) => !!x))
+  sources$ = this._sourcesSubject$.asObservable().pipe(filter((x) => !!x))
+  output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged())
   code$ = this.getFormValue('code');
 
   constructor(
     protected _sandboxSvc: SandboxService,
+    protected _streamBuilder: StreamBuilder,
     protected _formBuilder: FormBuilder,
   ) { }
 
-  protected getFormValue<T = string>(key: string): rx.Observable<T> {
+  protected getFormValue<T = string>(key: string): Observable<T> {
     return getFormValue<T>(key, this.formGroup);
   }
 
   protected handleSandboxServiceChanges(): void {
     this._sandboxSvc.exampleToRender$.pipe(
-      rxOp.tap((example) => {
+      tap((example) => {
         this._sourcesSubject$.next(example.getSources());
         this.formGroup.get('code').setValue(example.getCode());
       }),
-      rxOp.takeUntil(this._onDestroySubject$),
+      takeUntil(this._onDestroySubject$),
     ).subscribe()
   }
 
-  protected createFunction(jsCode: string, sources: rx.Observable<string>[]): Function {
-    const words = ['one$', 'two$', 'three$', 'four$', 'five$', 'six$', 'seven$', 'eight$', 'nine$', 'ten$'];
-    const args = ['rx', 'rxOp', ...sources.map((_, i) => i > 9 ? `source${i}$` : words[i])];
-    const callMethod = `return visualize(${args.join(', ')});`;
-    try {
-      return new Function(...args, `${jsCode}\n\n${callMethod}`);
-    } catch (error: unknown) {
-      return null;
-    }
-  }
-
-  protected callFunction(fn: Function, sources: rx.Observable<string>[]): rx.Observable<string> {
-    if (!fn) {
-      return rx.of(null);
-    }
-
-    try {
-      return (fn(rx, rxOp, ...sources) as rx.Observable<string>).pipe(  // TODO: Check Function response type
-        rxOp.catchError((err: unknown) => rx.of(null)),
-      );
-    } catch (error: unknown) {
-      return rx.of(null);
-    }
+  protected handleCodeChange(): void {
+    this.code$.pipe(
+      tap(() => this._outputSubject$.next(null)),
+      takeUntil(this._onDestroySubject$),
+    ).subscribe;
   }
 
   ngOnInit(): void {
     this.handleSandboxServiceChanges();
+    this.handleCodeChange();
+  }
 
-    // this.formGroup.get('code')?.valueChanges.pipe(  // TODO: Replace with Visualize button
-    //   rxOp.debounceTime(600),
-    //   rxOp.map((jsCode) => this.createFunction(jsCode)),
-    //   rxOp.switchMap((fn) => this.callFunction(fn)),
-    //   rxOp.tap((result) => console.log({ result })),  // TODO: Add LoggerService
-    // ).subscribe();
+  addInputStream(): void {
+    this._sourcesSubject$.pipe(
+      first(),
+      map((sources) => [...sources, this._streamBuilder.create([2, 5, 8], 10)]),
+      tap((sources) => this._sourcesSubject$.next(sources)),
+    ).subscribe()
+  }
 
-    // TODO: Show errors
-    // TODO: Visualize response
-    // TODO: Allow adding sources
+  removeInputStream(index: number): void {
+    this._sourcesSubject$.pipe(
+      first(),
+      map((sources) => sources.filter((_, i) => i !== index)),
+      tap((sources) => this._sourcesSubject$.next(sources)),
+    ).subscribe()
+  }
+
+  visualizeOutput(): void {
   }
 
   ngOnDestroy(): void {

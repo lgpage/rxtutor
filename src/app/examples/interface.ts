@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { Stream } from '../stream';
+import { InputStream } from '../stream';
 
 export type ExampleSection = 'creation'
   | 'conditional'
@@ -14,7 +14,7 @@ export interface Example {
   name: string;
   section: ExampleSection;
 
-  getSources: () => Stream[];
+  getSources: () => InputStream[];
   getCode: () => string;
 }
 

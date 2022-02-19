@@ -1,7 +1,7 @@
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { distribute, indexToX } from './helpers';
-import { Stream, StreamNode } from './stream';
+import { InputStream, StreamNode } from './stream';
 
 @Injectable({ providedIn: 'root' })
 export class StreamBuilder {
@@ -35,8 +35,8 @@ export class StreamBuilder {
     return nodes;
   }
 
-  create(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): Stream {
-    const stream = new Stream(this.createNodes(indexes, completeIndex, errorIndex, start));
+  create(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): InputStream {
+    const stream = new InputStream(this.createNodes(indexes, completeIndex, errorIndex, start));
     return stream;
   }
 
@@ -48,7 +48,7 @@ export class StreamBuilder {
     return distribute(0, 9, size);
   }
 
-  adjustStream(stream: Stream, indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): void {
+  adjustStream(stream: InputStream, indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): void {
     stream.setNodes(this.createNodes(indexes, completeIndex, errorIndex, start));
   }
 }

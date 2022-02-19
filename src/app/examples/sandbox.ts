@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Stream } from '../stream';
+import { InputStream } from '../stream';
 import { StreamBuilder } from '../stream.builder';
 import { Example, ExampleSection } from './interface';
 
@@ -12,11 +12,15 @@ export class SandboxExample implements Example {
     protected _streamBuilder: StreamBuilder,
   ) { }
 
-  getSources(): Stream[] {
+  getSources(): InputStream[] {
     return [this._streamBuilder.create([2, 5, 8], 10)];
   };
 
   getCode(): string {
-    return 'function visualize(rx, rxOp, one$) {\n  return rx.of(10);\n}';
+    return `function visualize({ of }, { map }, one$) {
+  return of(10).pipe(
+    map((x) => x * 2),
+  );
+}`;
   };
 }
