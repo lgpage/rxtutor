@@ -3,7 +3,7 @@ import { debounceTime, distinctUntilChanged, map, skip, takeUntil, tap, withLate
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { getFormValue, range } from '../helpers';
-import { StreamBuilder } from '../stream.builder';
+import { StreamBuilder } from '../internal/stream.builder';
 
 type CompleteType = 'none' | 'complete' | 'error';
 
@@ -23,7 +23,7 @@ interface StreamUpdate {
 export class StreamControllerComponent implements OnInit, OnDestroy {
   protected _onDestroySubject$ = new Subject<boolean>();
 
-  @Input() stream = this._streamBuilder.create([2, 5, 8], 10);
+  @Input() stream = this._streamBuilder.inputStream([2, 5, 8], 10);
 
   formGroup = this._formBuilder.group({
     size: [3, Validators.required],

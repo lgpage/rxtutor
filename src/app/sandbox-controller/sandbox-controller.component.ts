@@ -1,11 +1,12 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, first, map, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, first, map, takeUntil, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { getFormValue } from '../helpers';
+import { getFunctionResult } from '../internal/functions';
+import { getFormValue } from '../internal/helpers';
+import { InputStream, Stream } from '../internal/stream';
+import { StreamBuilder } from '../internal/stream.builder';
 import { SandboxService } from '../sandbox.service';
-import { InputStream, Stream } from '../stream';
-import { StreamBuilder } from '../stream.builder';
 
 @Component({
   selector: 'app-sandbox-controller',
@@ -25,8 +26,8 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
 
   formGroup = this._formBuilder.group({ code: [null] });
 
-  sources$ = this._sourcesSubject$.asObservable().pipe(filter((x) => !!x))
-  output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged())
+  sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged())
+  output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   code$ = this.getFormValue('code');
 
   constructor(
@@ -49,22 +50,21 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
     ).subscribe()
   }
 
-  protected handleCodeChange(): void {
-    this.code$.pipe(
+  protected handleInputChanges(): void {
+    merge(this.code$, this.sources$).pipe(
       tap(() => this._outputSubject$.next(null)),
-      takeUntil(this._onDestroySubject$),
-    ).subscribe;
+    ).subscribe();
   }
 
   ngOnInit(): void {
+    this.handleInputChanges();
     this.handleSandboxServiceChanges();
-    this.handleCodeChange();
   }
 
   addInputStream(): void {
     this._sourcesSubject$.pipe(
       first(),
-      map((sources) => [...sources, this._streamBuilder.create([2, 5, 8], 10)]),
+      map((sources) => [...sources, this._streamBuilder.inputStream([2, 5, 8], 10)]),
       tap((sources) => this._sourcesSubject$.next(sources)),
     ).subscribe()
   }
@@ -78,6 +78,13 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   }
 
   visualizeOutput(): void {
+    combineLatest([this.code$, this.sources$]).pipe(
+      first(),
+      map(([code, sources]) => ({ code, sources: sources.map((s) => s.source$) })),
+      map(({ code, sources }) => getFunctionResult(code, sources)),
+      map((output$) => this._streamBuilder.outputStream(output$)),
+      tap((stream) => this._outputSubject$.next(stream)),
+    ).subscribe();
   }
 
   ngOnDestroy(): void {

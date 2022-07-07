@@ -31,5 +31,6 @@ export const callFunction = (fn: Function, sources: rx.Observable<string>[]): rx
 export const getFunctionResult = (jsCode: string, sources: rx.Observable<string>[]): rx.Observable<string> => {
   return callFunction(createFunction(jsCode, sources.length), sources).pipe(
     rxOp.tap((result) => console.log({ result })),  // TODO: Add LoggerService
+    rxOp.shareReplay({ refCount: true, bufferSize: 1 }),
   );
 };

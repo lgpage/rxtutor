@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
@@ -32,5 +32,6 @@ export const getFormValue = <T = string>(key: string, formGroup: FormGroup): Obs
     startWith(formGroup.get(key).value),
     distinctUntilChanged(),
     map((x) => x as T),
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 }

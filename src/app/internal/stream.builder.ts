@@ -1,7 +1,9 @@
+import { Observable } from 'rxjs';
+import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { distribute, indexToX } from './helpers';
-import { InputStream, StreamNode } from './stream';
+import { InputStream, Stream, StreamNode } from './stream';
 
 @Injectable({ providedIn: 'root' })
 export class StreamBuilder {
@@ -35,17 +37,37 @@ export class StreamBuilder {
     return nodes;
   }
 
-  create(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): InputStream {
-    const stream = new InputStream(this.createNodes(indexes, completeIndex, errorIndex, start));
-    return stream;
-  }
-
   getDistributedIndexes(size: number): number[] {
     if (size === 0) {
       return [];
     }
 
     return distribute(0, 9, size);
+  }
+
+  inputStream(indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): InputStream {
+    const stream = new InputStream(this.createNodes(indexes, completeIndex, errorIndex, start));
+    return stream;
+  }
+
+  outputStream(output$: Observable<string>): Stream {
+    const nodes$ = output$.pipe(
+      tap((output) => console.log({ output })),
+      bufferTime(100),
+      tap((outputs) => console.log({ outputs })),
+      map((outputs) => outputs.map<StreamNode>((x, i) => ({
+        id: guid(),
+        index: i,
+        text: x,
+        type: x === '|' ? 'complete' : x === '#' ? 'error' : 'next',
+        x: indexToX(i),
+      }))),
+      tap((nodes) => console.log({ nodes })),
+      map((nodes) => nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {})),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    return new Stream(nodes$);
   }
 
   adjustStream(stream: InputStream, indexes: number[], completeIndex?: number, errorIndex?: number, start?: string): void {
