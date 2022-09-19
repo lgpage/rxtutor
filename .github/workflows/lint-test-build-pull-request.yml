@@ -1,0 +1,21 @@
+name: Lint, test and build on PR
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release
+
+jobs:
+  lint_test_and_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm i
+      - name: Lint application
+        run: npm run lint
+      - name: Test application
+        run: npm run test:headless
+      - name: Build application
+        run: npm run build:prod
