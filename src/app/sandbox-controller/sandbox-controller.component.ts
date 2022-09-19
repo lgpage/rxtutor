@@ -1,7 +1,8 @@
-import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, first, map, takeUntil, tap } from 'rxjs/operators';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest, merge, Observable } from 'rxjs';
+import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFunctionResult } from '../internal/functions';
 import { getFormValue } from '../internal/helpers';
 import { InputStream, Stream } from '../internal/stream';
@@ -13,8 +14,8 @@ import { SandboxService } from '../sandbox.service';
   templateUrl: './sandbox-controller.component.html',
   styleUrls: ['./sandbox-controller.component.scss']
 })
-export class SandboxControllerComponent implements OnInit, OnDestroy {
-  protected _onDestroySubject$ = new Subject<boolean>();
+@UntilDestroy()
+export class SandboxControllerComponent implements OnInit {
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>(null);
   protected _outputSubject$ = new BehaviorSubject<Stream>(null);
 
@@ -46,7 +47,7 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
         this._sourcesSubject$.next(example.getSources());
         this.formGroup.get('code').setValue(example.getCode());
       }),
-      takeUntil(this._onDestroySubject$),
+      untilDestroyed(this),
     ).subscribe()
   }
 
@@ -85,9 +86,5 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
       map((output$) => this._streamBuilder.outputStream(output$)),
       tap((stream) => this._outputSubject$.next(stream)),
     ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroySubject$.next(true);
   }
 }

@@ -1,7 +1,8 @@
-import { combineLatest, merge, Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { combineLatest, merge, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip, tap, withLatestFrom } from 'rxjs/operators';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, range } from '../internal/helpers';
 import { StreamBuilder } from '../internal/stream.builder';
 
@@ -20,9 +21,8 @@ interface StreamUpdate {
   styleUrls: ['./stream-controller.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class StreamControllerComponent implements OnInit, OnDestroy {
-  protected _onDestroySubject$ = new Subject<boolean>();
-
+@UntilDestroy()
+export class StreamControllerComponent implements OnInit {
   @Input() stream = this._streamBuilder.inputStream([2, 5, 8], 10);
 
   formGroup = this._formBuilder.group({
@@ -85,7 +85,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map((type) => type === 'numeric' ? '1' : 'A'),
       tap((start) => this.formGroup.get('start').setValue(start)),
-      takeUntil(this._onDestroySubject$),
+      untilDestroyed(this),
     );
 
     const adjustStream$ = merge(sizeChange$, startOrCompleteChange$).pipe(
@@ -94,7 +94,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
         const errorIndex = complete === 'error' ? terminateIndex : null;
         this._streamBuilder.adjustStream(this.stream, indexes, completeIndex, errorIndex, start);
       }),
-      takeUntil(this._onDestroySubject$),
+      untilDestroyed(this),
     );
 
     adjustStartControlValue$.subscribe();
@@ -107,7 +107,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
       map((nodes) => nodes.length),
       distinctUntilChanged(),
       tap((size) => this.formGroup.get('size').setValue(size, { emitEvent: false })),
-      takeUntil(this._onDestroySubject$),
+      untilDestroyed(this),
     );
 
     setControlSize$.subscribe();
@@ -120,9 +120,5 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
 
   range(size: number): number[] {
     return range(size);
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroySubject$.next(true);
   }
 }

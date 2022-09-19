@@ -1,5 +1,11 @@
 export type NotificationKind = 'N' | 'E' | 'C';
 
+export const NotificationKindText: { [key in NotificationKind]: string } = {
+  N: "Next",
+  E: "Error",
+  C: "Complete"
+};
+
 export interface NextNotification<T = any> {
   kind: 'N';
   value: T;
