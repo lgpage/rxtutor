@@ -2,7 +2,7 @@ import { combineLatest, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { getFormValue, range } from '../helpers';
+import { getFormValue, range } from '../internal/helpers';
 import { StreamBuilder } from '../internal/stream.builder';
 
 type CompleteType = 'none' | 'complete' | 'error';
