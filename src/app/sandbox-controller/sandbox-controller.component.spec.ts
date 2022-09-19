@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../examples/interface';
-import { InputStream } from '../stream';
+import { InputStream } from '../internal/stream';
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
 
