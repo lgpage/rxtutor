@@ -1,7 +1,7 @@
 import { combineLatest, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { getFormValue, range } from '../helpers';
 import { StreamBuilder } from '../internal/stream.builder';
 
@@ -49,7 +49,7 @@ export class StreamControllerComponent implements OnInit, OnDestroy {
   );
 
   constructor(
-    protected _formBuilder: FormBuilder,
+    protected _formBuilder: UntypedFormBuilder,
     protected _streamBuilder: StreamBuilder,
   ) { }
 

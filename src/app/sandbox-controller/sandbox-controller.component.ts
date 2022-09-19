@@ -1,7 +1,7 @@
 import { BehaviorSubject, combineLatest, merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, first, map, takeUntil, tap } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { getFunctionResult } from '../internal/functions';
 import { getFormValue } from '../internal/helpers';
 import { InputStream, Stream } from '../internal/stream';
@@ -33,7 +33,7 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   constructor(
     protected _sandboxSvc: SandboxService,
     protected _streamBuilder: StreamBuilder,
-    protected _formBuilder: FormBuilder,
+    protected _formBuilder: UntypedFormBuilder,
   ) { }
 
   protected getFormValue<T = string>(key: string): Observable<T> {
