@@ -3,10 +3,10 @@ import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFunctionResult } from '../internal/functions';
-import { getFormValue } from '../internal/helpers';
-import { InputStream, Stream } from '../internal/stream';
-import { StreamBuilder } from '../internal/stream.builder';
+import { getFunctionResult } from '../core/functions';
+import { getFormValue } from '../core/helpers';
+import { InputStream, Stream } from '../core/stream';
+import { StreamBuilder } from '../core/stream.builder';
 import { SandboxService } from '../sandbox.service';
 
 @Component({

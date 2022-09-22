@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { InputStream } from '../internal/stream';
+import { InputStream } from '../core/stream';
 import { StreamComponent } from './stream.component';
 
 describe('StreamComponent', () => {

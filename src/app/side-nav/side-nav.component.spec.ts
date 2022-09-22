@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { InputStream } from '../core/stream';
 import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../examples/interface';
-import { InputStream } from '../internal/stream';
 import { SideNavComponent } from './side-nav.component';
 
 class MockExample implements Example {

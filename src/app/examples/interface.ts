@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { InputStream } from '../internal/stream';
+import { InputStream } from '../core/stream';
 
 export type ExampleSection = 'creation'
   | 'conditional'
