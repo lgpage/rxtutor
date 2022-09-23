@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - release
+  push:
+    branches:
+      - main
+      - release
 
 jobs:
   lint_test_and_build:

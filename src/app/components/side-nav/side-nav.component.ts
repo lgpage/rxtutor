@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Example, EXAMPLE, ExampleSection } from '../examples/interface';
-import { SandboxService } from '../sandbox.service';
+import { SandboxService } from '../../services';
+import { Example, EXAMPLE, ExampleSection } from '../../types';
 
 type GroupedExamples = Partial<{
   [section in ExampleSection]: Example[];

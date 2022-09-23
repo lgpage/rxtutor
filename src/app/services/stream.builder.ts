@@ -2,11 +2,18 @@ import { Observable } from 'rxjs';
 import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
-import { distribute, indexToX } from './helpers';
-import { InputStream, Stream, StreamNode } from './stream';
+import { distribute, indexToX } from '../core/helpers';
+import { InputStream, Stream, StreamNode } from '../core/stream';
+import { LoggerService } from '../services';
 
 @Injectable({ providedIn: 'root' })
-export class StreamBuilder {
+export class StreamBuilderService {
+  private _name = 'StreamBuilderService';
+
+  constructor(
+    private _logger: LoggerService,
+  ) { }
+
   protected isNumber(x?: number): boolean {
     return x !== null && x !== undefined && !isNaN(+x);
   }
@@ -52,9 +59,9 @@ export class StreamBuilder {
 
   outputStream(output$: Observable<string>): Stream {
     const nodes$ = output$.pipe(
-      tap((output) => console.log({ output })),
+      tap((output) => this._logger.logDebug(`${this._name} >> outputStream`, { output })),
       bufferTime(100),
-      tap((outputs) => console.log({ outputs })),
+      tap((outputs) => this._logger.logDebug(`${this._name} >> outputStream`, { outputs })),
       map((outputs) => outputs.map<StreamNode>((x, i) => ({
         id: guid(),
         index: i,
@@ -62,7 +69,7 @@ export class StreamBuilder {
         type: x === '|' ? 'complete' : x === '#' ? 'error' : 'next',
         x: indexToX(i),
       }))),
-      tap((nodes) => console.log({ nodes })),
+      tap((nodes) => this._logger.logDebug(`${this._name} >> outputStream`, { nodes })),
       map((nodes) => nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {})),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );

@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
-import { Example, START_EXAMPLE } from './examples/interface';
+import { Example, START_EXAMPLE } from '../types';
 
 @Injectable({ providedIn: 'root' })
 export class SandboxService {

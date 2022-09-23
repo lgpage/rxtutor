@@ -2,8 +2,7 @@ import { first, tap } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getBoundedX, range } from '../core/helpers';
-import { InputStream, Stream, StreamNode } from '../core/stream';
+import { getBoundedX, InputStream, range, Stream, StreamNode } from '../../core';
 
 const isInputStream = (stream: Stream | InputStream): stream is InputStream => !!(stream as InputStream)?.correct;
 

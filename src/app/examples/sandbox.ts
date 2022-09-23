@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InputStream } from '../core/stream';
-import { StreamBuilder } from '../core/stream.builder';
-import { Example, ExampleSection } from './interface';
+import { StreamBuilderService } from '../services/stream.builder';
+import { Example, ExampleSection } from '../types';
 
 @Injectable()
 export class SandboxExample implements Example {
@@ -9,7 +9,7 @@ export class SandboxExample implements Example {
   section: ExampleSection = 'other';
 
   constructor(
-    protected _streamBuilder: StreamBuilder,
+    protected _streamBuilder: StreamBuilderService,
   ) { }
 
   getSources(): InputStream[] {

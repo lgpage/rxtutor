@@ -3,8 +3,8 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import { SandboxControllerComponent } from './sandbox-controller/sandbox-controller.component';
-import { SideNavComponent } from './side-nav/side-nav.component';
+import { SandboxControllerComponent } from './components/sandbox-controller/sandbox-controller.component';
+import { SideNavComponent } from './components/side-nav/side-nav.component';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {

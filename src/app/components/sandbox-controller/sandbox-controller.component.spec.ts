@@ -5,8 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { InputStream } from '../core/stream';
-import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../examples/interface';
+import { InputStream } from '../../core';
+import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../../types';
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
 

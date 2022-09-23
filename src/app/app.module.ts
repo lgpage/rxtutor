@@ -16,11 +16,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AppComponent } from './app.component';
+import { SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent } from './components';
 import { exampleProviders } from './examples';
-import { SideNavComponent } from './side-nav/side-nav.component';
-import { StreamControllerComponent } from './stream-controller/stream-controller.component';
-import { StreamComponent } from './stream/stream.component';
-import { SandboxControllerComponent } from './sandbox-controller/sandbox-controller.component';
 
 @NgModule({
   imports: [

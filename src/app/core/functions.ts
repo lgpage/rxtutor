@@ -1,5 +1,6 @@
 import * as rx from 'rxjs';
 import * as rxOp from 'rxjs/operators';
+import { LoggerService } from '../services';
 import { range } from './helpers';
 
 export const createFunction = (jsCode: string, size: number): Function => {
@@ -28,9 +29,9 @@ export const callFunction = (fn: Function, sources: rx.Observable<string>[]): rx
   }
 };
 
-export const getFunctionResult = (jsCode: string, sources: rx.Observable<string>[]): rx.Observable<string> => {
+export const getFunctionResult = (jsCode: string, sources: rx.Observable<string>[], logger?: LoggerService): rx.Observable<string> => {
   return callFunction(createFunction(jsCode, sources.length), sources).pipe(
-    rxOp.tap((result) => console.log({ result })),  // TODO: Add LoggerService
+    rxOp.tap((result) => logger?.logDebug('getFunctionResult', { result })),
     rxOp.shareReplay({ refCount: true, bufferSize: 1 }),
   );
 };

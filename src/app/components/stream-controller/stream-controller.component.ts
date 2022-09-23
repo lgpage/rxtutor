@@ -3,8 +3,8 @@ import { debounceTime, distinctUntilChanged, map, skip, tap, withLatestFrom } fr
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, range } from '../core/helpers';
-import { StreamBuilder } from '../core/stream.builder';
+import { getFormValue, range } from '../../core/helpers';
+import { StreamBuilderService } from '../../services/stream.builder';
 
 type CompleteType = 'none' | 'complete' | 'error';
 
@@ -50,7 +50,7 @@ export class StreamControllerComponent implements OnInit {
 
   constructor(
     protected _formBuilder: UntypedFormBuilder,
-    protected _streamBuilder: StreamBuilder,
+    protected _streamBuilder: StreamBuilderService,
   ) { }
 
   protected getFormValue<T = string>(key: string): Observable<T> {
