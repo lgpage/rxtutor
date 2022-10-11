@@ -20,6 +20,6 @@ export class CombineLatestExample implements Example {
   };
 
   getCode(): string {
-    return 'function visualize({ combineLatest }, rxOp, one$, two$) {\n  return combineLatest([one$, two$]);\n}';
+    return 'function visualize({ combineLatest }, one$, two$) {\n  return combineLatest([one$, two$]);\n}';
   };
 }

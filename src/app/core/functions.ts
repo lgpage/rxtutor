@@ -1,5 +1,4 @@
 import * as rx from 'rxjs';
-import * as rxOp from 'rxjs/operators';
 import { LoggerService } from '../services';
 import { range } from './helpers';
 
@@ -21,8 +20,8 @@ export const callFunction = (fn: Function, sources: rx.Observable<string>[]): rx
   }
 
   try {
-    return (fn(rx, rxOp, ...sources) as rx.Observable<string>).pipe(  // TODO: Check Function response type
-      rxOp.catchError((err: unknown) => rx.of(null)),
+    return (fn(rx, ...sources) as rx.Observable<string>).pipe(  // TODO: Check Function response type
+      rx.catchError((err: unknown) => rx.of(null)),
     );
   } catch (error: unknown) {
     return rx.of(null);
@@ -31,7 +30,7 @@ export const callFunction = (fn: Function, sources: rx.Observable<string>[]): rx
 
 export const getFunctionResult = (jsCode: string, sources: rx.Observable<string>[], logger?: LoggerService): rx.Observable<string> => {
   return callFunction(createFunction(jsCode, sources.length), sources).pipe(
-    rxOp.tap((result) => logger?.logDebug('getFunctionResult', { result })),
-    rxOp.shareReplay({ refCount: true, bufferSize: 1 }),
+    rx.tap((result) => logger?.logDebug('getFunctionResult', { result })),
+    rx.shareReplay({ refCount: true, bufferSize: 1 }),
   );
 };

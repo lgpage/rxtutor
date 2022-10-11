@@ -17,7 +17,7 @@ export class SandboxExample implements Example {
   };
 
   getCode(): string {
-    return `function visualize({ of }, { map }, one$) {
+    return `function visualize({ of, map }, one$) {
   return of(10).pipe(
     map((x) => x * 2),
   );
