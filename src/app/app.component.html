@@ -1,15 +1,20 @@
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container class="min-vh-100">
   <mat-sidenav mode="side" opened>
     <app-side-nav></app-side-nav>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <div class="container">
-      <div class="row mt-2">
-        <div class="col">
-          <h4>Interactive sandbox for RxJS Observables</h4>
-        </div>
-      </div>
+      <mat-toolbar>
+        <div><h4>Interactive sandbox for RxJS Observables</h4></div>
+        <div class="ms-auto float-end"></div>
+        <mat-icon>brightness_5</mat-icon>
+        <mat-slide-toggle
+          class="mx-1"
+          [formControl]="darkModeControl"
+        ></mat-slide-toggle>
+        <mat-icon>bedtime</mat-icon>
+      </mat-toolbar>
 
       <app-sandbox-controller></app-sandbox-controller>
     </div>

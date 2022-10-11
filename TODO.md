@@ -2,7 +2,9 @@
 
 * Update to use Typed controls (UntypedFormBuilder -> FormBuilder)
 * Limit the number of sources to min 1 and max 3
-* Add dark vs light theme and persist via browser storage
+* Test different examples and inputs
+  * Compare to RxJs marbles
+  * Create integration tests for the examples
 * Add additional examples
 * Rework stream
   * Update to use types more similar to RxJs
@@ -18,6 +20,7 @@
   * Compare to RxJs marbles
   * Create integration tests for the examples
 * Tweak styling if needed
+  * Review primary, secondary, and warn colors
 * Add google analytics
 * Publish & make public
 
