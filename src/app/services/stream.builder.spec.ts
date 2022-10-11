@@ -3,7 +3,7 @@ import { TestScheduler } from 'rxjs/testing';
 import { TestBed } from '@angular/core/testing';
 import { StreamBuilderService } from './stream.builder';
 
-describe('Stream', () => {
+describe('StreamBuilder', () => {
   let testScheduler: TestScheduler;
   let service: StreamBuilderService;
 

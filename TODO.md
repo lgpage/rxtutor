@@ -1,7 +1,9 @@
 # TODO
 
-* Add alerts for errors
-* Rename functions.ts to somethings else
+* Update to use Typed controls (UntypedFormBuilder -> FormBuilder)
+* Limit the number of sources to min 1 and max 3
+* Add dark vs light theme and persist via browser storage
+* Add additional examples
 * Rework stream
   * Update to use types more similar to RxJs
   * Update design to split out options to new dialog
@@ -12,17 +14,15 @@
     * Create visual for offsets like 20ms and add frame no
     * FrameTimeFactor = 1
   * Rename stream to something else
-* Limit the number of sources to min 1 and max 3
-* Add additional examples
-* Add footer + FAQ
 * Test different examples and inputs
   * Compare to RxJs marbles
-  * Possibly create some integration tests for the examples
+  * Create integration tests for the examples
 * Tweak styling if needed
 * Add google analytics
 * Publish & make public
 
 ## Future
 
+* Add footer + FAQ
+* Add additional unit tests
 * Add Scheduler (may need to w8 for v8 refactor of schedulers?)
-* Add dark vs light theme and persist via browser storage

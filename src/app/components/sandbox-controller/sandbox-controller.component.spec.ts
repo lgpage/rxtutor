@@ -1,4 +1,4 @@
-import { MockComponent } from 'ng-mocks';
+import { MockComponent, MockService } from 'ng-mocks';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 import { InputStream } from '../../core';
+import { ExecutorService } from '../../services';
 import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../../types';
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
@@ -38,6 +39,7 @@ describe('SandboxControllerComponent', () => {
       providers: [
         { provide: START_EXAMPLE, useClass: MockExample, multi: true },
         { provide: EXAMPLE, useClass: MockExample, multi: true },
+        { provide: ExecutorService, useValue: MockService(ExecutorService) },
       ]
     }).compileComponents();
   }));
