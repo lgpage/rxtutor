@@ -1,7 +1,7 @@
-import { BehaviorSubject, combineLatest, merge, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, Stream } from '../../core';
 import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } from '../../services';
@@ -23,23 +23,21 @@ export class SandboxControllerComponent implements OnInit {
     mode: 'text/typescript'
   };
 
-  formGroup = this._formBuilder.group({ code: [null] });
+  formGroup = this._formBuilder.group<{ code: FormControl<string | null> }>({
+    code: this._formBuilder.control(null),
+  });
 
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged())
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  code$ = this.getFormValue('code');
+  code$ = getFormValue('code', this.formGroup);
 
   constructor(
     protected _sandboxSvc: SandboxService,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
-    protected _formBuilder: UntypedFormBuilder,
+    protected _formBuilder: FormBuilder,
     protected _logger: LoggerService,
   ) { }
-
-  protected getFormValue<T = string>(key: string): Observable<T> {
-    return getFormValue<T>(key, this.formGroup);
-  }
 
   protected handleSandboxServiceChanges(): void {
     this._sandboxSvc.exampleToRender$.pipe(
