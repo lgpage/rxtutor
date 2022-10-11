@@ -1,7 +1,5 @@
 # TODO
 
-* Update examples and helpers to pass all of rxjs in first argument
-  * No rx vs rxOp separation
 * Add alerts for errors
 * Rename functions.ts to somethings else
 * Rework stream

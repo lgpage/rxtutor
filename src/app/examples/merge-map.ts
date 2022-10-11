@@ -20,10 +20,10 @@ export class MergeMapExample implements Example {
   };
 
   getCode(): string {
-    return `function visualize(rx, rxOp, one$, two$) {
+    return `function visualize({ mergeMap, map }, one$, two$) {
   return one$.pipe(
-    rxOp.mergeMap((a) => two$.pipe(
-      rxOp.map((b) => \`\${a}\${b}\`)
+    mergeMap((a) => two$.pipe(
+      map((b) => \`\${a}\${b}\`)
     )),
   );
 }`;
