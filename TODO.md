@@ -1,7 +1,6 @@
 # TODO
 
 * Update to use Typed controls (UntypedFormBuilder -> FormBuilder)
-* Limit the number of sources to min 1 and max 3
 * Add dark vs light theme and persist via browser storage
 * Add additional examples
 * Rework stream

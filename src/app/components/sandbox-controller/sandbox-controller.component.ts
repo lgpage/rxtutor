@@ -1,10 +1,17 @@
 import { BehaviorSubject, combineLatest, merge, Observable } from 'rxjs';
 import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
+=======
+import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
+>>>>>>> fbb5695 (Limit the number of sources)
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, Stream } from '../../core';
 import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } from '../../services';
+
+export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
 @Component({
   selector: 'app-sandbox-controller',
@@ -14,6 +21,7 @@ import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } 
 @UntilDestroy()
 export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
+  protected _maxSources = 3;
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>(null);
   protected _outputSubject$ = new BehaviorSubject<Stream>(null);
 
@@ -29,13 +37,31 @@ export class SandboxControllerComponent implements OnInit {
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   code$ = this.getFormValue('code');
 
+  numberOfSources$ = this.sources$.pipe(
+    map((sources) => sources?.length ?? 0),
+    distinctUntilChanged(),
+  );
+
+  canRemoveSource$ = this.numberOfSources$.pipe(
+    map((x) => x > 1),
+    distinctUntilChanged(),
+  );
+
+  canAddSource$ = this.numberOfSources$.pipe(
+    map((x) => x < this._maxSources),
+    distinctUntilChanged(),
+  );
+
   constructor(
+    @Inject(MAX_SOURCES) @Optional() maxSources: number | undefined,
     protected _sandboxSvc: SandboxService,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
     protected _formBuilder: UntypedFormBuilder,
     protected _logger: LoggerService,
-  ) { }
+  ) {
+    this._maxSources = maxSources ?? this._maxSources;
+  }
 
   protected getFormValue<T = string>(key: string): Observable<T> {
     return getFormValue<T>(key, this.formGroup);
