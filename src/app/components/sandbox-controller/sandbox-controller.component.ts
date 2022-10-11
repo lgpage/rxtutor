@@ -3,8 +3,8 @@ import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, getFunctionResult, InputStream, Stream } from '../../core';
-import { LoggerService, SandboxService, StreamBuilderService } from '../../services';
+import { getFormValue, InputStream, Stream } from '../../core';
+import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } from '../../services';
 
 @Component({
   selector: 'app-sandbox-controller',
@@ -31,6 +31,7 @@ export class SandboxControllerComponent implements OnInit {
 
   constructor(
     protected _sandboxSvc: SandboxService,
+    protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
     protected _formBuilder: UntypedFormBuilder,
     protected _logger: LoggerService,
@@ -81,7 +82,7 @@ export class SandboxControllerComponent implements OnInit {
     combineLatest([this.code$, this.sources$]).pipe(
       first(),
       map(([code, sources]) => ({ code, sources: sources.map((s) => s.source$) })),
-      map(({ code, sources }) => getFunctionResult(code, sources, this._logger)),
+      map(({ code, sources }) => this._executorSvc.getFunctionResult(code, sources)),
       map((output$) => this._streamBuilder.outputStream(output$)),
       tap((stream) => this._outputSubject$.next(stream)),
     ).subscribe();
