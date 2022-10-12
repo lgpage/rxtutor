@@ -1,7 +1,9 @@
 # TODO
 
-* Update to use Typed controls (UntypedFormBuilder -> FormBuilder)
 * Add dark vs light theme and persist via browser storage
+* Test different examples and inputs
+  * Compare to RxJs marbles
+  * Create integration tests for the examples
 * Add additional examples
 * Rework stream
   * Update to use types more similar to RxJs
@@ -13,9 +15,6 @@
     * Create visual for offsets like 20ms and add frame no
     * FrameTimeFactor = 1
   * Rename stream to something else
-* Test different examples and inputs
-  * Compare to RxJs marbles
-  * Create integration tests for the examples
 * Tweak styling if needed
 * Add google analytics
 * Publish & make public

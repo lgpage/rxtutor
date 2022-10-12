@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
-import { UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 
@@ -27,11 +27,13 @@ export const distribute = (start: number, stop: number, num: number): number[] =
   return result;
 }
 
-export const getFormValue = <T = string>(key: string, formGroup: UntypedFormGroup): Observable<T> => {
+export const getFormValue = <TValue = string, TControl extends { [K in keyof TControl]: AbstractControl<any> } = any>(
+  key: string,
+  formGroup: FormGroup<TControl>
+): Observable<TValue> => {
   return formGroup.get(key).valueChanges.pipe(
     startWith(formGroup.get(key).value),
     distinctUntilChanged(),
-    map((x) => x as T),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 }
