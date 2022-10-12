@@ -1,6 +1,5 @@
 # TODO
 
-* Add dark vs light theme and persist via browser storage
 * Test different examples and inputs
   * Compare to RxJs marbles
   * Create integration tests for the examples
@@ -16,6 +15,7 @@
     * FrameTimeFactor = 1
   * Rename stream to something else
 * Tweak styling if needed
+  * Review primary, secondary, and warn colors
 * Add google analytics
 * Publish & make public
 

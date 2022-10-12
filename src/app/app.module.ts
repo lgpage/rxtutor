@@ -10,7 +10,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +36,9 @@ import { exampleProviders } from './examples';
     MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
+    MatToolbarModule,
     MatTooltipModule,
     ReactiveFormsModule,
   ],
