@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "Angular.ng-template",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "jock.svg",
+    "mike-co.import-sorter",
+    "streetsidesoftware.code-spell-checker",
+  ]
+}
