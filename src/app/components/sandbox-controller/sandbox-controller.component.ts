@@ -1,10 +1,12 @@
 import { BehaviorSubject, combineLatest, merge } from 'rxjs';
 import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, Stream } from '../../core';
 import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } from '../../services';
+
+export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
 @Component({
   selector: 'app-sandbox-controller',
@@ -14,6 +16,7 @@ import { ExecutorService, LoggerService, SandboxService, StreamBuilderService } 
 @UntilDestroy()
 export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
+  protected _maxSources = 3;
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>(null);
   protected _outputSubject$ = new BehaviorSubject<Stream>(null);
 
@@ -31,13 +34,31 @@ export class SandboxControllerComponent implements OnInit {
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   code$ = getFormValue('code', this.formGroup);
 
+  numberOfSources$ = this.sources$.pipe(
+    map((sources) => sources?.length ?? 0),
+    distinctUntilChanged(),
+  );
+
+  canRemoveSource$ = this.numberOfSources$.pipe(
+    map((x) => x > 1),
+    distinctUntilChanged(),
+  );
+
+  canAddSource$ = this.numberOfSources$.pipe(
+    map((x) => x < this._maxSources),
+    distinctUntilChanged(),
+  );
+
   constructor(
+    @Inject(MAX_SOURCES) @Optional() maxSources: number | undefined,
     protected _sandboxSvc: SandboxService,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
     protected _formBuilder: FormBuilder,
     protected _logger: LoggerService,
-  ) { }
+  ) {
+    this._maxSources = maxSources ?? this._maxSources;
+  }
 
   protected handleSandboxServiceChanges(): void {
     this._sandboxSvc.exampleToRender$.pipe(

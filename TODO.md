@@ -1,6 +1,5 @@
 # TODO
 
-* Limit the number of sources to min 1 and max 3
 * Add dark vs light theme and persist via browser storage
 * Test different examples and inputs
   * Compare to RxJs marbles
