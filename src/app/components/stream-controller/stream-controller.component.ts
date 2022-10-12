@@ -1,7 +1,8 @@
-import { combineLatest, merge, Observable } from 'rxjs';
+import { combineLatest, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip, tap, withLatestFrom } from 'rxjs/operators';
+import { LoggerService } from 'src/app/services';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, range } from '../../core/helpers';
 import { StreamBuilderService } from '../../services/stream.builder';
@@ -15,6 +16,13 @@ interface StreamUpdate {
   terminateIndex: number;
 }
 
+interface StreamFormControls {
+  size: FormControl<number>;
+  start: FormControl<string>;
+  type: FormControl<string>;
+  complete: FormControl<CompleteType>;
+}
+
 @Component({
   selector: 'app-stream-controller',
   templateUrl: './stream-controller.component.html',
@@ -25,17 +33,17 @@ interface StreamUpdate {
 export class StreamControllerComponent implements OnInit {
   @Input() stream = this._streamBuilder.inputStream([2, 5, 8], 10);
 
-  formGroup = this._formBuilder.group({
-    size: [3, Validators.required],
-    start: ['1', Validators.required],
-    type: ['numeric', Validators.required],
-    complete: ['complete', Validators.required],
+  formGroup = this._formBuilder.group<StreamFormControls>({
+    size: this._formBuilder.control(3, Validators.required),
+    start: this._formBuilder.control('1', Validators.required),
+    type: this._formBuilder.control('numeric', Validators.required),
+    complete: this._formBuilder.control('complete', Validators.required),
   });
 
-  size$ = this.getFormValue<number>('size');
-  start$ = this.getFormValue('start');
-  type$ = this.getFormValue('type');
-  complete$ = this.getFormValue<CompleteType>('complete');
+  size$ = getFormValue<number>('size', this.formGroup);
+  start$ = getFormValue('start', this.formGroup);
+  type$ = getFormValue('type', this.formGroup);
+  complete$ = getFormValue<CompleteType>('complete', this.formGroup);
 
   startOptions$ = this.type$.pipe(
     withLatestFrom(this.size$),
@@ -49,13 +57,10 @@ export class StreamControllerComponent implements OnInit {
   );
 
   constructor(
-    protected _formBuilder: UntypedFormBuilder,
     protected _streamBuilder: StreamBuilderService,
+    protected _formBuilder: FormBuilder,
+    protected _logger: LoggerService,
   ) { }
-
-  protected getFormValue<T = string>(key: string): Observable<T> {
-    return getFormValue<T>(key, this.formGroup);
-  }
 
   protected handleFormControlChanges(): void {
     const sizeChange$ = this.size$.pipe(

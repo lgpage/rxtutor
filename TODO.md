@@ -1,7 +1,5 @@
 # TODO
 
-* Update to use Typed controls (UntypedFormBuilder -> FormBuilder)
-* Limit the number of sources to min 1 and max 3
 * Test different examples and inputs
   * Compare to RxJs marbles
   * Create integration tests for the examples
@@ -16,9 +14,6 @@
     * Create visual for offsets like 20ms and add frame no
     * FrameTimeFactor = 1
   * Rename stream to something else
-* Test different examples and inputs
-  * Compare to RxJs marbles
-  * Create integration tests for the examples
 * Tweak styling if needed
   * Review primary, secondary, and warn colors
 * Add google analytics
