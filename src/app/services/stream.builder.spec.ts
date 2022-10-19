@@ -1,7 +1,7 @@
 import { cold } from 'jasmine-marbles';
 import { TestScheduler } from 'rxjs/testing';
 import { TestBed } from '@angular/core/testing';
-import { StreamBuilderService } from './stream.builder';
+import { STREAM_CONFIG, StreamBuilderService } from './stream.builder';
 
 describe('StreamBuilder', () => {
   let testScheduler: TestScheduler;
@@ -12,7 +12,11 @@ describe('StreamBuilder', () => {
       expect(actual).toEqual(expected);
     });
 
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: STREAM_CONFIG, useValue: { dx: 10, dy: 10, offset: 5, frames: 10 } }
+      ]
+    });
 
     service = TestBed.inject(StreamBuilderService);
   });

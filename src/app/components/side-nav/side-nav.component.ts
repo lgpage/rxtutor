@@ -31,7 +31,7 @@ export class SideNavComponent implements OnInit {
     other: { section: 'Other', sequence: 7 },
   };
 
-  groupedExamples: SideNavExamples[];
+  groupedExamples: SideNavExamples[] | undefined;
 
   constructor(
     @Inject(EXAMPLE) protected _examples: Example[],
@@ -47,7 +47,7 @@ export class SideNavComponent implements OnInit {
     const sections = Object.keys(grouped) as ExampleSection[];
     sections.sort((a, b) => this._sectionTitles[a].sequence - this._sectionTitles[b].sequence);
 
-    return sections.map((section) => ({ section: this._sectionTitles[section].section, examples: grouped[section] }));
+    return sections.map((section) => ({ section: this._sectionTitles[section].section, examples: grouped[section]! }));
   }
 
   ngOnInit(): void {

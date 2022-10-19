@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,8 +19,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AppComponent } from './app.component';
-import { SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent } from './components';
+import {
+  SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent, StreamOptionsComponent,
+} from './components';
 import { exampleProviders } from './examples';
+import { STREAM_CONFIG } from './services';
+import { StreamConfig } from './types';
+
+const DEFAULT_STREAM_CONFIG: StreamConfig = {
+  dx: 10,
+  dy: 10,
+  offset: 3,
+  frames: 15,
+}
 
 @NgModule({
   imports: [
@@ -28,6 +40,7 @@ import { exampleProviders } from './examples';
     CodemirrorModule,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
@@ -44,13 +57,15 @@ import { exampleProviders } from './examples';
   ],
   declarations: [
     AppComponent,
+    SandboxControllerComponent,
+    SideNavComponent,
     StreamComponent,
     StreamControllerComponent,
-    SideNavComponent,
-    SandboxControllerComponent,
+    StreamOptionsComponent,
   ],
   providers: [
     ...exampleProviders,
+    { provide: STREAM_CONFIG, useValue: DEFAULT_STREAM_CONFIG },
   ],
   bootstrap: [AppComponent]
 })

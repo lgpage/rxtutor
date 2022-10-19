@@ -26,3 +26,10 @@ export interface FrameNotification<T = any> {
   frame: number;
   notification: Notification<T>;
 }
+
+export interface StreamConfig {
+  dx: number;
+  dy: number;
+  offset: number;
+  frames: number;
+}

@@ -1,56 +1,29 @@
-<app-stream [stream]="stream"></app-stream>
-
-<div class="row">
-  <div class="col">
-    <form [formGroup]="formGroup">
-      <div class="row">
-        <div class="col-3">
-          <mat-form-field>
-            <mat-select required formControlName="size">
-              <mat-option [value]="i" *ngFor="let i of range(10)">
-                {{ i }}
-              </mat-option>
-            </mat-select>
-            <mat-label>Nodes</mat-label>
-            <mat-hint>Number of stream nodes</mat-hint>
-          </mat-form-field>
-        </div>
-
-        <div class="col-3">
-          <mat-form-field>
-            <mat-select required formControlName="type">
-              <mat-option value="alpha">Alpha</mat-option>
-              <mat-option value="numeric">Numeric</mat-option>
-            </mat-select>
-            <mat-label>Type</mat-label>
-            <mat-hint>Node value type</mat-hint>
-          </mat-form-field>
-        </div>
-
-        <div class="col-3">
-          <mat-form-field>
-            <mat-select required formControlName="start">
-              <mat-option [value]="s" *ngFor="let s of startOptions$ | async">
-                {{ s }}
-              </mat-option>
-            </mat-select>
-            <mat-label>Start</mat-label>
-            <mat-hint>Node values starts from</mat-hint>
-          </mat-form-field>
-        </div>
-
-        <div class="col-3">
-          <mat-form-field>
-            <mat-select required formControlName="complete">
-              <mat-option value="none">None</mat-option>
-              <mat-option value="complete">Complete</mat-option>
-              <mat-option value="error">Error</mat-option>
-            </mat-select>
-            <mat-label>Terminate</mat-label>
-            <mat-hint>How the stream terminates</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-    </form>
-  </div>
+<app-stream [stream]="stream" class="stream"></app-stream>
+<div class="options">
+  <button
+    mat-icon-button
+    (click)="copyMarblesToClipboard()"
+    aria-label="View marbles"
+  >
+    <mat-icon
+      [matTooltip]="(stream.marbles$ | async)!"
+      matTooltipPosition="after"
+      matTooltipClass="marbles-tooltip"
+    >
+      info
+    </mat-icon>
+  </button>
+  <button mat-icon-button (click)="showOptions()" aria-label="View settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    color="warn"
+    class="remove"
+    aria-label="Remove input stream"
+    (click)="remove()"
+    *ngIf="canRemoveSource$ | async"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
 </div>

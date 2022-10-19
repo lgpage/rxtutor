@@ -1,21 +1,40 @@
-<mat-sidenav-container class="min-vh-100">
-  <mat-sidenav mode="side" opened>
+<mat-sidenav-container
+  class="min-vh-100"
+  [class.is-mobile]="mobileQuery.matches"
+>
+  <mat-sidenav
+    #snav
+    [mode]="mobileQuery.matches ? 'over' : 'side'"
+    [fixedInViewport]="mobileQuery.matches"
+    [opened]="!mobileQuery.matches"
+  >
     <app-side-nav></app-side-nav>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="container">
-      <mat-toolbar>
-        <div><h4>Interactive sandbox for RxJS Observables</h4></div>
-        <div class="ms-auto float-end"></div>
-        <mat-icon>brightness_5</mat-icon>
-        <mat-slide-toggle
-          class="mx-1"
-          [formControl]="darkModeControl"
-        ></mat-slide-toggle>
-        <mat-icon>bedtime</mat-icon>
-      </mat-toolbar>
+    <mat-toolbar>
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div>
+        <h4 *ngIf="!mobileQuery.matches; else shortTitle">
+          Interactive sandbox for RxJS Observables
+        </h4>
+        <ng-template #shortTitle>
+          <h4>Interactive sandbox</h4>
+        </ng-template>
+      </div>
+      <div class="ms-auto float-end"></div>
+      <mat-icon>brightness_5</mat-icon>
+      <mat-slide-toggle
+        class="mx-1"
+        aria-label="Toggle theme"
+        [formControl]="darkModeControl"
+      ></mat-slide-toggle>
+      <mat-icon>bedtime</mat-icon>
+    </mat-toolbar>
 
+    <div class="container">
       <app-sandbox-controller></app-sandbox-controller>
     </div>
   </mat-sidenav-content>

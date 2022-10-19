@@ -17,8 +17,8 @@ export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
   protected _maxSources = 3;
-  protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>(null);
-  protected _outputSubject$ = new BehaviorSubject<Stream>(null);
+  protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>([]);
+  protected _outputSubject$ = new BehaviorSubject<Stream | null>(null);
 
   codeMirrorOptions = {
     lineNumbers: true,
@@ -35,7 +35,7 @@ export class SandboxControllerComponent implements OnInit {
   code$ = getFormValue('code', this.formGroup);
 
   numberOfSources$ = this.sources$.pipe(
-    map((sources) => sources?.length ?? 0),
+    map((sources) => sources.length ?? 0),
     distinctUntilChanged(),
   );
 
@@ -63,8 +63,8 @@ export class SandboxControllerComponent implements OnInit {
   protected handleSandboxServiceChanges(): void {
     this._sandboxSvc.exampleToRender$.pipe(
       tap((example) => {
-        this._sourcesSubject$.next(example.getSources());
-        this.formGroup.get('code').setValue(example.getCode());
+        this._sourcesSubject$.next(example.getInputStreams());
+        this.formGroup.get('code')?.setValue(example.getCode());
       }),
       untilDestroyed(this),
     ).subscribe()
