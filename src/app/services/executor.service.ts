@@ -22,7 +22,7 @@ export class ExecutorService {
     );
   }
 
-  private createCallable(jsCode: string, size: number): Function {
+  private createCallable(jsCode: string, size: number): Function | null {
     const words = ['one$', 'two$', 'three$', 'four$', 'five$', 'six$', 'seven$', 'eight$', 'nine$', 'ten$'];
     const args = ['rx', ...range(size).map((i) => i > 9 ? `source${i}$` : words[i])];
     const callMethod = `return visualize(${args.join(', ')});`;
@@ -37,7 +37,7 @@ export class ExecutorService {
     }
   }
 
-  private invoke(callable: Function, sources: rx.Observable<string>[]): rx.Observable<string> {
+  private invoke(callable: Function | null, sources: rx.Observable<string>[]): rx.Observable<string | null> {
     this._logger.logDebug(`${this._name} >> invoke`, { callable, sources });
 
     if (!callable) {
@@ -57,7 +57,7 @@ export class ExecutorService {
     }
   }
 
-  getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<string> {
+  getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<string | null> {
     return this.invoke(this.createCallable(jsCode, sources.length), sources).pipe(
       rx.tap((result) => this._logger.logDebug(`${this._name} >> getFunctionResult`, { result })),
       rx.shareReplay({ refCount: true, bufferSize: 1 }),

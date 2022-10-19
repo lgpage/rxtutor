@@ -14,7 +14,7 @@ export interface Example {
   name: string;
   section: ExampleSection;
 
-  getSources: () => InputStream[];
+  getInputStreams: () => InputStream[];
   getCode: () => string;
 }
 

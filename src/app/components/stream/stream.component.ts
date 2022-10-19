@@ -1,10 +1,10 @@
-import { first, tap } from 'rxjs/operators';
-import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { STREAM_CONFIG } from 'src/app/services';
+import { StreamConfig } from 'src/app/types';
+import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getBoundedX, InputStream, range, Stream, StreamNode } from '../../core';
+import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
 
-const isInputStream = (stream: Stream | InputStream): stream is InputStream => !!(stream as InputStream)?.correct;
+const isInputStream = (stream: Stream | InputStream | undefined): stream is InputStream => !!(stream as InputStream)?.correct;
 
 @Component({
   selector: 'app-stream',
@@ -12,43 +12,42 @@ const isInputStream = (stream: Stream | InputStream): stream is InputStream => !
   styleUrls: ['./stream.component.scss']
 })
 export class StreamComponent implements OnInit {
-  protected _node: StreamNode = null;
+  protected _node: StreamNode | null = null;
 
-  @Input() stream: Stream | InputStream;
-  @Input() color = "rgb(62, 161, 203)";
+  @Input() stream: Stream | InputStream | undefined;
+  @Input() color: 'primary' | 'accent' = 'accent';
 
-  @ViewChild('svg') svg: ElementRef;
+  @ViewChild('svg') svg: ElementRef | undefined;
 
-  nodeClass: string;
+  nodeClass: string | undefined;
+
+  dx = this._config.dx;
+  dy = this._config.dy;
+  offset = this._config.offset;
+  frames = this._config.frames;
+  radius = roundOff(0.8 * (this.dx / 2), 1);
+  streamLine = (this.frames * this.dx) + (2 * this.offset);
+  viewBox = [0, 3, this.streamLine + 3, 14];
 
   constructor(
-    protected _clipboard: Clipboard,
+    @Inject(STREAM_CONFIG) private _config: StreamConfig,
     protected _snackBar: MatSnackBar,
   ) { }
 
   protected getX(event: PointerEvent): number {
-    const ctm: SVGMatrix = this.svg.nativeElement.getScreenCTM();
+    const ctm: SVGMatrix = this.svg!.nativeElement.getScreenCTM();
     return (event.clientX - ctm.e) / ctm.a;
   }
 
   ngOnInit(): void {
     this.nodeClass = 'node' + (isInputStream(this.stream) ? ' hover' : '');
+    if (isInputStream(this.stream)) {
+      this.viewBox[1] -= 1;  // Adjust for icons
+    }
   }
 
   range(size: number): number[] {
     return range(size);
-  }
-
-  openSnackBar(message: string, action?: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
-  }
-
-  copyMarblesToClipboard(): void {
-    this.stream.marbles$.pipe(
-      first(),
-      tap((marbles) => this._clipboard.copy(marbles)),
-      tap(() => this.openSnackBar('Marbles copied to the clipboard', 'Ok')),
-    ).subscribe();
   }
 
   startDrag(node: StreamNode): void {
@@ -58,7 +57,7 @@ export class StreamComponent implements OnInit {
   drag(event: PointerEvent): void {
     if (!!this._node && isInputStream(this.stream)) {
       event.preventDefault();
-      const x = getBoundedX(this.getX(event));
+      const x = getBoundedX(this.getX(event), this.dx, this.frames, this.offset);
       this.stream.updateNode({ ...this._node, x, index: 99 });
     }
   }

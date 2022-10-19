@@ -19,7 +19,13 @@ module.exports = function (config) {
         // for example, you can disable the random execution with `random: false`
         // or set a specific seed with `seed: 4321`
       },
+      captureConsole: true,
       clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
+    browserConsoleLogOptions: {
+      level: 'warn',
+      format: '%b %T: %m',
+      terminal: true,
     },
     jasmineHtmlReporter: {
       suppressAll: true // removes the duplicated traces
@@ -35,7 +41,7 @@ module.exports = function (config) {
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,

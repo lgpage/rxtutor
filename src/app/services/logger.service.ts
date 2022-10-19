@@ -36,7 +36,7 @@ export class LoggerService {
   }
 
   logTrace(message?: any, ...optionalParams: any[]): void {
-    this.logWith(LogLevel.Trace, console.trace, message, ...optionalParams);
+    this.logWith(LogLevel.Trace, console.debug, message, ...optionalParams);
   }
 
   logDebug(message?: any, ...optionalParams: any[]): void {

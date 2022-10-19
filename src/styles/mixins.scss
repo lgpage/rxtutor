@@ -1,0 +1,35 @@
+@mixin svg-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  svg.stream {
+    g.node {
+      > circle {
+        &.primary {
+          fill: mat-color($primary);
+        }
+
+        &.accent {
+          fill: mat-color($accent);
+        }
+      }
+
+      > line {
+        &.complete {
+          &.primary {
+            stroke: mat-color($accent);
+          }
+
+          &.accent {
+            stroke: mat-color($primary);
+          }
+        }
+
+        &.error {
+          stroke: mat-color($warn);
+        }
+      }
+    }
+  }
+}

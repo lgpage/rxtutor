@@ -1,11 +1,12 @@
 import { MockComponent } from 'ng-mocks';
+import { STREAM_CONFIG } from 'src/app/services';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 import { StreamComponent } from '../stream/stream.component';
 import { StreamControllerComponent } from './stream-controller.component';
 
@@ -16,18 +17,19 @@ describe('StreamControllerComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatFormFieldModule,
+        MatDialogModule,
         MatIconModule,
-        MatSelectModule,
+        MatSnackBarModule,
         MatTooltipModule,
         NoopAnimationsModule,
-        ReactiveFormsModule,
       ],
       declarations: [
         StreamControllerComponent,
         MockComponent(StreamComponent),
+        MockComponent(StreamOptionsComponent),
       ],
       providers: [
+        { provide: STREAM_CONFIG, useValue: { dx: 10, dy: 10, offset: 5, frames: 10 } }
       ]
     }).compileComponents();
   }));

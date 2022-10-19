@@ -12,7 +12,7 @@ export class SandboxExample implements Example {
     protected _streamBuilder: StreamBuilderService,
   ) { }
 
-  getSources(): InputStream[] {
+  getInputStreams(): InputStream[] {
     return [this._streamBuilder.inputStream([2, 5, 8], 10)];
   };
 

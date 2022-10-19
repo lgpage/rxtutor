@@ -1,9 +1,10 @@
 <div class="row">
-  <div class="col-10">
+  <div class="col-12">
     <svg
       #svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 130 20"
+      class="stream"
+      [attr.viewBox]="viewBox.join(' ')"
       (pointermove)="drag($event)"
       (pointerup)="endDrag()"
       (pointerleave)="endDrag()"
@@ -19,36 +20,44 @@
         >
           <polygon points="0 0, 6 2, 0 4" />
         </marker>
+        <filter id="shadow">
+          <feDropShadow
+            dx="0.2"
+            dy="0.4"
+            stdDeviation="0.2"
+            flood-color="black"
+          />
+        </filter>
       </defs>
 
       <line
         x1="0"
-        y1="10"
-        x2="120"
-        y2="10"
+        [attr.y1]="dy"
+        [attr.x2]="streamLine"
+        [attr.y2]="dy"
         stroke="black"
-        stroke-width="1"
+        stroke-width="0.5"
         marker-end="url(#arrowhead)"
       ></line>
 
       <line
-        [attr.x1]="10 * (i + 1)"
-        y1="7"
-        [attr.x2]="10 * (i + 1)"
-        y2="13"
+        [attr.x1]="dx * i + offset"
+        [attr.y1]="dy - 3"
+        [attr.x2]="dx * i + offset"
+        [attr.y2]="dy + 3"
         stroke="black"
         stroke-width="0.3"
         stroke-dasharray="0.5 0.6"
-        *ngFor="let i of range(11)"
+        *ngFor="let i of range(frames + 1)"
       ></line>
 
       <g
-        [attr.transform]="'translate(' + node.x + ', 10)'"
+        [attr.transform]="'translate(' + node.x + ', ' + dy + ')'"
         (pointerdown)="startDrag(node)"
         (pointermove)="drag($event)"
         (pointerup)="endDrag()"
         [class]="nodeClass"
-        *ngFor="let node of stream.nodesToRender$ | async"
+        *ngFor="let node of stream?.nodesToRender$ | async"
       >
         <ng-container
           [ngTemplateOutlet]="
@@ -63,39 +72,44 @@
         <ng-template #completeNode>
           <line
             x1="0"
-            y1="-5"
+            [attr.y1]="-(radius + 0.5)"
             x2="0"
-            y2="5"
+            [attr.y2]="radius + 0.5"
             stroke="blue"
-            stroke-width="1"
+            stroke-width="0.5"
+            class="complete"
+            [ngClass]="color"
           ></line>
         </ng-template>
 
         <ng-template #errorNode>
           <line
             x1="-2"
-            y1="-5"
+            [attr.y1]="-radius"
             x2="2"
-            y2="5"
+            [attr.y2]="radius"
             stroke="red"
-            stroke-width="1"
+            stroke-width="0.5"
+            class="error"
+            [ngClass]="color"
           ></line>
           <line
             x1="-2"
-            y1="5"
+            [attr.y1]="radius"
             x2="2"
-            y2="-5"
+            [attr.y2]="-radius"
             stroke="red"
-            stroke-width="1"
+            stroke-width="0.5"
+            class="error"
+            [ngClass]="color"
           ></line>
         </ng-template>
 
         <ng-template #nextNode>
           <circle
-            r="4.2"
-            [attr.fill]="color"
-            stroke="black"
-            stroke-width="0.3"
+            style="filter: url(#shadow)"
+            [attr.r]="radius"
+            [ngClass]="color"
           ></circle>
           <text text-anchor="middle" y="1" font-size="3.5px">
             {{ node.text }}
@@ -103,16 +117,5 @@
         </ng-template>
       </g>
     </svg>
-  </div>
-  <div class="col-2 align-self-center">
-    <button mat-icon-button (click)="copyMarblesToClipboard()">
-      <mat-icon
-        [matTooltip]="stream.marbles$ | async"
-        matTooltipPosition="after"
-        matTooltipClass="marbles-tooltip"
-      >
-        info
-      </mat-icon>
-    </button>
   </div>
 </div>

@@ -1,14 +1,20 @@
-import { Observable } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
+import { Observable, OperatorFunction } from 'rxjs';
+import { distinctUntilChanged, filter, shareReplay, startWith } from 'rxjs/operators';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 
-export const indexToX = (index: number) => 15 + (10 * index);
-export const xToIndex = (x: number) => Math.round((x - 15) / 10);
+export const indexToX = (index: number, dx: number, offset: number) =>
+  offset + (dx / 2) + (dx * index);
 
-export const getBoundedX = (x: number): number => Math.max(15, Math.min(105, x));
-export const getSnappedX = (x: number): number => getBoundedX(15 + Math.round((x - 15) / 10) * 10);
+export const xToIndex = (x: number, dx: number, offset: number) =>
+  Math.round((x - offset - (dx / 2)) / dx);
+
+export const getBoundedX = (x: number, dx: number, frames: number, offset: number): number =>
+  Math.max(offset + (dx / 2), Math.min((dx * (frames - 1)) + offset + (dx / 2), x));
+
+export const getSnappedX = (x: number, dx: number, frames: number, offset: number): number =>
+  getBoundedX(offset + (dx / 2) + Math.round((x - offset - (dx / 2)) / dx) * dx, dx, frames, offset);
 
 export const linspace = (start: number, stop: number, num: number, endpoint = true): number[] => {
   const size = Math.max(2, num);
@@ -31,9 +37,17 @@ export const getFormValue = <TValue = string, TControl extends { [K in keyof TCo
   key: string,
   formGroup: FormGroup<TControl>
 ): Observable<TValue> => {
-  return formGroup.get(key).valueChanges.pipe(
-    startWith(formGroup.get(key).value),
+  return formGroup.get(key)!.valueChanges.pipe(
+    startWith(formGroup.get(key)!.value),
     distinctUntilChanged(),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
+}
+
+export const filterTruthy = <T>(): OperatorFunction<T, NonNullable<T>> =>
+  filter((x) => !!x) as OperatorFunction<T, NonNullable<T>>;
+
+export const roundOff = (num: number, places: number) => {
+  const x = Math.pow(10, places);
+  return Math.round(num * x) / x;
 }

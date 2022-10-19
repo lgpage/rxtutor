@@ -1,39 +1,41 @@
 <div class="row mt-2" *ngFor="let source of sources$ | async; index as i">
   <div class="col">
     <mat-card class="mat-elevation-z3">
-      <button
-        mat-icon-button
-        color="warn"
-        class="remove"
-        (click)="removeInputStream(i)"
-        *ngIf="canRemoveSource$ | async"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-
-      <app-stream-controller [stream]="source"></app-stream-controller>
+      <app-stream-controller
+        [stream]="source"
+        [canRemoveSource$]="canRemoveSource$"
+        (removeStream)="removeInputStream(i)"
+      ></app-stream-controller>
     </mat-card>
   </div>
 </div>
 
-<div class="row">
-  <div class="col d-flex justify-content-center">
-    <button
-      mat-icon-button
-      matTooltip="Add another input stream"
-      (click)="addInputStream()"
-      *ngIf="canAddSource$ | async"
-    >
-      <mat-icon>add_box</mat-icon>
-    </button>
+<ng-container *ngIf="canAddSource$ | async; else hrule">
+  <div class="row">
+    <div class="col d-flex justify-content-center">
+      <button
+        mat-icon-button
+        matTooltip="Add input stream"
+        aria-label="Add input stream"
+        (click)="addInputStream()"
+      >
+        <mat-icon>add_box</mat-icon>
+      </button>
+    </div>
   </div>
-</div>
 
-<hr class="mt-0" />
+  <hr class="mt-0" />
+</ng-container>
+
+<ng-template #hrule>
+  <hr />
+</ng-template>
 
 <div class="row">
   <div class="col" *ngIf="output$ | async; else visualize; let output">
-    <app-stream [stream]="output"></app-stream>
+    <mat-card class="mat-elevation-z3">
+      <app-stream [stream]="output"></app-stream>
+    </mat-card>
   </div>
 
   <ng-template #visualize>
@@ -41,6 +43,7 @@
       <button
         mat-raised-button
         color="primary"
+        aria-label="Visualize output stream"
         matTooltip="Visualize output stream from code block below"
         (click)="visualizeOutput()"
       >

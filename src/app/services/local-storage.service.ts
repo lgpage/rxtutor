@@ -6,7 +6,7 @@ export class LocalStorageService {
     return localStorage;
   }
 
-  public getValue(key: string, defaultValue?: string): string {
+  public getValue(key: string, defaultValue?: string): string | undefined {
     return this._storage.getItem(key) ?? defaultValue;
   }
 

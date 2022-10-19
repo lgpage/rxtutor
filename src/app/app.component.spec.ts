@@ -1,6 +1,6 @@
 import { MockComponent } from 'ng-mocks';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -19,6 +19,7 @@ describe('AppComponent', () => {
         MatSlideToggleModule,
         MatToolbarModule,
         NoopAnimationsModule,
+        ReactiveFormsModule,
       ],
       declarations: [
         AppComponent,

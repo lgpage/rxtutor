@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InputStream } from '../core/stream';
-import { StreamBuilderService } from '../services/stream.builder';
+import { InputStream } from '../core';
+import { StreamBuilderService } from '../services';
 import { Example, ExampleSection } from '../types';
 
 @Injectable()
@@ -12,10 +12,10 @@ export class CombineLatestExample implements Example {
     protected _streamBuilder: StreamBuilderService,
   ) { }
 
-  getSources(): InputStream[] {
+  getInputStreams(): InputStream[] {
     return [
       this._streamBuilder.inputStream([2, 5, 8], 10),
-      this._streamBuilder.inputStream([2, 5, 8], 10),
+      this._streamBuilder.inputStream([2, 5, 8], 10, null, 'a'),
     ];
   };
 
