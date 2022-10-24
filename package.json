@@ -26,7 +26,7 @@
     "@angular/material": "^14.2.5",
     "@angular/platform-browser": "^14.2.6",
     "@angular/platform-browser-dynamic": "^14.2.6",
-    "@angular/router": "^14.2.6",
+    "@angular/router": "^14.2.7",
     "@ctrl/ngx-codemirror": "^5.1.1",
     "@ngneat/until-destroy": "^9.2.2",
     "bootstrap": "^5.2.2",
