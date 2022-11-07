@@ -33,7 +33,7 @@
     "codemirror": "^5.65.8",
     "github-fork-ribbon-css": "~0.2.3",
     "rxjs": "^7.5.7",
-    "tslib": "^2.4.0",
+    "tslib": "^2.4.1",
     "uuid": "^9.0.0",
     "zone.js": "~0.11.8"
   },
