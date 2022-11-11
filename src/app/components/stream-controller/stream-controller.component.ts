@@ -1,4 +1,5 @@
 import { first, of, tap } from 'rxjs';
+import { Stream } from 'src/app/core';
 import { LoggerService } from 'src/app/services';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
@@ -14,8 +15,9 @@ import { StreamOptionsComponent } from '../stream-options/stream-options.compone
   encapsulation: ViewEncapsulation.None,
 })
 export class StreamControllerComponent {
-  @Input() stream = this._streamBuilder.inputStream([2, 5, 8], 10);
-  @Input() canRemoveSource$ = of(true);
+  @Input() stream: Stream = this._streamBuilder.inputStream([2, 5, 8], 10);
+  @Input() canRemoveSource$ = of(false);
+  @Input() hasOptions$ = of(false);
 
   @Output() removeStream = new EventEmitter<StreamControllerComponent>();
 

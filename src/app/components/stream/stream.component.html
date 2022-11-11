@@ -51,6 +51,16 @@
         *ngFor="let i of range(frames + 1)"
       ></line>
 
+      <text
+        [attr.x]="dx * i + offset + dx / 2"
+        [attr.y]="dy + 3"
+        text-anchor="middle"
+        font-size="2px"
+        *ngFor="let i of range(frames)"
+      >
+        {{ i + 1 }}
+      </text>
+
       <g
         [attr.transform]="'translate(' + node.x + ', ' + dy + ')'"
         (pointerdown)="startDrag(node)"

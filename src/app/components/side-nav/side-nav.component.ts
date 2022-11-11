@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { SandboxService } from '../../services';
 import { Example, EXAMPLE, ExampleSection } from '../../types';
 
@@ -31,6 +31,8 @@ export class SideNavComponent implements OnInit {
     other: { section: 'Other', sequence: 7 },
   };
 
+  @Output() selectedOption = new EventEmitter<Example>();
+
   groupedExamples: SideNavExamples[] | undefined;
 
   constructor(
@@ -55,6 +57,7 @@ export class SideNavComponent implements OnInit {
   }
 
   renderExample(example: Example): void {
+    this.selectedOption.next(example);
     this._sandboxSvc.renderExample(example);
   }
 }
