@@ -1,14 +1,17 @@
 # TODO
 
-* Add frame number
-* Add checks to exclude delays, debounceTime, etc usage
-* Add checking / conversions to ensure output observable type is a string and / or max 2 chars
-  * Drive with unit tests on stream.spec.ts
-
 * Add FAQ
   * Add initial FAQ page
   * Grouping and virtual time advancement
   * Why no delay, debounceTime, etc.
+
+* Add checks to exclude delays, debounceTime, etc usage
+* Add checking / conversions to ensure output observable type is a string and / or max 2 chars
+  * Figure out payload / node display vs node value
+  * Drive with unit tests on stream.spec.ts
+
+* Adjust max chunks for small devices
+* Mobile -> fix moving svg nodes
 
 * Fix output stream
   * Make output update with the change to input nodes
@@ -16,12 +19,12 @@
   * Fix bug
     * visualize -> make no real change -> visualize
 
-* Adjust max chunks for small devices (maybe)
-
-* Add all additional examples
+* Add additional examples
 * Review lighthouse output
 * Add google analytics
+* Update README, LICENSE, etc.
 * Publish & make public
+* Test and bugfixes
 
 ## Future
 

@@ -34,7 +34,7 @@
 <div class="row">
   <div class="col" *ngIf="output$ | async; else visualize; let output">
     <mat-card class="mat-elevation-z3">
-      <app-stream [stream]="output"></app-stream>
+      <app-stream-controller [stream]="output"></app-stream-controller>
     </mat-card>
   </div>
 

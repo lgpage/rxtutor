@@ -8,7 +8,9 @@
     [fixedInViewport]="mobileQuery.matches"
     [opened]="!mobileQuery.matches"
   >
-    <app-side-nav></app-side-nav>
+    <app-side-nav
+      (selectedOption)="mobileQuery.matches && snav.close()"
+    ></app-side-nav>
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -21,7 +23,7 @@
           Interactive sandbox for RxJS Observables
         </h4>
         <ng-template #shortTitle>
-          <h4>Interactive sandbox</h4>
+          <h4>RxJS sandbox</h4>
         </ng-template>
       </div>
       <div class="ms-auto float-end"></div>

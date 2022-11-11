@@ -27,7 +27,7 @@ export class StreamComponent implements OnInit {
   frames = this._config.frames;
   radius = roundOff(0.8 * (this.dx / 2), 1);
   streamLine = (this.frames * this.dx) + (2 * this.offset);
-  viewBox = [0, 3, this.streamLine + 3, 14];
+  viewBox = [0, 2, this.streamLine + 3, 15];
 
   constructor(
     @Inject(STREAM_CONFIG) private _config: StreamConfig,
@@ -41,9 +41,6 @@ export class StreamComponent implements OnInit {
 
   ngOnInit(): void {
     this.nodeClass = 'node' + (isInputStream(this.stream) ? ' hover' : '');
-    if (isInputStream(this.stream)) {
-      this.viewBox[1] -= 1;  // Adjust for icons
-    }
   }
 
   range(size: number): number[] {

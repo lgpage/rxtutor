@@ -13,7 +13,12 @@
       info
     </mat-icon>
   </button>
-  <button mat-icon-button (click)="showOptions()" aria-label="View settings">
+  <button
+    mat-icon-button
+    (click)="showOptions()"
+    aria-label="View settings"
+    *ngIf="hasOptions$ | async"
+  >
     <mat-icon>settings</mat-icon>
   </button>
   <button
