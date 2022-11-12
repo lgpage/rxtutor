@@ -1,0 +1,37 @@
+<div class="pt-4">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Why aren't the marbles for grouped values the same as RxJS marbles?
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>
+        RxJS Tutor opts to visualize grouped values in a single frame, whereas
+        RxJS marbles (for testing) opts to advance the virtual time by the
+        number of ASCII characters in the group.
+      </p>
+      <p>
+        From the
+        <a
+          href="https://github.com/ReactiveX/rxjs/blob/master/docs_app/content/guide/testing/marble-testing.md#marble-syntax"
+          target="_blank"
+        >
+          RxJS docs
+        </a>
+        :
+      </p>
+      <blockquote>
+        While it can be unintuitive at first, after all the values have
+        synchronously emitted time will progress a number of frames equal to the
+        number of ASCII characters in the group, including the parentheses. e.g.
+        <code>'(abc)'</code>
+        will emit the values of a, b, and c synchronously in the same frame and
+        then advance virtual time by 5 frames,
+        <code>'(abc)'.length === 5</code>
+        . This is done because it often helps you vertically align your marble
+        diagrams, but it's a known pain point in real-world testing.
+      </blockquote>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

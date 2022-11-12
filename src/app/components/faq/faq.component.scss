@@ -1,0 +1,17 @@
+blockquote {
+  position: relative;
+  margin: 0 1em 1em 1em;
+  padding: 0.8em 0.8em 0.8em 1em;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    border-radius: 1px;
+    background: #212121;
+  }
+}

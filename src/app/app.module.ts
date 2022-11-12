@@ -17,12 +17,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { AppComponent } from './app.component';
 import {
-  SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent, StreamOptionsComponent,
+  FaqComponent, SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent,
+  StreamOptionsComponent,
 } from './components';
 import { exampleProviders } from './examples';
+import { routes } from './routes';
 import { STREAM_CONFIG } from './services';
 import { StreamConfig } from './types';
 
@@ -38,6 +41,7 @@ const DEFAULT_STREAM_CONFIG: StreamConfig = {
     BrowserAnimationsModule,
     BrowserModule,
     CodemirrorModule,
+    RouterModule.forRoot(routes),
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
@@ -57,6 +61,7 @@ const DEFAULT_STREAM_CONFIG: StreamConfig = {
   ],
   declarations: [
     AppComponent,
+    FaqComponent,
     SandboxControllerComponent,
     SideNavComponent,
     StreamComponent,

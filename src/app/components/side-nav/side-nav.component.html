@@ -1,4 +1,4 @@
-<h1 class="p-2">RxJS Tutor</h1>
+<h2 class="p-2 text-center hover" (click)="goToHome()">RxJS Tutor</h2>
 
 <mat-accordion>
   <mat-expansion-panel *ngFor="let group of groupedExamples">
@@ -16,6 +16,10 @@
     </button>
   </mat-expansion-panel>
 </mat-accordion>
+
+<hr />
+
+<button mat-button class="w-100" (click)="goToFAQ()">FAQ</button>
 
 <a
   class="github-fork-ribbon left-bottom fixed"

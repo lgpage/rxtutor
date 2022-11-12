@@ -1,13 +1,7 @@
 # TODO
 
-* Add FAQ
-  * Add initial FAQ page
-  * Grouping and virtual time advancement
-  * Why no delay, debounceTime, etc.
-
-* Add checks to exclude delays, debounceTime, etc usage
+* Figure out payload / node display vs node value
 * Add checking / conversions to ensure output observable type is a string and / or max 2 chars
-  * Figure out payload / node display vs node value
   * Drive with unit tests on stream.spec.ts
 
 * Adjust max chunks for small devices
@@ -21,10 +15,16 @@
 
 * Add additional examples
 * Review lighthouse output
-* Add google analytics
 * Update README, LICENSE, etc.
-* Publish & make public
+* Add Azure analytics
+* Publish (Azure) & make public
 * Test and bugfixes
+
+## Testing
+
+* Delay / throttle time / debounce time, etc
+  * Add checks to exclude if it doesn't work
+  * Update FAQ if it doesn't work
 
 ## Future
 
