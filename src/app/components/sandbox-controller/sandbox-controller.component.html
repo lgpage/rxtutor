@@ -3,6 +3,7 @@
     <mat-card class="mat-elevation-z3">
       <app-stream-controller
         [stream]="source"
+        [hasOptions$]="hasOptions$"
         [canRemoveSource$]="canRemoveSource$"
         (removeStream)="removeInputStream(i)"
       ></app-stream-controller>

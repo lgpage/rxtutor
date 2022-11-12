@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +19,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js';
 import { AppComponent } from './app.component';
 import {
   FaqComponent, SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent,
@@ -71,6 +72,7 @@ const DEFAULT_STREAM_CONFIG: StreamConfig = {
   providers: [
     ...exampleProviders,
     { provide: STREAM_CONFIG, useValue: DEFAULT_STREAM_CONFIG },
+    { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
   ],
   bootstrap: [AppComponent]
 })

@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
-import { ExecutorService, STREAM_CONFIG } from '../../services';
+import { ExecutorService, InsightsService, STREAM_CONFIG } from '../../services';
 import { Example, EXAMPLE, ExampleSection, START_EXAMPLE } from '../../types';
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
@@ -40,6 +40,7 @@ describe('SandboxControllerComponent', () => {
         { provide: EXAMPLE, useClass: MockExample, multi: true },
         { provide: STREAM_CONFIG, useValue: { dx: 10, dy: 10, offset: 5, frames: 10 } },
         { provide: ExecutorService, useValue: MockService(ExecutorService) },
+        { provide: InsightsService, useValue: MockService(InsightsService) },
       ]
     }).compileComponents();
   }));

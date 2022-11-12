@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InputStream } from '../core/stream';
-import { StreamBuilderService } from '../services/stream.builder';
+import { InputStream } from '../core';
+import { StreamBuilderService } from '../services';
 import { Example, ExampleSection } from '../types';
 
 @Injectable()

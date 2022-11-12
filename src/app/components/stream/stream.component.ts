@@ -1,8 +1,8 @@
-import { STREAM_CONFIG } from 'src/app/services';
-import { StreamConfig } from 'src/app/types';
 import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
+import { STREAM_CONFIG } from '../../services';
+import { StreamConfig } from '../../types';
 
 const isInputStream = (stream: Stream | InputStream | undefined): stream is InputStream => !!(stream as InputStream)?.correct;
 

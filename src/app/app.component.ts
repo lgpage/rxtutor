@@ -3,8 +3,9 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, NonNullableFormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { LocalStorageService } from './services';
+import { InsightsService, LocalStorageService } from './services';
 
 type Theme = 'light' | 'dark';
 
@@ -26,12 +27,16 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    protected _router: Router,
     protected _mediaMatcher: MediaMatcher,
     protected _overlayContainer: OverlayContainer,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _storageSvc: LocalStorageService,
     protected _formBuilder: NonNullableFormBuilder,
+    protected _insightsSvc: InsightsService,
   ) {
+    this._insightsSvc.init(this._router);
+
     this._mobileQueryListener = () => this._changeDetectorRef.detectChanges();
     this.mobileQuery = this._mediaMatcher.matchMedia('(max-width: 600px)');
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);

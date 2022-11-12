@@ -1,11 +1,10 @@
 import { first, of, tap } from 'rxjs';
-import { Stream } from 'src/app/core';
-import { LoggerService } from 'src/app/services';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StreamBuilderService } from '../../services/stream.builder';
+import { Stream } from '../../core';
+import { InsightsService, LoggerService, StreamBuilderService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 
 @Component({
@@ -26,6 +25,7 @@ export class StreamControllerComponent {
     protected _clipboard: Clipboard,
     protected _snackBar: MatSnackBar,
     protected _dialog: MatDialog,
+    protected _insightsSvc: InsightsService,
     protected _logger: LoggerService,
   ) { }
 
@@ -42,7 +42,13 @@ export class StreamControllerComponent {
   }
 
   showOptions(): void {
-    this._dialog.open(StreamOptionsComponent, { data: { stream: this.stream } });
+    this._insightsSvc.startTrackPage('Stream Options');
+    const dialog = this._dialog.open(StreamOptionsComponent, { data: { stream: this.stream } });
+
+    dialog.afterClosed().pipe(
+      first(),
+      tap(() => this._insightsSvc.stopTrackPage('Stream Options')),
+    ).subscribe();
   }
 
   remove(): void {
