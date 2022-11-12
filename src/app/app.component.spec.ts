@@ -1,4 +1,4 @@
-import { MockComponent } from 'ng-mocks';
+import { MockComponent, MockService } from 'ng-mocks';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SandboxControllerComponent } from './components/sandbox-controller/sandbox-controller.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
+import { InsightsService } from './services';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -30,6 +31,7 @@ describe('AppComponent', () => {
       ],
       providers: [
         FormBuilder,
+        { provide: InsightsService, useValue: MockService(InsightsService) },
       ]
     }).compileComponents();
   }));

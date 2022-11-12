@@ -2,8 +2,7 @@ import { Observable } from 'rxjs';
 import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { distribute, indexToX } from '../core/helpers';
-import { InputStream, Stream, StreamNode } from '../core/stream';
+import { distribute, indexToX, InputStream, Stream, StreamNode } from '../core';
 import { LoggerService } from '../services';
 import { StreamConfig } from '../types';
 

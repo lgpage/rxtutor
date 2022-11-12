@@ -16,7 +16,6 @@
 * Add additional examples
 * Review lighthouse output
 * Update README, LICENSE, etc.
-* Add Azure analytics
 * Publish (Azure) & make public
 * Test and bugfixes
 

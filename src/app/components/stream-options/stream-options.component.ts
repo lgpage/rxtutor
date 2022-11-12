@@ -1,13 +1,11 @@
 import { combineLatest, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip, tap, withLatestFrom } from 'rxjs/operators';
-import { InputStream } from 'src/app/core';
-import { LoggerService } from 'src/app/services';
 import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, range } from '../../core/helpers';
-import { StreamBuilderService } from '../../services/stream.builder';
+import { getFormValue, InputStream, range } from '../../core';
+import { LoggerService, StreamBuilderService } from '../../services';
 
 type CompleteType = 'none' | 'complete' | 'error';
 

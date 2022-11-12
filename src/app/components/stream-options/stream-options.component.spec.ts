@@ -1,10 +1,10 @@
-import { STREAM_CONFIG } from 'src/app/services';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { STREAM_CONFIG } from '../../services';
 import { StreamOptionsComponent } from './stream-options.component';
 
 describe('StreamOptionsComponent', () => {

@@ -4,7 +4,7 @@
     <div class="col">
       <form [formGroup]="formGroup">
         <div class="row">
-          <div class="col-6">
+          <div class="col-md-6 col">
             <mat-form-field class="w-100">
               <mat-select required formControlName="size">
                 <mat-option [value]="i" *ngFor="let i of range(10)">
@@ -16,8 +16,8 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6">
-            <mat-form-field class="w-100">
+          <div class="col-md-6 col">
+            <mat-form-field class="w-100 pt-md-0 pt-4">
               <mat-select required formControlName="type">
                 <mat-option value="alpha">Alpha</mat-option>
                 <mat-option value="numeric">Numeric</mat-option>
@@ -27,7 +27,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6">
+          <div class="col-md-6 col">
             <mat-form-field class="w-100 pt-4">
               <mat-select required formControlName="start">
                 <mat-option [value]="s" *ngFor="let s of startOptions$ | async">
@@ -39,7 +39,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6">
+          <div class="col-md-6 col">
             <mat-form-field class="w-100 pt-4">
               <mat-select required formControlName="complete">
                 <mat-option value="none">None</mat-option>
