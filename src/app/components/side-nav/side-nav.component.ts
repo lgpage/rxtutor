@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { SandboxService } from '../../services';
 import { Example, EXAMPLE, ExampleSection } from '../../types';
 
@@ -31,13 +32,14 @@ export class SideNavComponent implements OnInit {
     other: { section: 'Other', sequence: 7 },
   };
 
-  @Output() selectedOption = new EventEmitter<Example>();
+  @Output() selectedOption = new EventEmitter<Example | 'FAQ' | 'Home'>();
 
   groupedExamples: SideNavExamples[] | undefined;
 
   constructor(
     @Inject(EXAMPLE) protected _examples: Example[],
     protected _sandboxSvc: SandboxService,
+    protected _router: Router,
   ) { }
 
   protected groupExamples(): SideNavExamples[] {
@@ -59,5 +61,16 @@ export class SideNavComponent implements OnInit {
   renderExample(example: Example): void {
     this.selectedOption.next(example);
     this._sandboxSvc.renderExample(example);
+    this._router.navigate(['/']);
+  }
+
+  goToHome(): void {
+    this.selectedOption.next('Home');
+    this._router.navigate(['/']);
+  }
+
+  goToFAQ(): void {
+    this.selectedOption.next('FAQ');
+    this._router.navigate(['/faq']);
   }
 }
