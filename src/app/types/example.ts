@@ -13,6 +13,7 @@ export type ExampleSection = 'creation'
 export interface Example {
   name: string;
   section: ExampleSection;
+  links?: { label: string; url: string }[];
 
   getInputStreams: () => InputStream[];
   getCode: () => string;

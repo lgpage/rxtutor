@@ -19,8 +19,10 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   protected _name = 'SandboxControllerComponent';
   protected _maxSources = 3;
   protected _currentExample: Example | undefined;
+
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>([]);
   protected _outputSubject$ = new BehaviorSubject<Stream | null>(null);
+  protected _linksSubject$ = new BehaviorSubject<{ label: string; url: string }[] | undefined>([]);
 
   codeMirrorOptions = {
     lineNumbers: true,
@@ -35,6 +37,7 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged())
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   code$ = getFormValue('code', this.formGroup);
+  links$ = this._linksSubject$.asObservable();
 
   numberOfSources$ = this.sources$.pipe(
     map((sources) => sources.length ?? 0),
@@ -75,6 +78,7 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
         this._currentExample = example;
         this._insightsSvc.startTrackPage(`${this._currentExample.name} Example`);
 
+        this._linksSubject$.next(example.links);
         this._sourcesSubject$.next(example.getInputStreams());
         this.formGroup.get('code')?.setValue(example.getCode());
       }),

@@ -66,3 +66,17 @@
     </form>
   </div>
 </div>
+
+<ng-container *ngIf="links$ | async; let links">
+  <hr />
+  <div class="row mt-2 resources">
+    <div class="col">
+      Resources:
+      <ul>
+        <li *ngFor="let link of links">
+          <a [href]="link.url" target="_blank">{{ link.label }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>
