@@ -7,6 +7,10 @@ import { Example, ExampleSection } from '../types';
 export class MergeMapExample implements Example {
   name = 'mergeMap';
   section: ExampleSection = 'transformation';
+  links = [
+    { label: 'Learn RxJS', url: 'https://www.learnrxjs.io/learn-rxjs/operators/transformation/mergemap' },
+    { label: 'RxJS API', url: 'https://rxjs.dev/api/index/function/mergeMap' },
+  ];
 
   constructor(
     protected _streamBuilder: StreamBuilderService,

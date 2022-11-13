@@ -7,6 +7,10 @@ import { Example, ExampleSection } from '../types';
 export class CombineLatestExample implements Example {
   name = 'combineLatest';
   section: ExampleSection = 'combination';
+  links = [
+    { label: 'Learn RxJS', url: 'https://www.learnrxjs.io/learn-rxjs/operators/combination/combinelatest' },
+    { label: 'RxJS API', url: 'https://rxjs.dev/api/index/function/combineLatest' },
+  ];
 
   constructor(
     protected _streamBuilder: StreamBuilderService,
