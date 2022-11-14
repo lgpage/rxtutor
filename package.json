@@ -32,7 +32,7 @@
     "@microsoft/applicationinsights-web": "^2.8.9",
     "@ngneat/until-destroy": "^9.2.2",
     "bootstrap": "^5.2.2",
-    "codemirror": "^5.65.8",
+    "codemirror": "^6.0.1",
     "github-fork-ribbon-css": "~0.2.3",
     "rxjs": "^7.5.7",
     "tslib": "^2.4.1",
