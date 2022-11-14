@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { SandboxService } from '../../services';
 import { Example, EXAMPLE, ExampleSection } from '../../types';
 
 type GroupedExamples = Partial<{
@@ -32,13 +31,12 @@ export class SideNavComponent implements OnInit {
     other: { section: 'Other', sequence: 7 },
   };
 
-  @Output() selectedOption = new EventEmitter<Example | 'FAQ' | 'Home'>();
+  @Output() selectedRoute = new EventEmitter<string>();
 
   groupedExamples: SideNavExamples[] | undefined;
 
   constructor(
     @Inject(EXAMPLE) protected _examples: Example[],
-    protected _sandboxSvc: SandboxService,
     protected _router: Router,
   ) { }
 
@@ -54,23 +52,24 @@ export class SideNavComponent implements OnInit {
     return sections.map((section) => ({ section: this._sectionTitles[section].section, examples: grouped[section]! }));
   }
 
+  protected navigate(route: string): void {
+    this.selectedRoute.next(route);
+    this._router.navigate([route]);
+  }
+
   ngOnInit(): void {
     this.groupedExamples = this.groupExamples();
   }
 
-  renderExample(example: Example): void {
-    this.selectedOption.next(example);
-    this._sandboxSvc.renderExample(example);
-    this._router.navigate(['/']);
+  goToHome(): void {
+    this.navigate('/');
   }
 
-  goToHome(): void {
-    this.selectedOption.next('Home');
-    this._router.navigate(['/']);
+  goToExample(example: Example): void {
+    this.navigate(`/${example.name}`);
   }
 
   goToFAQ(): void {
-    this.selectedOption.next('FAQ');
-    this._router.navigate(['/faq']);
+    this.navigate('/faq');
   }
 }

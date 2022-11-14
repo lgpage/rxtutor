@@ -1,11 +1,12 @@
 import { BehaviorSubject, combineLatest, merge, of } from 'rxjs';
 import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
-import { Component, Inject, InjectionToken, OnDestroy, OnInit, Optional } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, Stream } from '../../core';
-import { ExecutorService, InsightsService, LoggerService, SandboxService, StreamBuilderService } from '../../services';
-import { Example } from '../../types';
+import { ExecutorService, LoggerService, StreamBuilderService } from '../../services';
+import { EXAMPLE, Example, START_EXAMPLE } from '../../types';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
@@ -15,10 +16,9 @@ export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
   styleUrls: ['./sandbox-controller.component.scss']
 })
 @UntilDestroy()
-export class SandboxControllerComponent implements OnInit, OnDestroy {
+export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
   protected _maxSources = 3;
-  protected _currentExample: Example | undefined;
 
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>([]);
   protected _outputSubject$ = new BehaviorSubject<Stream | null>(null);
@@ -57,27 +57,28 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   );
 
   constructor(
+    @Inject(EXAMPLE) protected _examples: Example[],
+    @Inject(START_EXAMPLE) protected _startExample: Example,
     @Inject(MAX_SOURCES) @Optional() maxSources: number | undefined,
-    protected _sandboxSvc: SandboxService,
+    protected _route: ActivatedRoute,
+    protected _formBuilder: FormBuilder,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
-    protected _formBuilder: FormBuilder,
-    protected _insightsSvc: InsightsService,
     protected _logger: LoggerService,
   ) {
     this._maxSources = maxSources ?? this._maxSources;
   }
 
-  protected handleSandboxServiceChanges(): void {
-    this._sandboxSvc.exampleToRender$.pipe(
+  protected renderExample(): void {
+    const examples = this._examples.reduce((p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample });
+
+    const exampleToRender$ = this._route.paramMap.pipe(
+      map((params) => params.get('exampleName') ?? this._startExample.name),
+      map((name) => examples[name]),
+    );
+
+    exampleToRender$.pipe(
       tap((example) => {
-        if (this._currentExample) {
-          this._insightsSvc.stopTrackPage(`${this._currentExample.name} Example`);
-        }
-
-        this._currentExample = example;
-        this._insightsSvc.startTrackPage(`${this._currentExample.name} Example`);
-
         this._linksSubject$.next(example.links);
         this._sourcesSubject$.next(example.getInputStreams());
         this.formGroup.get('code')?.setValue(example.getCode());
@@ -89,12 +90,13 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
   protected handleInputChanges(): void {
     merge(this.code$, this.sources$).pipe(
       tap(() => this._outputSubject$.next(null)),
+      untilDestroyed(this),
     ).subscribe();
   }
 
   ngOnInit(): void {
+    this.renderExample();
     this.handleInputChanges();
-    this.handleSandboxServiceChanges();
   }
 
   addInputStream(): void {
@@ -121,11 +123,5 @@ export class SandboxControllerComponent implements OnInit, OnDestroy {
       map((output$) => this._streamBuilder.outputStream(output$)),
       tap((stream) => this._outputSubject$.next(stream)),
     ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    if (this._currentExample) {
-      this._insightsSvc.stopTrackPage(`${this._currentExample.name} Example`);
-    }
   }
 }

@@ -4,5 +4,6 @@ import { FaqComponent, SandboxControllerComponent } from './components';
 export const routes: Routes = [
   { path: '', component: SandboxControllerComponent },
   { path: 'faq', component: FaqComponent },
+  { path: ':exampleName', component: SandboxControllerComponent },
   { path: '**', redirectTo: '' },
 ];

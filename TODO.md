@@ -1,8 +1,5 @@
 # TODO
 
-* Implement routing instead of render example service
-  * Remove extra code for app insights
-
 * Adjust max chunks for small devices
 * Mobile -> fix moving svg nodes
 
