@@ -1,11 +1,10 @@
 import { tap } from 'rxjs';
-import { MediaMatcher } from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { FormControl, NonNullableFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { InsightsService, LocalStorageService } from './services';
+import { InsightsService, LocalStorageService, RuntimeService } from './services';
 
 type Theme = 'light' | 'dark';
 
@@ -14,13 +13,12 @@ type Theme = 'light' | 'dark';
   templateUrl: './app.component.html'
 })
 @UntilDestroy()
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   protected _defaultTheme: Theme = 'light';
   protected _themeStorageKey = 'rxTutorTheme';
-  protected _mobileQueryListener: () => void;
 
-  mobileQuery: MediaQueryList;
   darkModeControl: FormControl<boolean> = this._formBuilder.control(false);
+  mediaSize$ = this._runtimeSvc.mediaSize$;
 
   @HostBinding('class.dark-mode') get darkMode(): boolean {
     return this.darkModeControl.value;
@@ -28,18 +26,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     protected _router: Router,
-    protected _mediaMatcher: MediaMatcher,
     protected _overlayContainer: OverlayContainer,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    protected _storageSvc: LocalStorageService,
     protected _formBuilder: NonNullableFormBuilder,
+    protected _storageSvc: LocalStorageService,
     protected _insightsSvc: InsightsService,
+    protected _runtimeSvc: RuntimeService,
   ) {
     this._insightsSvc.init(this._router);
-
-    this._mobileQueryListener = () => this._changeDetectorRef.detectChanges();
-    this.mobileQuery = this._mediaMatcher.matchMedia('(max-width: 600px)');
-    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
   ngOnInit(): void {
@@ -58,9 +51,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const theme = this._storageSvc.getValue(this._themeStorageKey) as Theme;
     this.darkModeControl.setValue(theme === 'dark');
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 }

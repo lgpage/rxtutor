@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { InsightsService, STREAM_CONFIG } from '../../services';
+import { InsightsService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 import { StreamComponent } from '../stream/stream.component';
 import { StreamControllerComponent } from './stream-controller.component';
@@ -29,7 +29,6 @@ describe('StreamControllerComponent', () => {
         MockComponent(StreamOptionsComponent),
       ],
       providers: [
-        { provide: STREAM_CONFIG, useValue: { dx: 10, dy: 10, offset: 5, frames: 10 } },
         { provide: InsightsService, useValue: MockService(InsightsService) },
       ]
     }).compileComponents();

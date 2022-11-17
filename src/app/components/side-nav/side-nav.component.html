@@ -27,6 +27,9 @@
   target="_blank"
   data-ribbon="Fork me on GitHub"
   title="Fork me on GitHub"
+  *ngIf="
+    (orientation$ | async) !== 'landscape' || (mediaSize$ | async) !== 'small'
+  "
 >
   Fork me on GitHub
 </a>

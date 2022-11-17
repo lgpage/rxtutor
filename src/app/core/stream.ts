@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, of, timer } from 'rxjs';
-import { distinctUntilChanged, filter, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
 import { StreamConfig } from '../types';
 import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
 
@@ -9,6 +9,23 @@ export interface StreamNode {
   x: number;
   index: number;
   text: string;
+}
+
+export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
+
+export interface IStream {
+  dx: number;
+  dy: number;
+  offset: number;
+  frames: number;
+
+  entities$: Observable<{ [id: string]: StreamNode }>;
+  nodes$: Observable<StreamNode[]>;
+  next$: Observable<StreamNode[]>;
+  terminate$: Observable<StreamNode | null>;
+  nodesToRender$: Observable<StreamNode[]>;
+  source$: Observable<string>;
+  marbles$: Observable<string>;
 }
 
 const getStreamValues = (nodes: StreamNode[]): (string | null)[] => {
@@ -63,7 +80,12 @@ const getStreamMarbles = (nodes: StreamNode[]): string => {
   return stream
 }
 
-export class Stream {
+export class Stream implements IStream {
+  dx: number;
+  dy: number;
+  offset: number;
+  frames: number;
+
   entities$: Observable<{ [id: string]: StreamNode }>;
   nodes$: Observable<StreamNode[]>;
   next$: Observable<StreamNode[]>;
@@ -72,8 +94,13 @@ export class Stream {
   source$: Observable<string>;
   marbles$: Observable<string>;
 
-  constructor(entities$: Observable<{ [id: string]: StreamNode }>) {
+  constructor(config: Config, entities$: Observable<{ [id: string]: StreamNode }>) {
     this.entities$ = entities$;
+
+    this.dx = config.dx;
+    this.dy = config.dy;
+    this.offset = config.offset;
+    this.frames = config.frames;
 
     this.nodes$ = this.entities$.pipe(
       map((entities) => Object.values(entities).sort((a, b) => a.x - b.x)),
@@ -109,14 +136,14 @@ export class Stream {
   }
 }
 
-export class InputStream {
+export class InputStream implements IStream {
   protected _stream: Stream;
   protected _nodesSubject$ = new BehaviorSubject<{ [id: string]: StreamNode } | null>(null);
 
-  dx = this._config.dx;
-  dy = this._config.dy;
-  offset = this._config.offset;
-  frames = this._config.frames;
+  dx: number;
+  dy: number;
+  offset: number;
+  frames: number;
 
   entities$ = this._nodesSubject$.asObservable().pipe(filterTruthy());
 
@@ -127,8 +154,13 @@ export class InputStream {
   source$: Observable<string>;
   marbles$: Observable<string>;
 
-  constructor(nodes: StreamNode[], private _config: StreamConfig) {
-    this._stream = new Stream(this.entities$);
+  constructor(config: Config, nodes: StreamNode[]) {
+    this._stream = new Stream(config, this.entities$);
+
+    this.dx = this._stream.dx;
+    this.dy = this._stream.dy;
+    this.offset = this._stream.offset;
+    this.frames = this._stream.frames;
 
     this.nodes$ = this._stream.nodes$;
     this.next$ = this._stream.next$;

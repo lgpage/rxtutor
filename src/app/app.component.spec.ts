@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SandboxControllerComponent } from './components/sandbox-controller/sandbox-controller.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
-import { InsightsService } from './services';
+import { InsightsService, RuntimeService } from './services';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -32,6 +32,7 @@ describe('AppComponent', () => {
       providers: [
         FormBuilder,
         { provide: InsightsService, useValue: MockService(InsightsService) },
+        { provide: RuntimeService, useValue: MockService(RuntimeService) },
       ]
     }).compileComponents();
   }));

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { RuntimeService } from '../../services';
 import { Example, EXAMPLE, ExampleSection } from '../../types';
 
 type GroupedExamples = Partial<{
@@ -35,9 +36,13 @@ export class SideNavComponent implements OnInit {
 
   groupedExamples: SideNavExamples[] | undefined;
 
+  orientation$ = this._runtimeSvc.orientation$;
+  mediaSize$ = this._runtimeSvc.mediaSize$;
+
   constructor(
     @Inject(EXAMPLE) protected _examples: Example[],
     protected _router: Router,
+    protected _runtimeSvc: RuntimeService,
   ) { }
 
   protected groupExamples(): SideNavExamples[] {

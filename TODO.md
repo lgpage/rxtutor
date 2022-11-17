@@ -1,8 +1,8 @@
 # TODO
 
-* Adjust max chunks for small devices
 * Mobile -> fix moving svg nodes
 
+* Fix console error on visualize
 * Figure out payload / node display vs node value
 * Add checking / conversions to ensure output observable type is a string and / or max 2 chars
   * Drive with unit tests on stream.spec.ts

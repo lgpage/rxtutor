@@ -6,14 +6,14 @@ import { LoggerService } from './logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExecutorService {
-  private _name = 'ExecutorService';
+  protected _name = 'ExecutorService';
 
   constructor(
     protected _snackBar: MatSnackBar,
     protected _logger: LoggerService,
   ) { }
 
-  private logError(message: string, error: unknown) {
+  protected logError(message: string, error: unknown) {
     this._logger.logError(message, { error });
     this._snackBar.open(
       'Something went wrong, please see browser console for more details.',
@@ -22,7 +22,7 @@ export class ExecutorService {
     );
   }
 
-  private createCallable(jsCode: string, size: number): Function | null {
+  protected createCallable(jsCode: string, size: number): Function | null {
     const words = ['one$', 'two$', 'three$', 'four$', 'five$', 'six$', 'seven$', 'eight$', 'nine$', 'ten$'];
     const args = ['rx', ...range(size).map((i) => i > 9 ? `source${i}$` : words[i])];
     const callMethod = `return visualize(${args.join(', ')});`;
@@ -37,7 +37,7 @@ export class ExecutorService {
     }
   }
 
-  private invoke(callable: Function | null, sources: rx.Observable<string>[]): rx.Observable<string | null> {
+  protected invoke(callable: Function | null, sources: rx.Observable<string>[]): rx.Observable<string | null> {
     this._logger.logDebug(`${this._name} >> invoke`, { callable, sources });
 
     if (!callable) {

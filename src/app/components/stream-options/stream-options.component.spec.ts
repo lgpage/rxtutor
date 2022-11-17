@@ -4,7 +4,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { STREAM_CONFIG } from '../../services';
 import { StreamOptionsComponent } from './stream-options.component';
 
 describe('StreamOptionsComponent', () => {
@@ -24,7 +23,6 @@ describe('StreamOptionsComponent', () => {
         StreamOptionsComponent,
       ],
       providers: [
-        { provide: STREAM_CONFIG, useValue: { dx: 10, dy: 10, offset: 5, frames: 10 } }
       ]
     }).compileComponents();
   }));

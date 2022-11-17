@@ -8,7 +8,7 @@ class MockExample implements Example {
   name = 'MockExample';
   section: ExampleSection = 'combination';
 
-  getInputStreams = () => [];
+  getInputStreams = () => ({ large: [], small: [] });
   getCode = () => '';
 }
 
