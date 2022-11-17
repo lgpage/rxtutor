@@ -1,43 +1,43 @@
-<mat-sidenav-container
-  class="min-vh-100"
-  [class.is-mobile]="mobileQuery.matches"
->
-  <mat-sidenav
-    #snav
-    [mode]="mobileQuery.matches ? 'over' : 'side'"
-    [fixedInViewport]="mobileQuery.matches"
-    [opened]="!mobileQuery.matches"
+<ng-container *ngIf="mediaSize$ | async; let mediaSize">
+  <mat-sidenav-container
+    class="min-vh-100"
+    [class.is-mobile]="mediaSize === 'small'"
   >
-    <app-side-nav
-      (selectedOption)="mobileQuery.matches && snav.close()"
-    ></app-side-nav>
-  </mat-sidenav>
+    <mat-sidenav
+      #snav
+      [mode]="mediaSize === 'small' ? 'over' : 'side'"
+      [opened]="mediaSize === 'large'"
+      [fixedInViewport]="mediaSize === 'small'"
+    >
+      <app-side-nav
+        (selectedRoute)="mediaSize === 'small' && snav.close()"
+      ></app-side-nav>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <mat-toolbar>
-      <button mat-icon-button (click)="snav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <div>
-        <h4 *ngIf="!mobileQuery.matches; else shortTitle">
-          Interactive sandbox for RxJS Observables
-        </h4>
-        <ng-template #shortTitle>
-          <h4>RxJS sandbox</h4>
-        </ng-template>
+    <mat-sidenav-content>
+      <mat-toolbar>
+        <button mat-icon-button (click)="snav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div>
+          <h4 *ngIf="mediaSize === 'small'; else longTitle">RxJS sandbox</h4>
+          <ng-template #longTitle>
+            <h4>Interactive sandbox for RxJS Observables</h4>
+          </ng-template>
+        </div>
+        <div class="ms-auto float-end"></div>
+        <mat-icon>brightness_5</mat-icon>
+        <mat-slide-toggle
+          class="mx-1"
+          aria-label="Toggle theme"
+          [formControl]="darkModeControl"
+        ></mat-slide-toggle>
+        <mat-icon>bedtime</mat-icon>
+      </mat-toolbar>
+
+      <div class="container-lg">
+        <router-outlet></router-outlet>
       </div>
-      <div class="ms-auto float-end"></div>
-      <mat-icon>brightness_5</mat-icon>
-      <mat-slide-toggle
-        class="mx-1"
-        aria-label="Toggle theme"
-        [formControl]="darkModeControl"
-      ></mat-slide-toggle>
-      <mat-icon>bedtime</mat-icon>
-    </mat-toolbar>
-
-    <div class="container">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>

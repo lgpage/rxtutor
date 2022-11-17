@@ -1,35 +1,51 @@
 import { Observable } from 'rxjs';
 import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distribute, indexToX, InputStream, Stream, StreamNode } from '../core';
-import { LoggerService } from '../services';
-import { StreamConfig } from '../types';
-
-export const STREAM_CONFIG = new InjectionToken<StreamConfig>('Stream config');
+import { LoggerService, RuntimeService } from '../services';
 
 @Injectable({ providedIn: 'root' })
+@UntilDestroy()
 export class StreamBuilderService {
-  private _name = 'StreamBuilderService';
+  protected _name = 'StreamBuilderService';
 
-  dx = this._config.dx;
-  dy = this._config.dy;
-  offset = this._config.offset;
-  frames = this._config.frames;
+  protected _framesSmall = 8;
+  protected _framesLarges = 18;
+  protected _frames = this._framesSmall;
+
+  dx = 10;
+  dy = 10;
+  offset = 3;
+
+  get frames(): number {
+    return this._frames;
+  }
+
+  get defaultCompleteFrame(): number {
+    return this.frames === this._framesLarges ? this.frames - 3 : this.frames - 1;
+  }
 
   constructor(
-    @Inject(STREAM_CONFIG) private _config: StreamConfig,
-    private _logger: LoggerService,
-  ) { }
+    protected _runtimeSvc: RuntimeService,
+    protected _logger: LoggerService,
+  ) {
+    this._runtimeSvc.exampleSize$.pipe(
+      tap((size) => this._frames = (size === 'small' ? this._framesSmall : this._framesLarges)),
+      untilDestroyed(this),
+    ).subscribe();
+  }
 
   protected isNumber(x?: number | null): x is number {
     return x !== null && x !== undefined && !isNaN(+x);
   }
 
   protected createNodes(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): StreamNode[] {
+    const startAsc = (start ?? '1').charCodeAt(0);
+
     const getText = (x: number) => {
-      const asc = (start ?? '1').charCodeAt(0);
-      const next = String.fromCharCode(asc + x);
+      const next = String.fromCharCode(startAsc + x);
       return next;
     };
 
@@ -57,12 +73,21 @@ export class StreamBuilderService {
       return [];
     }
 
-    return distribute(0, 9, size);
+    return distribute(0, this.defaultCompleteFrame - 1, size);
   }
 
   inputStream(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): InputStream {
-    const stream = new InputStream(this.createNodes(indexes, completeIndex, errorIndex, start), this._config);
+    const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
+    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start));
     return stream;
+  }
+
+  defaultInputStream(): InputStream {
+    if (this.frames === this._framesLarges) {
+      return this.inputStream([2, 5, 8, 11, 14], this.defaultCompleteFrame);
+    }
+
+    return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
   }
 
   outputStream(output$: Observable<string | null>): Stream {
@@ -82,7 +107,8 @@ export class StreamBuilderService {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    return new Stream(nodes$);
+    const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
+    return new Stream(config, nodes$);
   }
 
   adjustStream(stream: InputStream, indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): void {

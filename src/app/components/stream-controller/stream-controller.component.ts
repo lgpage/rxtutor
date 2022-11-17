@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stream } from '../../core';
-import { InsightsService, LoggerService, StreamBuilderService } from '../../services';
+import { InsightsService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 
 @Component({
@@ -14,11 +14,13 @@ import { StreamOptionsComponent } from '../stream-options/stream-options.compone
   encapsulation: ViewEncapsulation.None,
 })
 export class StreamControllerComponent {
-  @Input() stream: Stream = this._streamBuilder.inputStream([2, 5, 8], 10);
+  @Input() stream: Stream = this._streamBuilder.defaultInputStream();
   @Input() canRemoveSource$ = of(false);
   @Input() hasOptions$ = of(false);
 
   @Output() removeStream = new EventEmitter<StreamControllerComponent>();
+
+  mediaSize$ = this._runtimeSvc.mediaSize$;
 
   constructor(
     protected _streamBuilder: StreamBuilderService,
@@ -26,6 +28,7 @@ export class StreamControllerComponent {
     protected _snackBar: MatSnackBar,
     protected _dialog: MatDialog,
     protected _insightsSvc: InsightsService,
+    protected _runtimeSvc: RuntimeService,
     protected _logger: LoggerService,
   ) { }
 

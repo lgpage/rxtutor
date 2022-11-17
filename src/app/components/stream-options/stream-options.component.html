@@ -2,12 +2,12 @@
 <mat-dialog-content class="mat-typography">
   <div class="row">
     <div class="col">
-      <form [formGroup]="formGroup">
+      <form [formGroup]="formGroup!">
         <div class="row">
           <div class="col-md-6 col">
             <mat-form-field class="w-100">
               <mat-select required formControlName="size">
-                <mat-option [value]="i" *ngFor="let i of range(10)">
+                <mat-option [value]="i" *ngFor="let i of maxNumberOfNodes">
                   {{ i }}
                 </mat-option>
               </mat-select>

@@ -12,7 +12,7 @@ export const LOG_LEVEL = new InjectionToken<LogLevel>('Minimum log level');
 
 @Injectable({ providedIn: 'root' })
 export class LoggerService {
-  private _logLevel: LogLevel = LogLevel.Warning;
+  protected _logLevel: LogLevel = LogLevel.Warning;
 
   constructor(
     @Inject(LOG_LEVEL) @Optional() logLevel: LogLevel | undefined,
@@ -20,11 +20,11 @@ export class LoggerService {
     this._logLevel = logLevel === undefined ? LogLevel.Warning : logLevel;
   }
 
-  private shouldLog(messageLogLevel: LogLevel): boolean {
+  protected shouldLog(messageLogLevel: LogLevel): boolean {
     return messageLogLevel >= this._logLevel;
   }
 
-  private logWith(
+  protected logWith(
     messageLogLevel: LogLevel,
     logger: (message?: any, ...optionalParams: any[]) => void,
     message?: any,

@@ -10,12 +10,17 @@ export type ExampleSection = 'creation'
   | 'utility'
   | 'other';
 
+export interface ExampleInputs {
+  small: InputStream[];
+  large: InputStream[];
+}
+
 export interface Example {
   name: string;
   section: ExampleSection;
   links?: { label: string; url: string }[];
 
-  getInputStreams: () => InputStream[];
+  getInputStreams: () => ExampleInputs;
   getCode: () => string;
 }
 

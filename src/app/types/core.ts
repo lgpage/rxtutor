@@ -31,5 +31,5 @@ export interface StreamConfig {
   dx: number;
   dy: number;
   offset: number;
-  frames: number;
+  frames: { small: number; large: number };
 }

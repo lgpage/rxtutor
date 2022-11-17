@@ -1,3 +1,4 @@
+import { LayoutModule } from '@angular/cdk/layout';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,22 +28,13 @@ import {
 } from './components';
 import { exampleProviders } from './examples';
 import { routes } from './routes';
-import { STREAM_CONFIG } from './services';
-import { StreamConfig } from './types';
-
-const DEFAULT_STREAM_CONFIG: StreamConfig = {
-  dx: 10,
-  dy: 10,
-  offset: 3,
-  frames: 15,
-}
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     CodemirrorModule,
-    RouterModule.forRoot(routes),
+    LayoutModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
@@ -59,6 +51,7 @@ const DEFAULT_STREAM_CONFIG: StreamConfig = {
     MatToolbarModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    RouterModule.forRoot(routes),
   ],
   declarations: [
     AppComponent,
@@ -71,7 +64,6 @@ const DEFAULT_STREAM_CONFIG: StreamConfig = {
   ],
   providers: [
     ...exampleProviders,
-    { provide: STREAM_CONFIG, useValue: DEFAULT_STREAM_CONFIG },
     { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
   ],
   bootstrap: [AppComponent]

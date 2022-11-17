@@ -1,11 +1,11 @@
 import { BehaviorSubject, combineLatest, merge, of } from 'rxjs';
-import { distinctUntilChanged, first, map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, Stream } from '../../core';
-import { ExecutorService, LoggerService, StreamBuilderService } from '../../services';
+import { ExecutorService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
 import { EXAMPLE, Example, START_EXAMPLE } from '../../types';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
@@ -51,8 +51,8 @@ export class SandboxControllerComponent implements OnInit {
     distinctUntilChanged(),
   );
 
-  canAddSource$ = this.numberOfSources$.pipe(
-    map((x) => x < this._maxSources),
+  canAddSource$ = combineLatest([this.numberOfSources$, this._runtimeSvc.mediaSize$]).pipe(
+    map(([x, size]) => size === 'large' && x < this._maxSources),
     distinctUntilChanged(),
   );
 
@@ -64,6 +64,7 @@ export class SandboxControllerComponent implements OnInit {
     protected _formBuilder: FormBuilder,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
+    protected _runtimeSvc: RuntimeService,
     protected _logger: LoggerService,
   ) {
     this._maxSources = maxSources ?? this._maxSources;
@@ -78,9 +79,12 @@ export class SandboxControllerComponent implements OnInit {
     );
 
     exampleToRender$.pipe(
-      tap((example) => {
+      withLatestFrom(this._runtimeSvc.exampleSize$),
+      tap(([example, size]) => {
+        const inputs = example.getInputStreams();
+
         this._linksSubject$.next(example.links);
-        this._sourcesSubject$.next(example.getInputStreams());
+        this._sourcesSubject$.next(size === 'small' ? inputs.small : inputs.large);
         this.formGroup.get('code')?.setValue(example.getCode());
       }),
       untilDestroyed(this),
@@ -102,7 +106,7 @@ export class SandboxControllerComponent implements OnInit {
   addInputStream(): void {
     this._sourcesSubject$.pipe(
       first(),
-      map((sources) => [...sources, this._streamBuilder.inputStream([2, 5, 8], 10)]),
+      map((sources) => [...sources, this._streamBuilder.defaultInputStream()]),
       tap((sources) => this._sourcesSubject$.next(sources)),
     ).subscribe()
   }

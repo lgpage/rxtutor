@@ -1,5 +1,5 @@
 <app-stream [stream]="stream" class="stream"></app-stream>
-<div class="options">
+<div class="options" *ngIf="(mediaSize$ | async) === 'large'">
   <button
     mat-icon-button
     (click)="copyMarblesToClipboard()"

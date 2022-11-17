@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InputStream } from '../core';
 import { StreamBuilderService } from '../services';
-import { Example, ExampleSection } from '../types';
+import { Example, ExampleInputs, ExampleSection } from '../types';
 
 @Injectable()
 export class CombineLatestExample implements Example {
@@ -16,14 +15,22 @@ export class CombineLatestExample implements Example {
     protected _streamBuilder: StreamBuilderService,
   ) { }
 
-  getInputStreams(): InputStream[] {
-    return [
-      this._streamBuilder.inputStream([2, 5, 8], 10),
-      this._streamBuilder.inputStream([2, 5, 8], 10, null, 'a'),
-    ];
+  getInputStreams(): ExampleInputs {
+    return {
+      small: [
+        this._streamBuilder.inputStream([1, 3, 6], 7),
+        this._streamBuilder.inputStream([0, 4], 7, null, 'A'),
+      ],
+      large: [
+        this._streamBuilder.inputStream([3, 6, 9], 15),
+        this._streamBuilder.inputStream([1, 6, 11], 15, null, 'A'),
+      ],
+    };
   };
 
   getCode(): string {
-    return 'function visualize({ combineLatest }, one$, two$) {\n  return combineLatest([one$, two$]);\n}';
+    return `function visualize({ combineLatest }, one$, two$) {
+  return combineLatest([one$, two$]);
+}`;
   };
 }

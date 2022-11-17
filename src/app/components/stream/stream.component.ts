@@ -1,8 +1,6 @@
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
-import { STREAM_CONFIG } from '../../services';
-import { StreamConfig } from '../../types';
 
 const isInputStream = (stream: Stream | InputStream | undefined): stream is InputStream => !!(stream as InputStream)?.correct;
 
@@ -19,18 +17,17 @@ export class StreamComponent implements OnInit {
 
   @ViewChild('svg') svg: ElementRef | undefined;
 
+  dx: number | undefined;
+  dy: number | undefined;
+  offset: number | undefined;
+  frames: number | undefined;
+  radius: number | undefined;
+  streamLine: number | undefined;
+  viewBox: number[] | undefined;
+
   nodeClass: string | undefined;
 
-  dx = this._config.dx;
-  dy = this._config.dy;
-  offset = this._config.offset;
-  frames = this._config.frames;
-  radius = roundOff(0.8 * (this.dx / 2), 1);
-  streamLine = (this.frames * this.dx) + (2 * this.offset);
-  viewBox = [0, 2, this.streamLine + 3, 15];
-
   constructor(
-    @Inject(STREAM_CONFIG) private _config: StreamConfig,
     protected _snackBar: MatSnackBar,
   ) { }
 
@@ -41,6 +38,16 @@ export class StreamComponent implements OnInit {
 
   ngOnInit(): void {
     this.nodeClass = 'node' + (isInputStream(this.stream) ? ' hover' : '');
+
+    if (this.stream) {
+      this.dx = this.stream.dx;
+      this.dy = this.stream.dy;
+      this.offset = this.stream.offset;
+      this.frames = this.stream.frames;
+      this.radius = roundOff(0.8 * (this.dx / 2), 1);
+      this.streamLine = (this.frames * this.dx) + (2 * this.offset);
+      this.viewBox = [0, 3, this.streamLine + 3, 15];
+    }
   }
 
   range(size: number): number[] {
@@ -54,7 +61,7 @@ export class StreamComponent implements OnInit {
   drag(event: PointerEvent): void {
     if (!!this._node && isInputStream(this.stream)) {
       event.preventDefault();
-      const x = getBoundedX(this.getX(event), this.dx, this.frames, this.offset);
+      const x = getBoundedX(this.getX(event), this.dx!, this.frames!, this.offset!);
       this.stream.updateNode({ ...this._node, x, index: 99 });
     }
   }
