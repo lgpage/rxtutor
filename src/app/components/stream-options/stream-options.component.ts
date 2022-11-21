@@ -2,7 +2,7 @@ import { combineLatest, merge, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first, map, skip, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, range, StreamNode } from '../../core';
 import { LoggerService, StreamBuilderService } from '../../services';

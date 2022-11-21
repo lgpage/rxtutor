@@ -1,8 +1,8 @@
 import { first, of, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stream } from '../../core';
 import { InsightsService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';

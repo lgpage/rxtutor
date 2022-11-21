@@ -2,7 +2,7 @@ import { cold } from 'jasmine-marbles';
 import { MockService } from 'ng-mocks';
 import { map, Observable, of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { CombineLatestExample } from './combine-latest';
 
