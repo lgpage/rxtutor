@@ -1,6 +1,6 @@
 <div class="row mt-2" *ngFor="let source of sources$ | async; index as i">
   <div class="col">
-    <mat-card class="mat-elevation-z3 p-2 pt-md-4">
+    <mat-card appearance="outlined" class="mat-elevation-z3 p-2 pt-md-4">
       <app-stream-controller
         [stream]="source"
         [hasOptions$]="hasOptions$"
@@ -34,7 +34,7 @@
 
 <div class="row">
   <div class="col" *ngIf="output$ | async; else visualize; let output">
-    <mat-card class="mat-elevation-z3">
+    <mat-card appearance="outlined" class="mat-elevation-z3">
       <app-stream-controller [stream]="output"></app-stream-controller>
     </mat-card>
   </div>
