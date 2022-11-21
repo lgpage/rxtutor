@@ -5,7 +5,7 @@
       <form [formGroup]="formGroup!">
         <div class="row">
           <div class="col-md-6 col">
-            <mat-form-field class="w-100">
+            <mat-form-field class="w-100 pt-md-2 pt-4">
               <mat-select required formControlName="size">
                 <mat-option [value]="i" *ngFor="let i of maxNumberOfNodes">
                   {{ i }}
@@ -17,7 +17,7 @@
           </div>
 
           <div class="col-md-6 col">
-            <mat-form-field class="w-100 pt-md-0 pt-4">
+            <mat-form-field class="w-100 pt-md-2 pt-4">
               <mat-select required formControlName="type">
                 <mat-option value="alpha">Alpha</mat-option>
                 <mat-option value="numeric">Numeric</mat-option>
