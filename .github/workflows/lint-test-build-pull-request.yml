@@ -14,12 +14,18 @@ jobs:
   lint_test_and_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm i
-      - name: Lint application
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - name: Install
+        run: npm ci
+      - name: Lint
         run: npm run lint
-      - name: Test application
+      - name: Test
         run: npm run test:headless
-      - name: Build application
+      - name: Build
         run: npm run build:prod
