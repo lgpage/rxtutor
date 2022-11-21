@@ -9,6 +9,7 @@ export interface StreamNode {
   x: number;
   index: number;
   text: string;
+  payload?: string;
 }
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
