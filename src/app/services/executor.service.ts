@@ -1,6 +1,6 @@
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { range } from '../core';
 import { LoggerService } from './logger.service';
 
