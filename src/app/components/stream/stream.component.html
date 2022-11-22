@@ -64,10 +64,11 @@
 
         <g
           [attr.transform]="'translate(' + node.x + ', ' + dy + ')'"
+          [matTooltip]="node.payload!"
+          [class]="nodeClass"
           (pointerdown)="startDrag(node)"
           (pointermove)="drag($event)"
           (pointerup)="endDrag()"
-          [class]="nodeClass"
           *ngFor="let node of stream?.nodesToRender$ | async"
         >
           <ng-container

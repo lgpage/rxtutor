@@ -90,18 +90,28 @@ export class StreamBuilderService {
     return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
   }
 
-  outputStream(output$: Observable<string | null>): Stream {
+  outputStream(output$: Observable<any | null>): Stream {
     const nodes$ = output$.pipe(
       tap((output) => this._logger.logDebug(`${this._name} >> outputStream`, { output })),
       bufferTime(100),
       tap((outputs) => this._logger.logDebug(`${this._name} >> outputStream`, { outputs })),
-      map((outputs) => outputs.map<StreamNode>((x, i) => ({
-        id: guid(),
-        index: i,
-        text: x ?? '-',
-        type: x === '|' ? 'complete' : x === '#' ? 'error' : 'next',
-        x: indexToX(i, this.dx, this.offset),
-      }))),
+      map((outputs) => outputs.map<StreamNode>((x, i) => {
+        const value = `${x}`;
+        const node: StreamNode = {
+          id: guid(),
+          index: i,
+          text: value ?? '-',
+          type: value === '|' ? 'complete' : value === '#' ? 'error' : 'next',
+          x: indexToX(i, this.dx, this.offset),
+        }
+
+        if (value.length > 3) {
+          node.text = `${i + 1}`;
+          node.payload = value;
+        }
+
+        return node;
+      })),
       tap((nodes) => this._logger.logDebug(`${this._name} >> outputStream`, { nodes })),
       map((nodes) => nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {})),
       shareReplay({ refCount: true, bufferSize: 1 }),

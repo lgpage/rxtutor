@@ -37,7 +37,7 @@ export class ExecutorService {
     }
   }
 
-  protected invoke(callable: Function | null, sources: rx.Observable<string>[]): rx.Observable<string | null> {
+  protected invoke(callable: Function | null, sources: rx.Observable<string>[]): rx.Observable<any | null> {
     this._logger.logDebug(`${this._name} >> invoke`, { callable, sources });
 
     if (!callable) {
@@ -45,7 +45,7 @@ export class ExecutorService {
     }
 
     try {
-      return (callable(rx, ...sources) as rx.Observable<string>).pipe(
+      return (callable(rx, ...sources) as rx.Observable<any>).pipe(
         rx.catchError((error: unknown) => {
           this.logError('Pipe threw an unexpected error.', error);
           return rx.of(null);
@@ -57,7 +57,7 @@ export class ExecutorService {
     }
   }
 
-  getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<string | null> {
+  getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<any | null> {
     return this.invoke(this.createCallable(jsCode, sources.length), sources).pipe(
       rx.tap((result) => this._logger.logDebug(`${this._name} >> getFunctionResult`, { result })),
       rx.shareReplay({ refCount: true, bufferSize: 1 }),

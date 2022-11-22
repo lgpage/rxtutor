@@ -6,14 +6,14 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
-    "build:stats": "ng build --stats-json",
+    "build:stats": "ng build --stats-json --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:headless": "ng test --code-coverage --watch=false --browsers=ChromeHeadless",
     "test:before-push": "npm run lint && npm run test:headless && npm run build:prod",
     "lint": "ng lint",
     "docs": "npx compodoc -p tsconfig.doc.json",
-    "view:stats": "webpack-bundle-analyzer ./dist/nana-page/stats.json"
+    "view:stats": "webpack-bundle-analyzer ./dist/rxtutor/stats.json"
   },
   "private": true,
   "dependencies": {

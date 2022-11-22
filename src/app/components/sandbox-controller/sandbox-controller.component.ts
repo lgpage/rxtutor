@@ -34,9 +34,10 @@ export class SandboxControllerComponent implements OnInit {
     code: this._formBuilder.control(null),
   });
 
+  code$ = getFormValue('code', this.formGroup);
+
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged())
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  code$ = getFormValue('code', this.formGroup);
   links$ = this._linksSubject$.asObservable();
 
   numberOfSources$ = this.sources$.pipe(
@@ -82,10 +83,11 @@ export class SandboxControllerComponent implements OnInit {
       withLatestFrom(this._runtimeSvc.exampleSize$),
       tap(([example, size]) => {
         const inputs = example.getInputStreams();
+        const code = example.getCode();
 
         this._linksSubject$.next(example.links);
         this._sourcesSubject$.next(size === 'small' ? inputs.small : inputs.large);
-        this.formGroup.get('code')?.setValue(example.getCode());
+        this.formGroup.get('code')?.setValue(code);
       }),
       untilDestroyed(this),
     ).subscribe()
@@ -99,8 +101,8 @@ export class SandboxControllerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.renderExample();
     this.handleInputChanges();
+    this.renderExample();
   }
 
   addInputStream(): void {
