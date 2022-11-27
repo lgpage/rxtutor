@@ -1,6 +1,5 @@
 import { BehaviorSubject, Observable, of, timer } from 'rxjs';
 import { distinctUntilChanged, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
-import { StreamConfig } from '../types';
 import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
 
 export interface StreamNode {
@@ -10,6 +9,13 @@ export interface StreamNode {
   index: number;
   text: string;
   payload?: string;
+}
+
+export interface StreamConfig {
+  dx: number;
+  dy: number;
+  offset: number;
+  frames: { small: number; large: number };
 }
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };

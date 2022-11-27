@@ -2,6 +2,9 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay, startWith } from 'rxjs/operators';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
+export * from './helpers/marbles';
+export * from './helpers/notification';
+
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 
 export const indexToX = (index: number, dx: number, offset: number) =>

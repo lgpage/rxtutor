@@ -1,2 +1,2 @@
-export * from './types/core';
+export * from './types/notification';
 export * from './types/example';
