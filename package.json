@@ -47,7 +47,7 @@
     "@angular-eslint/schematics": "^15.0.0",
     "@angular-eslint/template-parser": "^15.0.0",
     "@angular/cli": "^15.0.0",
-    "@angular/compiler-cli": "^15.0.0",
+    "@angular/compiler-cli": "^15.0.1",
     "@compodoc/compodoc": "^1.1.19",
     "@types/codemirror": "^5.60.5",
     "@types/jasmine": "^4.3.0",
