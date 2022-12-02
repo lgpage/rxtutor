@@ -1,7 +1,7 @@
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { range } from '../core';
+import { InputStream, range, VisualizationScheduler } from '../core';
 import { LoggerService } from './logger.service';
 
 @Injectable({ providedIn: 'root' })
@@ -58,9 +58,28 @@ export class ExecutorService {
   }
 
   getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<any | null> {
-    return this.invoke(this.createCallable(jsCode, sources.length), sources).pipe(
-      rx.tap((result) => this._logger.logDebug(`${this._name} >> getFunctionResult`, { result })),
-      rx.shareReplay({ refCount: true, bufferSize: 1 }),
-    );
+    return this.invoke(this.createCallable(jsCode, sources.length), sources);
+  }
+
+  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): rx.Observable<any> {
+    return rx.combineLatest([code$, sources$]).pipe(
+      rx.mergeMap(([code, sources]) => rx.combineLatest(sources.map((x) => x.marbles$)).pipe(
+        rx.map((marbles) => ({ code, marbles })),
+      )),
+      rx.tap(({ code, marbles }) => this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { code, marbles })),
+      rx.map(({ code, marbles }) => {
+        const scheduler = new VisualizationScheduler(this._logger);
+
+        return scheduler.run(({ streamObservable, materialize }) => {
+          const streams = marbles.map((m) => streamObservable(m))
+          const output = materialize(this.getFunctionResult(code, streams).pipe(
+            rx.tap((output) => this._logger.logDebug(`${this._name} >> getVisualizedOutput >> output$`, { output })),
+          ));
+
+          this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { streams, output });
+          return output;
+        });
+      }),
+    )
   }
 }

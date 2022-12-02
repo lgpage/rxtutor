@@ -1,5 +1,6 @@
-import { BehaviorSubject, Observable, of, timer } from 'rxjs';
-import { distinctUntilChanged, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { distinctUntilChanged, first, map, shareReplay, tap } from 'rxjs/operators';
+import { LoggerService } from '../services';
 import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
 
 export interface StreamNode {
@@ -31,7 +32,6 @@ export interface IStream {
   next$: Observable<StreamNode[]>;
   terminate$: Observable<StreamNode | null>;
   nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
   marbles$: Observable<string>;
 }
 
@@ -54,23 +54,6 @@ const getStreamValues = (nodes: StreamNode[]): (string | null)[] => {
   }
 
   return values;
-}
-
-const getStreamSource = (nodes: StreamNode[]): Observable<string> => {
-  const values = getStreamValues(nodes);
-  return timer(0, 1).pipe(
-    take(values.length),
-    mergeMap((i) => {
-      const val = values[i];
-      return !!val ? of(...val.split(',')) : of(null);
-    }),
-    filterTruthy(),
-    tap((x) => {
-      if (x === '#') {
-        throw 'error';
-      }
-    }),
-  );
 }
 
 const getStreamMarbles = (nodes: StreamNode[]): string => {
@@ -98,7 +81,6 @@ export class Stream implements IStream {
   next$: Observable<StreamNode[]>;
   terminate$: Observable<StreamNode | null>;
   nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
   marbles$: Observable<string>;
 
   constructor(config: Config, entities$: Observable<{ [id: string]: StreamNode }>) {
@@ -129,12 +111,6 @@ export class Stream implements IStream {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    this.source$ = this.nodes$.pipe(
-      mergeMap((nodes) => getStreamSource(nodes)),
-      takeWhile((v) => v !== '|'),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
     this.marbles$ = this.nodes$.pipe(
       map((nodes) => getStreamMarbles(nodes)),
       distinctUntilChanged(),
@@ -144,8 +120,10 @@ export class Stream implements IStream {
 }
 
 export class InputStream implements IStream {
+  protected _name = 'InputStream';
   protected _stream: Stream;
   protected _nodesSubject$ = new BehaviorSubject<{ [id: string]: StreamNode } | null>(null);
+  protected _logger: LoggerService | undefined;
 
   dx: number;
   dy: number;
@@ -158,11 +136,11 @@ export class InputStream implements IStream {
   next$: Observable<StreamNode[]>;
   terminate$: Observable<StreamNode | null>;
   nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
   marbles$: Observable<string>;
 
-  constructor(config: Config, nodes: StreamNode[]) {
+  constructor(config: Config, nodes: StreamNode[], logger?: LoggerService) {
     this._stream = new Stream(config, this.entities$);
+    this._logger = logger;
 
     this.dx = this._stream.dx;
     this.dy = this._stream.dy;
@@ -173,7 +151,6 @@ export class InputStream implements IStream {
     this.next$ = this._stream.next$;
     this.terminate$ = this._stream.terminate$;
     this.nodesToRender$ = this._stream.nodesToRender$;
-    this.source$ = this._stream.source$;
     this.marbles$ = this._stream.marbles$;
 
     this.setNodes(nodes);
@@ -217,6 +194,7 @@ export class InputStream implements IStream {
       first(),
       map((nodes) => this.excludeNodesAfterComplete(nodes)),
       map((nodes) => this.snapNodesToNearestFrame(nodes)),
+      tap((nodes) => this._logger?.logDebug(`${this._name} >> correct`, { nodes })),
       tap((nodes) => this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}))),
     ).subscribe();
   }

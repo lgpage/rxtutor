@@ -78,7 +78,7 @@ export class StreamBuilderService {
 
   inputStream(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): InputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
-    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start));
+    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start), this._logger);
     return stream;
   }
 

@@ -19,8 +19,10 @@ export class SandboxExample implements Example {
   };
 
   getCode(): string {
-    return `function visualize({ map }, one$) {
+    return `function visualize({ map, tap }, one$) {
+  console.warn({ one$ });
   return one$.pipe(
+    tap((x) => console.warn({ x })),
     map((x) => x * 2),
   );
 }`;
