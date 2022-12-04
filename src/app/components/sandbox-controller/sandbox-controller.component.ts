@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, merge, of, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, of } from 'rxjs';
 import { distinctUntilChanged, first, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -19,8 +19,6 @@ export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
   protected _maxSources = 3;
-
-  protected _subs: Subscription[] = [];
 
   protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>([]);
   protected _outputSubject$ = new BehaviorSubject<Stream | null>(null);
@@ -124,15 +122,7 @@ export class SandboxControllerComponent implements OnInit {
   }
 
   visualizeOutput(): void {
-    if (this._subs && this._subs.length > 0) {
-      for (const sub of this._subs) {
-        sub.unsubscribe();
-      }
-    }
-
-    const vis$ = this._executorSvc.getVisualizedOutput(this.code$, this.sources$).pipe(
-    );
-
-    this._subs.push(vis$.subscribe());
+    const stream = this._executorSvc.getVisualizedOutput(this.code$, this.sources$);
+    this._outputSubject$.next(stream);
   }
 }

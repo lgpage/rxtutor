@@ -1,8 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
+import { getBoundedX, InputStream, OutputStream, range, roundOff, Stream, StreamNode } from '../../core';
 
-const isInputStream = (stream: Stream | InputStream | undefined): stream is InputStream => !!(stream as InputStream)?.correct;
+const isInputStream = (stream: InputStream | OutputStream | Stream | undefined): stream is InputStream =>
+  !!(stream as InputStream)?.updateNode;
 
 @Component({
   selector: 'app-stream',
@@ -12,7 +13,7 @@ const isInputStream = (stream: Stream | InputStream | undefined): stream is Inpu
 export class StreamComponent implements OnInit {
   protected _node: StreamNode | null = null;
 
-  @Input() stream: Stream | InputStream | undefined;
+  @Input() stream: InputStream | OutputStream | Stream | undefined;
   @Input() color: 'primary' | 'accent' = 'accent';
 
   @ViewChild('svg') svg: ElementRef | undefined;

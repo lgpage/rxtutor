@@ -4,6 +4,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 
 export * from './helpers/marbles';
 export * from './helpers/notification';
+export * from './helpers/scheduler';
 
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 

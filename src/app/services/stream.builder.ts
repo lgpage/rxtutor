@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
-import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distribute, indexToX, InputStream, Stream, StreamNode } from '../core';
+import { distribute, indexToX, InputStream, isNextNotification, OutputStream, StreamNode } from '../core';
 import { LoggerService, RuntimeService } from '../services';
+import { FrameNotification } from '../types';
 
 @Injectable({ providedIn: 'root' })
 @UntilDestroy()
@@ -90,35 +91,28 @@ export class StreamBuilderService {
     return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
   }
 
-  outputStream(output$: Observable<any | null>): Stream {
-    const nodes$ = output$.pipe(
-      tap((output) => this._logger.logDebug(`${this._name} >> outputStream`, { output })),
-      bufferTime(100),
-      tap((outputs) => this._logger.logDebug(`${this._name} >> outputStream`, { outputs })),
-      map((outputs) => outputs.map<StreamNode>((x, i) => {
-        const value = `${x}`;
-        const node: StreamNode = {
-          id: guid(),
-          index: i,
-          text: value ?? '-',
-          type: value === '|' ? 'complete' : value === '#' ? 'error' : 'next',
-          x: indexToX(i, this.dx, this.offset),
-        }
-
-        if (value.length > 3) {
-          node.text = `${i + 1}`;
-          node.payload = value;
-        }
-
-        return node;
-      })),
-      tap((nodes) => this._logger.logDebug(`${this._name} >> outputStream`, { nodes })),
-      map((nodes) => nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {})),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
+  outputStream(updater$: Observable<FrameNotification[]>): OutputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
-    return new Stream(config, nodes$);
+    const stream = new OutputStream(config, this._logger);
+
+    stream.setNodesUpdater(updater$.pipe(
+      tap((notifications) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { notifications })),
+      map((notifications) => notifications.map((x, i): StreamNode => {
+        const kind = x.notification.kind;
+        const type = kind === 'C' ? 'complete' : kind === 'E' ? 'error' : 'next';
+
+        return {
+          id: guid(),
+          type,
+          index: i,
+          x: this.offset + x.frame,
+          text: isNextNotification(x.notification) ? x.notification.value : null,
+        };
+      })),
+      tap((nodes) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { nodes })),
+    ));
+
+    return stream;
   }
 
   adjustStream(stream: InputStream, indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): void {

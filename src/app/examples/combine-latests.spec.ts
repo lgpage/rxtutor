@@ -76,7 +76,7 @@ describe('CombineLatestExample', () => {
     it('returns the expected observable', () => {
       const code = example.getCode();
       const inputStreams = example.getInputStreams();
-      const result$ = executorSvc.getFunctionResult(code, inputStreams.large.map((x) => x.source$));
+      const result$ = executorSvc.getFunctionResult(code, inputStreams.large.map((x) => x.marbles$));
       const outputStream = streamBuilder.outputStream(result$);
 
       expect(outputStream.marbles$).toBeObservable(cold('---a--b--c|', { a: 1, b: 1, c: 1 }));

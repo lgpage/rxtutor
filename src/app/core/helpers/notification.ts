@@ -24,3 +24,12 @@ export const createCompleteFrameNotification = (frame: number): FrameNotificatio
 
 export const createErrorFrameNotification = (frame: number, error?: unknown): FrameNotification =>
   ({ frame, notification: createErrorNotification(error) });
+
+export const isNextNotification = (notification: Notification): notification is NextNotification =>
+  notification.kind === 'N';
+
+export const isCompleteNotification = (notification: Notification): notification is NextNotification =>
+  notification.kind === 'C';
+
+export const isErrorNotification = (notification: Notification): notification is NextNotification =>
+  notification.kind === 'E';
