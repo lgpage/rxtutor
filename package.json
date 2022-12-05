@@ -34,7 +34,7 @@
     "bootstrap": "^5.2.2",
     "codemirror": "^5.65.10",
     "github-fork-ribbon-css": "~0.2.3",
-    "rxjs": "^7.5.7",
+    "rxjs": "^7.6.0",
     "tslib": "^2.4.1",
     "uuid": "^9.0.0",
     "zone.js": "~0.12.0"
