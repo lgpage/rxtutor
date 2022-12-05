@@ -7,7 +7,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, range, StreamNode } from '../../core';
 import { LoggerService, StreamBuilderService } from '../../services';
 
-type CompleteType = 'none' | 'complete' | 'error';
+type CompleteType = 'C' | 'E' | null;
 
 interface StreamUpdate {
   indexes: number[];
@@ -59,10 +59,10 @@ export class StreamOptionsComponent implements OnInit {
     const firstNode = nodes[0];
     const lastNode = nodes[nodes.length - 1];
 
-    const size = nodes.filter((x) => x.type === 'next').length;
-    const start = firstNode.text;
-    const type = isFinite(+firstNode.text) ? 'numeric' : 'alpha';
-    const complete = lastNode.type !== 'next' ? lastNode.type : 'none';
+    const size = nodes.filter((x) => x.kind === 'N').length;
+    const start = firstNode.display;
+    const type = isFinite(+firstNode.display) ? 'numeric' : 'alpha';
+    const complete = lastNode.kind !== 'N' ? lastNode.kind : null;
 
     this.formGroup = this._formBuilder.group<StreamFormControls>({
       size: this._formBuilder.control(size, Validators.required),
@@ -106,10 +106,10 @@ export class StreamOptionsComponent implements OnInit {
       withLatestFrom(this.stream.next$, this.stream.terminate$),
       tap(([start, complete]) => console.log('startOrCompleteChange', { start, complete })),
       map(([[start, complete], next, terminate]): StreamUpdate => ({
-        indexes: next.map((n) => n.index),
+        indexes: next.map((n) => n.zIndex),
         start,
         complete,
-        terminateIndex: terminate?.index ?? this._streamBuilder.defaultCompleteFrame,
+        terminateIndex: terminate?.zIndex ?? this._streamBuilder.defaultCompleteFrame,
       })),
     );
 
@@ -124,8 +124,8 @@ export class StreamOptionsComponent implements OnInit {
 
     const adjustStream$ = merge(sizeChange$, startOrCompleteChange$).pipe(
       tap(({ indexes, start, complete, terminateIndex }) => {
-        const completeIndex = complete === 'complete' ? terminateIndex : null;
-        const errorIndex = complete === 'error' ? terminateIndex : null;
+        const completeIndex = complete === 'C' ? terminateIndex : null;
+        const errorIndex = complete === 'E' ? terminateIndex : null;
         this._streamBuilder.adjustStream(this.stream, indexes, completeIndex, errorIndex, start);
       }),
       untilDestroyed(this),

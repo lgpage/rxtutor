@@ -22,8 +22,8 @@ export class CombineLatestExample implements Example {
         this._streamBuilder.inputStream([0, 4], 7, null, 'A'),
       ],
       large: [
-        this._streamBuilder.inputStream([3, 6, 9], 15),
-        this._streamBuilder.inputStream([1, 6, 11], 15, null, 'A'),
+        this._streamBuilder.inputStream([2, 5, 10], 15),
+        this._streamBuilder.inputStream([1, 5, 11], 15, null, 'A'),
       ],
     };
   };

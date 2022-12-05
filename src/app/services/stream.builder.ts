@@ -51,18 +51,18 @@ export class StreamBuilderService {
     };
 
     const nodes: StreamNode[] = indexes.map((ind, i) =>
-      ({ id: guid(), index: i, text: getText(i), type: 'next', x: indexToX(ind, this.dx, this.offset) })
+      ({ id: guid(), zIndex: i, display: getText(i), kind: 'N', x: indexToX(ind, this.dx, this.offset) })
     );
 
     const i = nodes.length;
 
     if (this.isNumber(completeIndex) && completeIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: '|', type: 'complete', x: indexToX(completeIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, display: '|', kind: 'C', x: indexToX(completeIndex, this.dx, this.offset) }));
       return nodes;
     }
 
     if (this.isNumber(errorIndex) && errorIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: '#', type: 'error', x: indexToX(errorIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, display: '#', kind: 'E', x: indexToX(errorIndex, this.dx, this.offset) }));
       return nodes;
     }
 
@@ -97,18 +97,13 @@ export class StreamBuilderService {
 
     stream.setNodesUpdater(updater$.pipe(
       tap((notifications) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { notifications })),
-      map((notifications) => notifications.map((x, i): StreamNode => {
-        const kind = x.notification.kind;
-        const type = kind === 'C' ? 'complete' : kind === 'E' ? 'error' : 'next';
-
-        return {
-          id: guid(),
-          type,
-          index: i,
-          x: this.offset + x.frame,
-          text: isNextNotification(x.notification) ? x.notification.value : null,
-        };
-      })),
+      map((notifications) => notifications.map((x, i): StreamNode => ({
+        id: guid(),
+        kind: x.notification.kind,
+        zIndex: i,
+        x: this.offset + x.frame,
+        display: isNextNotification(x.notification) ? x.notification.value : null,
+      }))),
       tap((nodes) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { nodes })),
     ));
 

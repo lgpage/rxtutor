@@ -2,6 +2,7 @@ import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InputStream, OutputStream, range, VisualizationScheduler } from '../core';
+import { FrameNotification } from '../types';
 import { LoggerService } from './logger.service';
 import { StreamBuilderService } from './stream.builder';
 
@@ -63,8 +64,8 @@ export class ExecutorService {
     return this.invoke(this.createCallable(jsCode, sources.length), sources);
   }
 
-  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {
-    const nodesUpdater$ = rx.combineLatest([code$, sources$]).pipe(
+  getVisualizedNodesUpdater(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): rx.Observable<FrameNotification[]> {
+    return rx.combineLatest([code$, sources$]).pipe(
       rx.first(),
       rx.mergeMap(([code, sources]) => rx.combineLatest(sources.map((x) => x.marbles$)).pipe(
         rx.map((marbles) => ({ code, marbles })),
@@ -84,7 +85,10 @@ export class ExecutorService {
         });
       }),
     )
+  }
 
+  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {
+    const nodesUpdater$ = this.getVisualizedNodesUpdater(code$, sources$);
     return this._streamBuilder.outputStream(nodesUpdater$);
   }
 }

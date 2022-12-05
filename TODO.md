@@ -1,9 +1,11 @@
 # TODO
 
-* Add unit tests for current examples
-
 * Rework stream
   * Update to use notification types
+
+* Visualize grouped nodes better
+
+* Add unit tests for current examples
 
 * Update README, LICENSE, etc.
 * Test and bugfixes

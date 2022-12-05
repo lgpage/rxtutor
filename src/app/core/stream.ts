@@ -1,23 +1,8 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, first, map, shareReplay, tap } from 'rxjs/operators';
 import { LoggerService } from '../services';
+import { StreamConfig } from '../types';
 import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
-
-export interface StreamNode {
-  id: string;
-  type: 'next' | 'complete' | 'error'
-  x: number;
-  index: number;
-  text: string;
-  payload?: string;
-}
-
-export interface StreamConfig {
-  dx: number;
-  dy: number;
-  offset: number;
-  frames: { small: number; large: number };
-}
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
 
@@ -39,15 +24,15 @@ const getStreamValues = (nodes: StreamNode[]): (string | null)[] => {
   let maxIndex = 0;
   const nodesDict: { [index: number]: StreamNode[] } = {};
   for (const n of nodes) {
-    maxIndex = Math.max(maxIndex, n.index);
-    nodesDict[n.index] = [...(nodesDict[n.index] ?? []), n];
+    maxIndex = Math.max(maxIndex, n.zIndex);
+    nodesDict[n.zIndex] = [...(nodesDict[n.zIndex] ?? []), n];
   }
 
   const values: (string | null)[] = [];
   for (const i of range(maxIndex + 1)) {
     const frameNodes = nodesDict[i];
     if (!!frameNodes) {
-      values.push((frameNodes ?? []).map((n) => n.text).join(','));
+      values.push((frameNodes ?? []).map((n) => n.display).join(','));
     } else {
       values.push(null);
     }
@@ -88,17 +73,17 @@ export class Stream implements IStream {
   );
 
   next$ = this.nodes$.pipe(
-    map((nodes) => nodes.filter((n) => n.type === 'next')),
+    map((nodes) => nodes.filter((n) => n.kind === 'N')),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   terminate$ = this.nodes$.pipe(
     map((nodes) => nodes[nodes.length - 1]),
-    map((node) => node.type === 'next' ? null : node),
+    map((node) => node.kind === 'N' ? null : node),
   );
 
   nodesToRender$ = this.entities$.pipe(
-    map((entities) => Object.values(entities).sort((a, b) => a.index - b.index)),
+    map((entities) => Object.values(entities).sort((a, b) => a.zIndex - b.zIndex)),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
@@ -122,7 +107,7 @@ export class Stream implements IStream {
     for (const node of nodes) {
       filteredNodes.push(node);
 
-      if (node.type === 'complete' || node.type === 'error') {
+      if (node.kind === 'C' || node.kind === 'E') {
         return filteredNodes;
       }
     }

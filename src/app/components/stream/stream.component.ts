@@ -63,7 +63,7 @@ export class StreamComponent implements OnInit {
     if (!!this._node && isInputStream(this.stream)) {
       event.preventDefault();
       const x = getBoundedX(this.getX(event), this.dx!, this.frames!, this.offset!);
-      this.stream.updateNode({ ...this._node, x, index: 99 });
+      this.stream.updateNode({ ...this._node, x, zIndex: 99 });
     }
   }
 
