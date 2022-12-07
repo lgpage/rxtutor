@@ -1,4 +1,4 @@
-import { FrameNotification, NotificationType } from '../../types';
+import { FrameNotification, NotificationType } from '../types';
 import { createCompleteNotification, createErrorNotification, createNextNotification } from './notification';
 
 interface MarbleNotification<T = any> {

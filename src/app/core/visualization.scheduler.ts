@@ -7,12 +7,12 @@ import { intervalProvider } from 'rxjs/internal/scheduler/intervalProvider';
 import { performanceTimestampProvider } from 'rxjs/internal/scheduler/performanceTimestampProvider';
 import { timeoutProvider } from 'rxjs/internal/scheduler/timeoutProvider';
 import { LoggerService } from '../services';
-import { FrameNotification } from '../types';
 import {
   createAnimator, createCompleteNotification, createDelegates, createErrorNotification, createNextNotification,
   getMarbleNotifications,
 } from './helpers';
 import { StreamObservable } from './stream-observable';
+import { FrameNotification } from './types';
 
 const defaultMaxFrame: number = 750;
 
@@ -22,6 +22,7 @@ export interface RunHelpers {
 }
 
 export class VisualizationScheduler extends VirtualTimeScheduler {
+  protected _name = 'VisualizationScheduler';
   protected _streamObservables: StreamObservable<any>[] = [];
 
   constructor(protected _frameSize: number, protected _logger: LoggerService) {
@@ -45,6 +46,7 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
   }
 
   createStreamObservable<T = string>(marbles: string, values?: any, errorValue?: unknown): StreamObservable<T> {
+    this._logger.logDebug(`${this._name} >> createStreamObservable`, { marbles, values, errorValue });
     const notifications = this.parseMarbles(marbles, values, errorValue);
     const obs$ = new StreamObservable<T>(notifications, this, this._logger);
 

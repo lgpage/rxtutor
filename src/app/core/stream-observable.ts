@@ -1,7 +1,7 @@
 import { Observable, SchedulerLike, Subscriber, Subscription } from 'rxjs';
 import { LoggerService } from '../services';
-import { FrameNotification } from '../types';
 import { observeNotification } from './helpers';
+import { FrameNotification } from './types';
 
 export class StreamObservable<T> extends Observable<T> {
   protected _name = 'StreamObservable';

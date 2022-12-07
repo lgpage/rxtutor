@@ -1,4 +1,4 @@
-import { getMarbleNotifications } from './marbles';
+import { getMarbleNotifications } from './marble';
 import {
   createCompleteFrameNotification, createErrorFrameNotification, createNextFrameNotification,
 } from './notification';

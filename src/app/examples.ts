@@ -1,8 +1,8 @@
 import { Provider } from '@angular/core';
+import { EXAMPLE, START_EXAMPLE } from './core';
 import { CombineLatestExample } from './examples/combine-latest';
 import { MergeMapExample } from './examples/merge-map';
 import { SandboxExample } from './examples/sandbox';
-import { EXAMPLE, START_EXAMPLE } from './types';
 
 export {
   SandboxExample,

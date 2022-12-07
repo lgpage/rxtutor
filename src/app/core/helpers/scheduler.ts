@@ -1,7 +1,7 @@
 /* eslint-disable rxjs/no-internal */
 import { SchedulerLike, Subscription } from 'rxjs';
 import { TimerHandle } from 'rxjs/internal/scheduler/timerHandle';
-import { getMarbleNotifications } from './marbles';
+import { getMarbleNotifications } from './marble';
 
 type SetHandler = (handler: () => void, timeout?: number, ...args: any[]) => TimerHandle;
 type ClearHandler = (handle: TimerHandle) => void;

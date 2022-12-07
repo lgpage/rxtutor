@@ -1,14 +1,14 @@
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream, OutputStream, range, VisualizationScheduler } from '../core';
-import { FrameNotification } from '../types';
+import { FrameNotification, InputStream, OutputStream, range, VisualizationScheduler } from '../core';
 import { LoggerService } from './logger.service';
 import { StreamBuilderService } from './stream.builder';
 
 @Injectable({ providedIn: 'root' })
 export class ExecutorService {
   protected _name = 'ExecutorService';
+  protected _frameSize = 1;
 
   constructor(
     protected _snackBar: MatSnackBar,
@@ -72,10 +72,10 @@ export class ExecutorService {
       )),
       rx.tap(({ code, marbles }) => this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { code, marbles })),
       rx.map(({ code, marbles }) => {
-        const scheduler = new VisualizationScheduler(this._streamBuilder.dx, this._logger);
+        const scheduler = new VisualizationScheduler(this._frameSize, this._logger);
 
         return scheduler.run(({ streamObservable, materialize }) => {
-          const streams = marbles.map((m) => streamObservable(m))
+          const streams = marbles.map(({ marbles, values, error }) => streamObservable(marbles, values, error));
           const output = materialize(this.getFunctionResult(code, streams).pipe(
             rx.tap((output) => this._logger.logDebug(`${this._name} >> getVisualizedOutput >> output$`, { output })),
           ));
@@ -89,6 +89,6 @@ export class ExecutorService {
 
   getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {
     const nodesUpdater$ = this.getVisualizedNodesUpdater(code$, sources$);
-    return this._streamBuilder.outputStream(nodesUpdater$);
+    return this._streamBuilder.outputStream(nodesUpdater$, this._frameSize);
   }
 }

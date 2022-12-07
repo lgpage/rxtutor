@@ -1,8 +1,8 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, first, map, shareReplay, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, first, map, shareReplay, tap } from 'rxjs/operators';
 import { LoggerService } from '../services';
-import { StreamConfig } from '../types';
-import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
+import { filterTruthy, getSnappedX, getStreamMarbles, xToIndex } from './helpers';
+import { StreamConfig, StreamMarbles, StreamNode } from './types';
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
 
@@ -17,42 +17,7 @@ export interface IStream {
   next$: Observable<StreamNode[]>;
   terminate$: Observable<StreamNode | null>;
   nodesToRender$: Observable<StreamNode[]>;
-  marbles$: Observable<string>;
-}
-
-const getStreamValues = (nodes: StreamNode[]): (string | null)[] => {
-  let maxIndex = 0;
-  const nodesDict: { [index: number]: StreamNode[] } = {};
-  for (const n of nodes) {
-    maxIndex = Math.max(maxIndex, n.zIndex);
-    nodesDict[n.zIndex] = [...(nodesDict[n.zIndex] ?? []), n];
-  }
-
-  const values: (string | null)[] = [];
-  for (const i of range(maxIndex + 1)) {
-    const frameNodes = nodesDict[i];
-    if (!!frameNodes) {
-      values.push((frameNodes ?? []).map((n) => n.display).join(','));
-    } else {
-      values.push(null);
-    }
-  }
-
-  return values;
-}
-
-const getStreamMarbles = (nodes: StreamNode[]): string => {
-  const values = getStreamValues(nodes);
-  const stream = values.map((val) => {
-    if (!val) {
-      return '-';
-    }
-
-    const marbles = val.split(',');
-    return marbles.length > 1 ? `(${marbles.join('')})` : marbles[0];
-  }).join('');
-
-  return stream
+  marbles$: Observable<StreamMarbles>;
 }
 
 export class Stream implements IStream {
@@ -88,8 +53,8 @@ export class Stream implements IStream {
   );
 
   marbles$ = this.nodes$.pipe(
-    map((nodes) => getStreamMarbles(nodes)),
-    distinctUntilChanged(),
+    map((nodes) => getStreamMarbles(nodes, this.dx, this.offset)),
+    distinctUntilKeyChanged('marbles'),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 

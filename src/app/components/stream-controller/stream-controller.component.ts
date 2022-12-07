@@ -1,4 +1,4 @@
-import { first, of, tap } from 'rxjs';
+import { first, map, of, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,6 +39,11 @@ export class StreamControllerComponent {
   copyMarblesToClipboard(): void {
     this.stream.marbles$.pipe(
       first(),
+      map((marbles) => {
+        const hasValues = Object.values(marbles.values ?? {}).filter((x) => !!x).length >= 1;
+        const valuesString = hasValues ? `,\n${JSON.stringify(marbles.values, null, 2)}` : '';
+        return `'${marbles.marbles}'${valuesString}`;
+      }),
       tap((marbles) => this._clipboard.copy(marbles)),
       tap(() => this.openSnackBar('Marbles copied to the clipboard', 'Ok')),
     ).subscribe();

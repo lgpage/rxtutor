@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Example, ExampleInputs, ExampleSection } from '../core';
 import { StreamBuilderService } from '../services';
-import { Example, ExampleInputs, ExampleSection } from '../types';
 
 @Injectable()
 export class SandboxExample implements Example {
@@ -19,10 +19,8 @@ export class SandboxExample implements Example {
   };
 
   getCode(): string {
-    return `function visualize({ map, tap }, one$) {
-  console.warn({ one$ });
+    return `function visualize({ map }, one$) {
   return one$.pipe(
-    tap((x) => console.warn({ x })),
     map((x) => x * 2),
   );
 }`;

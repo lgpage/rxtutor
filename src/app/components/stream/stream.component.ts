@@ -1,8 +1,9 @@
+import { distinctUntilChanged, map, Observable, shareReplay } from 'rxjs';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getBoundedX, InputStream, OutputStream, range, roundOff, Stream, StreamNode } from '../../core';
+import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
 
-const isInputStream = (stream: InputStream | OutputStream | Stream | undefined): stream is InputStream =>
+const isInputStream = (stream: Stream | undefined): stream is InputStream =>
   !!(stream as InputStream)?.updateNode;
 
 @Component({
@@ -13,7 +14,7 @@ const isInputStream = (stream: InputStream | OutputStream | Stream | undefined):
 export class StreamComponent implements OnInit {
   protected _node: StreamNode | null = null;
 
-  @Input() stream: InputStream | OutputStream | Stream | undefined;
+  @Input() stream: Stream | undefined;
   @Input() color: 'primary' | 'accent' = 'accent';
 
   @ViewChild('svg') svg: ElementRef | undefined;
@@ -27,6 +28,8 @@ export class StreamComponent implements OnInit {
   viewBox: number[] | undefined;
 
   nodeClass: string | undefined;
+
+  displayValues$: Observable<boolean> | undefined;
 
   constructor(
     protected _snackBar: MatSnackBar,
@@ -48,6 +51,12 @@ export class StreamComponent implements OnInit {
       this.radius = roundOff(0.8 * (this.dx / 2), 1);
       this.streamLine = (this.frames * this.dx) + (2 * this.offset);
       this.viewBox = [0, 3, this.streamLine + 3, 15];
+
+      this.displayValues$ = this.stream.marbles$.pipe(
+        map((marbles) => !!marbles.canDisplayAsValue),
+        distinctUntilChanged(),
+        shareReplay({ refCount: true, bufferSize: 1 }),
+      );
     }
   }
 

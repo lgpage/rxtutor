@@ -1,12 +1,5 @@
 # TODO
 
-* Rework stream
-  * Update to use notification types
-
-* Visualize grouped nodes better
-
-* Add unit tests for current examples
-
 * Update README, LICENSE, etc.
 * Test and bugfixes
 * Delete this file and create issues on GitHub
@@ -26,8 +19,9 @@
 
 ## Future
 
+* Visualize grouped nodes better
+
 * Fix marbles not showing via matToolTip
-* Fix @angular/material scss bundle warning
 
 * Add additional unit tests
 

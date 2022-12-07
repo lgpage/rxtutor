@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Example, EXAMPLE, ExampleSection } from '../../core';
 import { RuntimeService } from '../../services';
-import { Example, EXAMPLE, ExampleSection } from '../../types';
 
 type GroupedExamples = Partial<{
   [section in ExampleSection]: Example[];

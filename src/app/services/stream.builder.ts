@@ -3,9 +3,10 @@ import { map, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distribute, indexToX, InputStream, isNextNotification, OutputStream, StreamNode } from '../core';
+import {
+  distribute, FrameNotification, getStreamNodes, indexToX, InputStream, OutputStream, StreamNode,
+} from '../core';
 import { LoggerService, RuntimeService } from '../services';
-import { FrameNotification } from '../types';
 
 @Injectable({ providedIn: 'root' })
 @UntilDestroy()
@@ -45,24 +46,24 @@ export class StreamBuilderService {
   protected createNodes(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): StreamNode[] {
     const startAsc = (start ?? '1').charCodeAt(0);
 
-    const getText = (x: number) => {
+    const getSymbol = (x: number) => {
       const next = String.fromCharCode(startAsc + x);
       return next;
     };
 
     const nodes: StreamNode[] = indexes.map((ind, i) =>
-      ({ id: guid(), zIndex: i, display: getText(i), kind: 'N', x: indexToX(ind, this.dx, this.offset) })
+      ({ id: guid(), zIndex: i, symbol: getSymbol(i), kind: 'N', x: indexToX(ind, this.dx, this.offset) })
     );
 
     const i = nodes.length;
 
     if (this.isNumber(completeIndex) && completeIndex >= 0) {
-      nodes.push(({ id: guid(), zIndex: i, display: '|', kind: 'C', x: indexToX(completeIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, symbol: '|', kind: 'C', x: indexToX(completeIndex, this.dx, this.offset) }));
       return nodes;
     }
 
     if (this.isNumber(errorIndex) && errorIndex >= 0) {
-      nodes.push(({ id: guid(), zIndex: i, display: '#', kind: 'E', x: indexToX(errorIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, symbol: '#', kind: 'E', x: indexToX(errorIndex, this.dx, this.offset) }));
       return nodes;
     }
 
@@ -91,19 +92,13 @@ export class StreamBuilderService {
     return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
   }
 
-  outputStream(updater$: Observable<FrameNotification[]>): OutputStream {
+  outputStream(updater$: Observable<FrameNotification[]>, frameSize: number): OutputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
     const stream = new OutputStream(config, this._logger);
 
     stream.setNodesUpdater(updater$.pipe(
       tap((notifications) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { notifications })),
-      map((notifications) => notifications.map((x, i): StreamNode => ({
-        id: guid(),
-        kind: x.notification.kind,
-        zIndex: i,
-        x: this.offset + x.frame,
-        display: isNextNotification(x.notification) ? x.notification.value : null,
-      }))),
+      map((notifications) => getStreamNodes(notifications, frameSize, this.dx, this.dy)),
       tap((nodes) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { nodes })),
     ));
 

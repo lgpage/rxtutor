@@ -1,10 +1,17 @@
 import { Notification } from './notification';
 
+export interface StreamMarbles {
+  marbles: string;
+  values?: any;
+  error?: unknown;
+  canDisplayAsValue?: boolean;
+}
+
 export interface StreamNode extends Notification<string> {
   id: string;
   x: number;
   zIndex: number;
-  display: string;
+  symbol: string;
 }
 
 export interface StreamConfig {

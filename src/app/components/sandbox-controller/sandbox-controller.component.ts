@@ -4,9 +4,8 @@ import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/co
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, InputStream, Stream } from '../../core';
+import { EXAMPLE, Example, getFormValue, InputStream, START_EXAMPLE, Stream } from '../../core';
 import { ExecutorService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
-import { EXAMPLE, Example, START_EXAMPLE } from '../../types';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
