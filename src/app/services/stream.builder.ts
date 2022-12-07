@@ -1,9 +1,11 @@
 import { Observable } from 'rxjs';
-import { bufferTime, map, shareReplay, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distribute, indexToX, InputStream, Stream, StreamNode } from '../core';
+import {
+  distribute, FrameNotification, getStreamNodes, indexToX, InputStream, OutputStream, StreamNode,
+} from '../core';
 import { LoggerService, RuntimeService } from '../services';
 
 @Injectable({ providedIn: 'root' })
@@ -44,24 +46,24 @@ export class StreamBuilderService {
   protected createNodes(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): StreamNode[] {
     const startAsc = (start ?? '1').charCodeAt(0);
 
-    const getText = (x: number) => {
+    const getSymbol = (x: number) => {
       const next = String.fromCharCode(startAsc + x);
       return next;
     };
 
     const nodes: StreamNode[] = indexes.map((ind, i) =>
-      ({ id: guid(), index: i, text: getText(i), type: 'next', x: indexToX(ind, this.dx, this.offset) })
+      ({ id: guid(), zIndex: i, symbol: getSymbol(i), kind: 'N', x: indexToX(ind, this.dx, this.offset) })
     );
 
     const i = nodes.length;
 
     if (this.isNumber(completeIndex) && completeIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: '|', type: 'complete', x: indexToX(completeIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, symbol: '|', kind: 'C', x: indexToX(completeIndex, this.dx, this.offset) }));
       return nodes;
     }
 
     if (this.isNumber(errorIndex) && errorIndex >= 0) {
-      nodes.push(({ id: guid(), index: i, text: '#', type: 'error', x: indexToX(errorIndex, this.dx, this.offset) }));
+      nodes.push(({ id: guid(), zIndex: i, symbol: '#', kind: 'E', x: indexToX(errorIndex, this.dx, this.offset) }));
       return nodes;
     }
 
@@ -78,7 +80,7 @@ export class StreamBuilderService {
 
   inputStream(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): InputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
-    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start));
+    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start), this._logger);
     return stream;
   }
 
@@ -90,35 +92,17 @@ export class StreamBuilderService {
     return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
   }
 
-  outputStream(output$: Observable<any | null>): Stream {
-    const nodes$ = output$.pipe(
-      tap((output) => this._logger.logDebug(`${this._name} >> outputStream`, { output })),
-      bufferTime(100),
-      tap((outputs) => this._logger.logDebug(`${this._name} >> outputStream`, { outputs })),
-      map((outputs) => outputs.map<StreamNode>((x, i) => {
-        const value = `${x}`;
-        const node: StreamNode = {
-          id: guid(),
-          index: i,
-          text: value ?? '-',
-          type: value === '|' ? 'complete' : value === '#' ? 'error' : 'next',
-          x: indexToX(i, this.dx, this.offset),
-        }
-
-        if (value.length > 3) {
-          node.text = `${i + 1}`;
-          node.payload = value;
-        }
-
-        return node;
-      })),
-      tap((nodes) => this._logger.logDebug(`${this._name} >> outputStream`, { nodes })),
-      map((nodes) => nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {})),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
+  outputStream(updater$: Observable<FrameNotification[]>, frameSize: number): OutputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
-    return new Stream(config, nodes$);
+    const stream = new OutputStream(config, this._logger);
+
+    stream.setNodesUpdater(updater$.pipe(
+      tap((notifications) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { notifications })),
+      map((notifications) => getStreamNodes(notifications, frameSize, this.dx, this.dy)),
+      tap((nodes) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { nodes })),
+    ));
+
+    return stream;
   }
 
   adjustStream(stream: InputStream, indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): void {

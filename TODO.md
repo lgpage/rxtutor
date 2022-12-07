@@ -1,16 +1,8 @@
 # TODO
 
-* Fix output stream
-  * Make output update with the change to input nodes
-  * Move relevant logic from builder to executor service
-  * Drive via example unit tests
-  * Fix bug
-    * visualize -> make no real change -> visualize
-
-* Add additional examples
-* Review lighthouse output
 * Update README, LICENSE, etc.
 * Test and bugfixes
+* Delete this file and create issues on GitHub
 * Publish to Azure & make repo public
 
 ## Testing
@@ -27,15 +19,20 @@
 
 ## Future
 
-* Fix @angular/material scss bundle warning
-* Add additional unit tests
-* Add Scheduler (may need to w8 for v8 refactor of schedulers?)
+* Visualize grouped nodes better
 
-* Rework stream
-  * Update to use types more similar to RxJS
-  * Update to (in theory) support "infinite" streams and offsets like 20ms, etc
+* Fix marbles not showing via matToolTip
+
+* Add additional unit tests
+
+* Add additional examples with unit tests
+
+* Review lighthouse output
+
+* Update stream
+  * Use marbles as the source of truth instead of indexes
+  * Allow user to input marbles with values
+  * Update to (in theory) support "infinite" streams and offsets like 40ms, etc
     * There will be a practical max based on screen size
       * Find, check, and return error if exceeded
-    * Create visual for offsets like 20ms
-    * FrameTimeFactor = 1
-  * Use marbles as the source of truth instead of indexes
+    * Create visual for offsets like 40ms

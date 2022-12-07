@@ -6,7 +6,7 @@
     aria-label="View marbles"
   >
     <mat-icon
-      [matTooltip]="(stream.marbles$ | async)!"
+      [matTooltip]="(stream.marbles$ | async)!.marbles"
       matTooltipPosition="after"
       matTooltipClass="marbles-tooltip"
     >

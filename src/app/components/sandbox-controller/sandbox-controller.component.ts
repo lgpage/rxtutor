@@ -4,9 +4,8 @@ import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/co
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, InputStream, Stream } from '../../core';
+import { EXAMPLE, Example, getFormValue, InputStream, START_EXAMPLE, Stream } from '../../core';
 import { ExecutorService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
-import { EXAMPLE, Example, START_EXAMPLE } from '../../types';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
@@ -122,12 +121,7 @@ export class SandboxControllerComponent implements OnInit {
   }
 
   visualizeOutput(): void {
-    combineLatest([this.code$, this.sources$]).pipe(
-      first(),
-      map(([code, sources]) => ({ code, sources: sources.map((s) => s.source$) })),
-      map(({ code, sources }) => this._executorSvc.getFunctionResult(code, sources)),
-      map((output$) => this._streamBuilder.outputStream(output$)),
-      tap((stream) => this._outputSubject$.next(stream)),
-    ).subscribe();
+    const stream = this._executorSvc.getVisualizedOutput(this.code$, this.sources$);
+    this._outputSubject$.next(stream);
   }
 }

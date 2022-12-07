@@ -1,15 +1,18 @@
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { range } from '../core';
+import { FrameNotification, InputStream, OutputStream, range, VisualizationScheduler } from '../core';
 import { LoggerService } from './logger.service';
+import { StreamBuilderService } from './stream.builder';
 
 @Injectable({ providedIn: 'root' })
 export class ExecutorService {
   protected _name = 'ExecutorService';
+  protected _frameSize = 1;
 
   constructor(
     protected _snackBar: MatSnackBar,
+    protected _streamBuilder: StreamBuilderService,
     protected _logger: LoggerService,
   ) { }
 
@@ -58,9 +61,34 @@ export class ExecutorService {
   }
 
   getFunctionResult(jsCode: string, sources: rx.Observable<string>[]): rx.Observable<any | null> {
-    return this.invoke(this.createCallable(jsCode, sources.length), sources).pipe(
-      rx.tap((result) => this._logger.logDebug(`${this._name} >> getFunctionResult`, { result })),
-      rx.shareReplay({ refCount: true, bufferSize: 1 }),
-    );
+    return this.invoke(this.createCallable(jsCode, sources.length), sources);
+  }
+
+  getVisualizedNodesUpdater(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): rx.Observable<FrameNotification[]> {
+    return rx.combineLatest([code$, sources$]).pipe(
+      rx.first(),
+      rx.mergeMap(([code, sources]) => rx.combineLatest(sources.map((x) => x.marbles$)).pipe(
+        rx.map((marbles) => ({ code, marbles })),
+      )),
+      rx.tap(({ code, marbles }) => this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { code, marbles })),
+      rx.map(({ code, marbles }) => {
+        const scheduler = new VisualizationScheduler(this._frameSize, this._logger);
+
+        return scheduler.run(({ streamObservable, materialize }) => {
+          const streams = marbles.map(({ marbles, values, error }) => streamObservable(marbles, values, error));
+          const output = materialize(this.getFunctionResult(code, streams).pipe(
+            rx.tap((output) => this._logger.logDebug(`${this._name} >> getVisualizedOutput >> output$`, { output })),
+          ));
+
+          this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { streams, output });
+          return output;
+        });
+      }),
+    )
+  }
+
+  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {
+    const nodesUpdater$ = this.getVisualizedNodesUpdater(code$, sources$);
+    return this._streamBuilder.outputStream(nodesUpdater$, this._frameSize);
   }
 }

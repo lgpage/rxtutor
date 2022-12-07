@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Example, ExampleInputs, ExampleSection } from '../core';
 import { StreamBuilderService } from '../services';
-import { Example, ExampleInputs, ExampleSection } from '../types';
 
 @Injectable()
 export class SandboxExample implements Example {

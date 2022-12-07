@@ -1,8 +1,10 @@
+import { distinctUntilChanged, map, Observable, shareReplay } from 'rxjs';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
 
-const isInputStream = (stream: Stream | InputStream | undefined): stream is InputStream => !!(stream as InputStream)?.correct;
+const isInputStream = (stream: Stream | undefined): stream is InputStream =>
+  !!(stream as InputStream)?.updateNode;
 
 @Component({
   selector: 'app-stream',
@@ -12,7 +14,7 @@ const isInputStream = (stream: Stream | InputStream | undefined): stream is Inpu
 export class StreamComponent implements OnInit {
   protected _node: StreamNode | null = null;
 
-  @Input() stream: Stream | InputStream | undefined;
+  @Input() stream: Stream | undefined;
   @Input() color: 'primary' | 'accent' = 'accent';
 
   @ViewChild('svg') svg: ElementRef | undefined;
@@ -26,6 +28,8 @@ export class StreamComponent implements OnInit {
   viewBox: number[] | undefined;
 
   nodeClass: string | undefined;
+
+  displayValues$: Observable<boolean> | undefined;
 
   constructor(
     protected _snackBar: MatSnackBar,
@@ -47,6 +51,12 @@ export class StreamComponent implements OnInit {
       this.radius = roundOff(0.8 * (this.dx / 2), 1);
       this.streamLine = (this.frames * this.dx) + (2 * this.offset);
       this.viewBox = [0, 3, this.streamLine + 3, 15];
+
+      this.displayValues$ = this.stream.marbles$.pipe(
+        map((marbles) => !!marbles.canDisplayAsValue),
+        distinctUntilChanged(),
+        shareReplay({ refCount: true, bufferSize: 1 }),
+      );
     }
   }
 
@@ -62,7 +72,7 @@ export class StreamComponent implements OnInit {
     if (!!this._node && isInputStream(this.stream)) {
       event.preventDefault();
       const x = getBoundedX(this.getX(event), this.dx!, this.frames!, this.offset!);
-      this.stream.updateNode({ ...this._node, x, index: 99 });
+      this.stream.updateNode({ ...this._node, x, zIndex: 99 });
     }
   }
 

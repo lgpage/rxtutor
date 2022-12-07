@@ -1,16 +1,8 @@
-import { BehaviorSubject, Observable, of, timer } from 'rxjs';
-import { distinctUntilChanged, first, map, mergeMap, shareReplay, take, takeWhile, tap } from 'rxjs/operators';
-import { StreamConfig } from '../types';
-import { filterTruthy, getSnappedX, range, xToIndex } from './helpers';
-
-export interface StreamNode {
-  id: string;
-  type: 'next' | 'complete' | 'error'
-  x: number;
-  index: number;
-  text: string;
-  payload?: string;
-}
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { distinctUntilKeyChanged, first, map, shareReplay, tap } from 'rxjs/operators';
+import { LoggerService } from '../services';
+import { filterTruthy, getSnappedX, getStreamMarbles, xToIndex } from './helpers';
+import { StreamConfig, StreamMarbles, StreamNode } from './types';
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
 
@@ -25,120 +17,12 @@ export interface IStream {
   next$: Observable<StreamNode[]>;
   terminate$: Observable<StreamNode | null>;
   nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
-  marbles$: Observable<string>;
-}
-
-const getStreamValues = (nodes: StreamNode[]): (string | null)[] => {
-  let maxIndex = 0;
-  const nodesDict: { [index: number]: StreamNode[] } = {};
-  for (const n of nodes) {
-    maxIndex = Math.max(maxIndex, n.index);
-    nodesDict[n.index] = [...(nodesDict[n.index] ?? []), n];
-  }
-
-  const values: (string | null)[] = [];
-  for (const i of range(maxIndex + 1)) {
-    const frameNodes = nodesDict[i];
-    if (!!frameNodes) {
-      values.push((frameNodes ?? []).map((n) => n.text).join(','));
-    } else {
-      values.push(null);
-    }
-  }
-
-  return values;
-}
-
-const getStreamSource = (nodes: StreamNode[]): Observable<string> => {
-  const values = getStreamValues(nodes);
-  return timer(0, 1).pipe(
-    take(values.length),
-    mergeMap((i) => {
-      const val = values[i];
-      return !!val ? of(...val.split(',')) : of(null);
-    }),
-    filterTruthy(),
-    tap((x) => {
-      if (x === '#') {
-        throw 'error';
-      }
-    }),
-  );
-}
-
-const getStreamMarbles = (nodes: StreamNode[]): string => {
-  const values = getStreamValues(nodes);
-  const stream = values.map((val) => {
-    if (!val) {
-      return '-';
-    }
-
-    const marbles = val.split(',');
-    return marbles.length > 1 ? `(${marbles.join('')})` : marbles[0];
-  }).join('');
-
-  return stream
+  marbles$: Observable<StreamMarbles>;
 }
 
 export class Stream implements IStream {
-  dx: number;
-  dy: number;
-  offset: number;
-  frames: number;
-
-  entities$: Observable<{ [id: string]: StreamNode }>;
-  nodes$: Observable<StreamNode[]>;
-  next$: Observable<StreamNode[]>;
-  terminate$: Observable<StreamNode | null>;
-  nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
-  marbles$: Observable<string>;
-
-  constructor(config: Config, entities$: Observable<{ [id: string]: StreamNode }>) {
-    this.entities$ = entities$;
-
-    this.dx = config.dx;
-    this.dy = config.dy;
-    this.offset = config.offset;
-    this.frames = config.frames;
-
-    this.nodes$ = this.entities$.pipe(
-      map((entities) => Object.values(entities).sort((a, b) => a.x - b.x)),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    this.next$ = this.nodes$.pipe(
-      map((nodes) => nodes.filter((n) => n.type === 'next')),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    this.terminate$ = this.nodes$.pipe(
-      map((nodes) => nodes[nodes.length - 1]),
-      map((node) => node.type === 'next' ? null : node),
-    );
-
-    this.nodesToRender$ = this.entities$.pipe(
-      map((entities) => Object.values(entities).sort((a, b) => a.index - b.index)),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    this.source$ = this.nodes$.pipe(
-      mergeMap((nodes) => getStreamSource(nodes)),
-      takeWhile((v) => v !== '|'),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    this.marbles$ = this.nodes$.pipe(
-      map((nodes) => getStreamMarbles(nodes)),
-      distinctUntilChanged(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-  }
-}
-
-export class InputStream implements IStream {
-  protected _stream: Stream;
+  protected _name = 'Stream';
+  protected _logger: LoggerService | undefined;
   protected _nodesSubject$ = new BehaviorSubject<{ [id: string]: StreamNode } | null>(null);
 
   dx: number;
@@ -148,29 +32,39 @@ export class InputStream implements IStream {
 
   entities$ = this._nodesSubject$.asObservable().pipe(filterTruthy());
 
-  nodes$: Observable<StreamNode[]>;
-  next$: Observable<StreamNode[]>;
-  terminate$: Observable<StreamNode | null>;
-  nodesToRender$: Observable<StreamNode[]>;
-  source$: Observable<string>;
-  marbles$: Observable<string>;
+  nodes$ = this.entities$.pipe(
+    map((entities) => Object.values(entities).sort((a, b) => a.x - b.x)),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
 
-  constructor(config: Config, nodes: StreamNode[]) {
-    this._stream = new Stream(config, this.entities$);
+  next$ = this.nodes$.pipe(
+    map((nodes) => nodes.filter((n) => n.kind === 'N')),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
 
-    this.dx = this._stream.dx;
-    this.dy = this._stream.dy;
-    this.offset = this._stream.offset;
-    this.frames = this._stream.frames;
+  terminate$ = this.nodes$.pipe(
+    map((nodes) => nodes[nodes.length - 1]),
+    map((node) => node.kind === 'N' ? null : node),
+  );
 
-    this.nodes$ = this._stream.nodes$;
-    this.next$ = this._stream.next$;
-    this.terminate$ = this._stream.terminate$;
-    this.nodesToRender$ = this._stream.nodesToRender$;
-    this.source$ = this._stream.source$;
-    this.marbles$ = this._stream.marbles$;
+  nodesToRender$ = this.entities$.pipe(
+    map((entities) => Object.values(entities).sort((a, b) => a.zIndex - b.zIndex)),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
 
-    this.setNodes(nodes);
+  marbles$ = this.nodes$.pipe(
+    map((nodes) => getStreamMarbles(nodes, this.dx, this.offset)),
+    distinctUntilKeyChanged('marbles'),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
+
+  constructor(config: Config, logger?: LoggerService) {
+    this.dx = config.dx;
+    this.dy = config.dy;
+    this.offset = config.offset;
+    this.frames = config.frames;
+
+    this._logger = logger;
   }
 
   protected excludeNodesAfterComplete(nodes: StreamNode[]): StreamNode[] {
@@ -178,7 +72,7 @@ export class InputStream implements IStream {
     for (const node of nodes) {
       filteredNodes.push(node);
 
-      if (node.type === 'complete' || node.type === 'error') {
+      if (node.kind === 'C' || node.kind === 'E') {
         return filteredNodes;
       }
     }
@@ -193,9 +87,32 @@ export class InputStream implements IStream {
     });
   }
 
-  setNodes(nodes: StreamNode[]): void {
-    this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}));
+  setNodes(nodes?: StreamNode[]): void {
+    this._nodesSubject$.next((nodes ?? []).reduce((p, c) => ({ ...p, [c.id]: c }), {}));
     this.correct();
+  }
+
+  correct(): void {
+    this.nodes$.pipe(
+      first(),
+      map((nodes) => this.excludeNodesAfterComplete(nodes)),
+      map((nodes) => this.snapNodesToNearestFrame(nodes)),
+      tap((nodes) => this._logger?.logDebug(`${this._name} >> correct`, { nodes })),
+      tap((nodes) => this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}))),
+    ).subscribe();
+  }
+}
+
+export class InputStream extends Stream implements IStream {
+  protected _name = 'InputStream';
+  protected _logger: LoggerService | undefined;
+
+  constructor(config: Config, nodes?: StreamNode[], logger?: LoggerService) {
+    super(config, logger);
+
+    this._logger = logger;
+
+    this.setNodes(nodes);
   }
 
   updateNode(update: Partial<StreamNode> & { id: string }): void {
@@ -205,13 +122,24 @@ export class InputStream implements IStream {
       tap((nodes) => this._nodesSubject$.next(nodes)),
     ).subscribe();
   }
+}
 
-  correct(): void {
-    this.nodes$.pipe(
-      first(),
-      map((nodes) => this.excludeNodesAfterComplete(nodes)),
-      map((nodes) => this.snapNodesToNearestFrame(nodes)),
-      tap((nodes) => this._nodesSubject$.next(nodes.reduce((p, c) => ({ ...p, [c.id]: c }), {}))),
+export class OutputStream extends Stream implements IStream {
+  protected _updateSub: Subscription | undefined;
+
+  constructor(config: Config, logger?: LoggerService) {
+    super(config, logger);
+  }
+
+  setNodesUpdater(updater$: Observable<StreamNode[]>): void {
+    this.dispose();
+
+    this._updateSub = updater$.pipe(
+      tap((nodes) => super.setNodes(nodes)),
     ).subscribe();
+  }
+
+  dispose(): void {
+    this._updateSub?.unsubscribe();
   }
 }

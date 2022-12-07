@@ -59,12 +59,12 @@
           font-size="2px"
           *ngFor="let i of range(frames!)"
         >
-          {{ i + 1 }}
+          {{ i * dx! }}
         </text>
 
         <g
           [attr.transform]="'translate(' + node.x + ', ' + dy + ')'"
-          [matTooltip]="node.payload!"
+          [matTooltip]="(displayValues$ | async) ? '' : node.value!"
           [class]="nodeClass"
           (pointerdown)="startDrag(node)"
           (pointermove)="drag($event)"
@@ -73,9 +73,9 @@
         >
           <ng-container
             [ngTemplateOutlet]="
-              node.type === 'next'
+              node.kind === 'N'
                 ? nextNode
-                : node.type === 'error'
+                : node.kind === 'E'
                 ? errorNode
                 : completeNode
             "
@@ -124,7 +124,7 @@
               [ngClass]="color"
             ></circle>
             <text text-anchor="middle" y="1" font-size="3.5px">
-              {{ node.text }}
+              {{ (displayValues$ | async) ? node.value : node.symbol }}
             </text>
           </ng-template>
         </g>

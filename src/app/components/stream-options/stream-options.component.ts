@@ -7,7 +7,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, range, StreamNode } from '../../core';
 import { LoggerService, StreamBuilderService } from '../../services';
 
-type CompleteType = 'none' | 'complete' | 'error';
+type CompleteType = 'C' | 'E' | null;
 
 interface StreamUpdate {
   indexes: number[];
@@ -59,10 +59,10 @@ export class StreamOptionsComponent implements OnInit {
     const firstNode = nodes[0];
     const lastNode = nodes[nodes.length - 1];
 
-    const size = nodes.filter((x) => x.type === 'next').length;
-    const start = firstNode.text;
-    const type = isFinite(+firstNode.text) ? 'numeric' : 'alpha';
-    const complete = lastNode.type !== 'next' ? lastNode.type : 'none';
+    const size = nodes.filter((x) => x.kind === 'N').length;
+    const start = firstNode.symbol;
+    const type = isFinite(+firstNode.symbol) ? 'numeric' : 'alpha';
+    const complete = lastNode.kind !== 'N' ? lastNode.kind : null;
 
     this.formGroup = this._formBuilder.group<StreamFormControls>({
       size: this._formBuilder.control(size, Validators.required),
@@ -83,7 +83,8 @@ export class StreamOptionsComponent implements OnInit {
           return range(10 - n).map((x) => `${x + 1}`);
         }
 
-        return range(n).map((x) => String.fromCharCode(65 + x));
+        const startAsc = 'a'.charCodeAt(0);
+        return range(n).map((x) => String.fromCharCode(startAsc + x));
       }),
     );
   }
@@ -104,12 +105,12 @@ export class StreamOptionsComponent implements OnInit {
     const startOrCompleteChange$ = combineLatest([this.start$!, this.complete$!]).pipe(
       skip(1),
       withLatestFrom(this.stream.next$, this.stream.terminate$),
-      tap(([start, complete]) => console.log('startOrCompleteChange', { start, complete })),
+      tap(([[start, complete], next, terminate]) => console.log('startOrCompleteChange', { start, complete, next, terminate })),
       map(([[start, complete], next, terminate]): StreamUpdate => ({
-        indexes: next.map((n) => n.index),
+        indexes: next.map((n) => n.zIndex),
         start,
         complete,
-        terminateIndex: terminate?.index ?? this._streamBuilder.defaultCompleteFrame,
+        terminateIndex: terminate?.zIndex ?? this._streamBuilder.defaultCompleteFrame,
       })),
     );
 
@@ -117,15 +118,15 @@ export class StreamOptionsComponent implements OnInit {
       skip(1),
       distinctUntilChanged(),
       tap((type) => console.log('adjustStartControlValue', { type })),
-      map((type) => type === 'numeric' ? '1' : 'A'),
+      map((type) => type === 'numeric' ? '1' : 'a'),
       tap((start) => this.formGroup!.get('start')?.setValue(start)),
       untilDestroyed(this),
     );
 
     const adjustStream$ = merge(sizeChange$, startOrCompleteChange$).pipe(
       tap(({ indexes, start, complete, terminateIndex }) => {
-        const completeIndex = complete === 'complete' ? terminateIndex : null;
-        const errorIndex = complete === 'error' ? terminateIndex : null;
+        const completeIndex = complete === 'C' ? terminateIndex : null;
+        const errorIndex = complete === 'E' ? terminateIndex : null;
         this._streamBuilder.adjustStream(this.stream, indexes, completeIndex, errorIndex, start);
       }),
       untilDestroyed(this),
