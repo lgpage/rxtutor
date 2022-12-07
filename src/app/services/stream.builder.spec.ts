@@ -1,6 +1,9 @@
 import { cold } from 'jasmine-marbles';
+import { MockService } from 'ng-mocks';
+import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { TestBed } from '@angular/core/testing';
+import { RuntimeService } from './runtime.service';
 import { StreamBuilderService } from './stream.builder';
 
 describe('StreamBuilder', () => {
@@ -13,7 +16,9 @@ describe('StreamBuilder', () => {
     });
 
     TestBed.configureTestingModule({
-      providers: []
+      providers: [
+        { provide: RuntimeService, useValue: MockService(RuntimeService, { exampleSize$: of<'small' | 'large'>('large') }) },
+      ]
     });
 
     service = TestBed.inject(StreamBuilderService);
