@@ -68,7 +68,7 @@ import { LOG_LEVEL, LogLevel } from './services/logger.service';
     ...exampleProviders,
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
     { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
-    { provide: LOG_LEVEL, useValue: environment.production ? LogLevel.Warning : LogLevel.Trace },
+    { provide: LOG_LEVEL, useValue: environment.production ? LogLevel.Warning : LogLevel.Debug },
   ],
   bootstrap: [AppComponent]
 })
