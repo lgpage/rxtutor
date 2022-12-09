@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applicationinsights-angularplugin-js';
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import {
   FaqComponent, SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent,
@@ -28,6 +29,7 @@ import {
 } from './components';
 import { exampleProviders } from './examples';
 import { routes } from './routes';
+import { LOG_LEVEL, LogLevel } from './services/logger.service';
 
 @NgModule({
   imports: [
@@ -66,6 +68,7 @@ import { routes } from './routes';
     ...exampleProviders,
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
     { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
+    { provide: LOG_LEVEL, useValue: environment.production ? LogLevel.Warning : LogLevel.Debug },
   ],
   bootstrap: [AppComponent]
 })
