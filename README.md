@@ -4,4 +4,4 @@
 
 Interactive sandbox for RxJS Observables
 
-<a>https://rxtutor.org</a>
+<a href="https://rxtutor.org" target="_blank">https://rxtutor.org</a>
