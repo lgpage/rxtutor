@@ -34,7 +34,7 @@ export class StreamBuilderService {
     protected _logger: LoggerService,
   ) {
     this._runtimeSvc.exampleSize$.pipe(
-      tap((size) => this._frames = (size === 'small' ? this._framesSmall : this._framesLarges)),
+      tap((size) => this.setFrames(size)),
       untilDestroyed(this),
     ).subscribe();
   }
@@ -68,6 +68,10 @@ export class StreamBuilderService {
     }
 
     return nodes;
+  }
+
+  setFrames(size: 'small' | 'large'): void {
+    this._frames = (size === 'small' ? this._framesSmall : this._framesLarges);
   }
 
   getDistributedIndexes(size: number): number[] {
