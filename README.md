@@ -1,7 +1,10 @@
 # Rxtutor
 
-![ci badge](https://github.com/lgpage/rxtutor/actions/workflows/lint-test-build-pull-request.yml/badge.svg?branch=main)
+[![ci badge](https://github.com/lgpage/rxtutor/actions/workflows/lint-test-build-pull-request.yml/badge.svg?branch=main)](https://github.com/lgpage/rxtutor/actions/workflows/lint-test-build-pull-request.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/lgpage/rxtutor/branch/main/graph/badge.svg?token=OIvmDknPv8)](https://codecov.io/gh/lgpage/rxtutor)
 
-Interactive sandbox for RxJS Observables
+[https://rxtutor.org](https://rxtutor.org)
 
-<a href="https://rxtutor.org" target="_blank">https://rxtutor.org</a>
+An interactive sandbox for RxJS Observables
+
+[![Usage Example](./src/assets/rxtutor-og.png)](https://rxtutor.org/mergeMap)
