@@ -5,17 +5,17 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InputStream } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
-import { CombineLatestExample } from './combine-latest';
+import { DebounceTimeExample } from './debounce-time';
 
-describe('CombineLatestExample', () => {
-  let example: CombineLatestExample;
+describe('DebounceTimeExample', () => {
+  let example: DebounceTimeExample;
   let executorSvc: ExecutorService;
   let streamBuilderSvc: StreamBuilderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        CombineLatestExample,
+        DebounceTimeExample,
         ExecutorService,
         StreamBuilderService,
         { provide: MatSnackBar, useValue: MockService(MatSnackBar) },
@@ -23,7 +23,7 @@ describe('CombineLatestExample', () => {
       ]
     });
 
-    example = TestBed.inject(CombineLatestExample);
+    example = TestBed.inject(DebounceTimeExample);
     executorSvc = TestBed.inject(ExecutorService);
     streamBuilderSvc = TestBed.inject(StreamBuilderService);
   });
@@ -33,18 +33,9 @@ describe('CombineLatestExample', () => {
   });
 
   describe('desktop', () => {
-    const one = '       --1--2----3----|';
-    const two = '       -a---b-----c---|';
-    const output = '    --A--(BC)----DE---|';
-    const rxjsOutput = '--A--(BC)-DE---|';
-
-    const values = {
-      A: '1a',
-      B: '2a',
-      C: '2b',
-      D: '3b',
-      E: '3c',
-    };
+    const one = '       -1-2---345-----|';
+    const output = '    -----A-----B---|';
+    const outputValues = { A: '2', B: '5' }
 
     let code: string;
     let inputStreams: InputStream[];
@@ -54,16 +45,12 @@ describe('CombineLatestExample', () => {
 
       code = example.getCode();
       inputStreams = example.getInputStreams().large;
-    });
+    })
 
     describe('example', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
-
-        expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
-          { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
         ]))
       });
 
@@ -72,14 +59,7 @@ describe('CombineLatestExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[28, 58, 108, 158]]))
-        expect(positions[1]).toBeObservable(cold('0', [[18, 58, 118, 158]]))
-      });
-
-      it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
-
-        expect(result$).toBeObservable(cold(rxjsOutput, values));
+        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 78, 88, 98, 158]]))
       });
     });
 
@@ -91,7 +71,7 @@ describe('CombineLatestExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values)
+            expect(values).toEqual(outputValues)
           }),
         ).subscribe(() => done())
       });
@@ -99,16 +79,9 @@ describe('CombineLatestExample', () => {
   });
 
   describe('mobile', () => {
-    const one = '       -1-2--3|';
-    const two = '       a---b--|';
-    const output = '    -A-BC-D|';
-
-    const outputValues = {
-      A: '1a',
-      B: '2a',
-      C: '2b',
-      D: '3b',
-    };
+    const one = '       12-3---|';
+    const output = '    -----A-|';
+    const outputValues = { A: '3' }
 
     let code: string;
     let inputStreams: InputStream[];
@@ -125,10 +98,6 @@ describe('CombineLatestExample', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
         ]))
-
-        expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
-          { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
       });
 
       it('has expected source stream nodes', () => {
@@ -136,14 +105,7 @@ describe('CombineLatestExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 68, 78]]))
-        expect(positions[1]).toBeObservable(cold('0', [[8, 48, 78]]))
-      });
-
-      it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
-
-        expect(result$).toBeObservable(cold(output, outputValues));
+        expect(positions[0]).toBeObservable(cold('0', [[8, 18, 38, 78]]))
       });
     });
 
