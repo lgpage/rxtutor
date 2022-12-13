@@ -17,5 +17,6 @@
   "schedule": [
     "before 6am"
   ],
-  "configMigration": true
+  "configMigration": true,
+  "dependencyDashboardTitle": "chore(deps): dependency dashboard"
 }
