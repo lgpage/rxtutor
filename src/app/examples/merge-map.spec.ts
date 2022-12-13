@@ -33,18 +33,11 @@ describe('MergeMapExample', () => {
   });
 
   describe('desktop', () => {
-    const one = '       -1---23--------|';
-    const two = '       a-b|';
-    const output = '    -A-B-CDEF------|';
+    const one = '   -1---23--------|';
+    const two = '   a-b|';
+    const output = '-A-B-CDEF------|';
 
-    const outputValues = {
-      A: '1a',
-      B: '1b',
-      C: '2a',
-      D: '3a',
-      E: '2b',
-      F: '3b',
-    };
+    const outputValues = { A: '1a', B: '1b', C: '2a', D: '3a', E: '2b', F: '3b' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -99,16 +92,11 @@ describe('MergeMapExample', () => {
   });
 
   describe('mobile', () => {
-    const one = '       -1--2--|';
-    const two = '       a-b|';
-    const output = '    -A-BC-D|';
+    const one = '   -1--2--|';
+    const two = '   a-b|';
+    const output = '-A-BC-D|';
 
-    const values = {
-      A: '1a',
-      B: '1b',
-      C: '2a',
-      D: '2b',
-    };
+    const values = { A: '1a', B: '1b', C: '2a', D: '2b' };
 
     let code: string;
     let inputStreams: InputStream[];
