@@ -38,13 +38,7 @@ describe('CombineLatestExample', () => {
     const output = '    --A--(BC)----DE---|';
     const rxjsOutput = '--A--(BC)-DE---|';
 
-    const values = {
-      A: '1a',
-      B: '2a',
-      C: '2b',
-      D: '3b',
-      E: '3c',
-    };
+    const values = { A: '1a', B: '2a', C: '2b', D: '3b', E: '3c' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -99,16 +93,11 @@ describe('CombineLatestExample', () => {
   });
 
   describe('mobile', () => {
-    const one = '       -1-2--3|';
-    const two = '       a---b--|';
-    const output = '    -A-BC-D|';
+    const one = '   -1-2--3|';
+    const two = '   a---b--|';
+    const output = '-A-BC-D|';
 
-    const outputValues = {
-      A: '1a',
-      B: '2a',
-      C: '2b',
-      D: '3b',
-    };
+    const outputValues = { A: '1a', B: '2a', C: '2b', D: '3b' };
 
     let code: string;
     let inputStreams: InputStream[];
