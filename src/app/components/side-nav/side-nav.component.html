@@ -3,17 +3,19 @@
 <mat-accordion>
   <mat-expansion-panel *ngFor="let group of groupedExamples">
     <mat-expansion-panel-header>
-      <mat-panel-title>{{ group.section }}</mat-panel-title>
+      <mat-panel-title class="fs-6">{{ group.section }}</mat-panel-title>
     </mat-expansion-panel-header>
 
-    <button
-      mat-button
-      class="w-100"
-      (click)="goToExample(example)"
-      *ngFor="let example of group.examples"
-    >
-      {{ example.name }}
-    </button>
+    <mat-nav-list class="p-0 ms-2">
+      <div
+        mat-list-item
+        class="hover py-1 ml-2"
+        (click)="goToExample(example)"
+        *ngFor="let example of group.examples"
+      >
+        {{ example.name }}
+      </div>
+    </mat-nav-list>
   </mat-expansion-panel>
 </mat-accordion>
 

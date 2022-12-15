@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
@@ -43,6 +44,7 @@ import { LOG_LEVEL, LogLevel } from './services/logger.service';
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
+    MatListModule,
     MatMenuModule,
     MatOptionModule,
     MatRadioModule,
