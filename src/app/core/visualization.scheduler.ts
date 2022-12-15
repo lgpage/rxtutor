@@ -72,7 +72,7 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
     return messages;
   }
 
-  run<T>(callback: (helpers: RunHelpers) => T): T {
+  run<R>(callback: (helpers: RunHelpers) => R): R {
     const prevMaxFrames = this.maxFrames;
 
     this.maxFrames = Infinity;

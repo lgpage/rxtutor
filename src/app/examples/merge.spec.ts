@@ -37,7 +37,7 @@ describe('MergeExample', () => {
     const two = '   -a---b|';
     const output = '-AB-CD--E------|';
 
-    const values = { A: 'a', B: '1', C: '2', D: 'b', E: '3' };
+    const outputValues = { A: 'a', B: '1', C: '2', D: 'b', E: '3' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -71,7 +71,7 @@ describe('MergeExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
-        expect(result$).toBeObservable(cold(output, values));
+        expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
 
@@ -83,7 +83,7 @@ describe('MergeExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values);
+            expect(values).toEqual(outputValues);
           }),
         ).subscribe(() => done());
       });

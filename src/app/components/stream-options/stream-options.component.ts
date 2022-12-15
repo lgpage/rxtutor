@@ -77,9 +77,9 @@ export class StreamOptionsComponent implements OnInit {
     this.complete$ = getFormValue<CompleteType>('complete', this.formGroup);
 
     this.startOptions$ = this.type$.pipe(
-      map((type) => {
+      map((t) => {
         const n = this.maxNumberOfNodes.length;
-        if (type === 'numeric') {
+        if (t === 'numeric') {
           return range(10 - n).map((x) => `${x + 1}`);
         }
 

@@ -28,13 +28,13 @@ const canDisplayValueAsSmallString = (value: any): boolean =>
   || (typeof value === 'number' && `${value}`.length < 3)
   || (typeof value === 'string' && value.length < 3);
 
-export const getStreamMarbles = (nodes: StreamNode[], dx: number, offset: number): StreamMarbles => {
+export const getStreamMarbles = (streamNodes: StreamNode[], dx: number, offset: number): StreamMarbles => {
   const nodesDict: { [index: number]: StreamNode[] } = {};
   const values: { [Symbol: string]: any } = {};
   const characters: string[] = [];
 
   let maxIndex = 0;
-  for (const n of nodes) {
+  for (const n of streamNodes) {
     const index = xToIndex(n.x, dx, offset);
 
     maxIndex = Math.max(maxIndex, index);
