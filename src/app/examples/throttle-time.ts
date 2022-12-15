@@ -24,7 +24,7 @@ export class ThrottleTimeExample implements Example {
         this._streamBuilder.inputStream([1, 3, 7, 8, 9], 15),
       ],
     };
-  };
+  }
 
   getCode(): string {
     return `function visualize({ throttleTime }, one$) {
@@ -32,5 +32,5 @@ export class ThrottleTimeExample implements Example {
     throttleTime(2),
   );
 }`;
-  };
+  }
 }

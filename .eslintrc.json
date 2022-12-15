@@ -15,6 +15,8 @@
         "createDefaultProgram": true
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:rxjs/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
@@ -23,6 +25,7 @@
         "eslint-plugin-rxjs"
       ],
       "rules": {
+        "semi": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -39,6 +42,9 @@
             "style": "kebab-case"
           }
         ],
+        "@typescript-eslint/semi": "error",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/consistent-type-definitions": "error",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/explicit-member-accessibility": [

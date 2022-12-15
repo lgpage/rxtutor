@@ -35,7 +35,7 @@ export class SandboxControllerComponent implements OnInit {
 
   code$ = getFormValue('code', this.formGroup);
 
-  sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged())
+  sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged());
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   links$ = this._linksSubject$.asObservable();
 
@@ -89,7 +89,7 @@ export class SandboxControllerComponent implements OnInit {
         this.formGroup.get('code')?.setValue(code);
       }),
       untilDestroyed(this),
-    ).subscribe()
+    ).subscribe();
   }
 
   protected handleInputChanges(): void {
@@ -109,7 +109,7 @@ export class SandboxControllerComponent implements OnInit {
       first(),
       map((sources) => [...sources, this._streamBuilder.defaultInputStream()]),
       tap((sources) => this._sourcesSubject$.next(sources)),
-    ).subscribe()
+    ).subscribe();
   }
 
   removeInputStream(index: number): void {
@@ -117,7 +117,7 @@ export class SandboxControllerComponent implements OnInit {
       first(),
       map((sources) => sources.filter((_, i) => i !== index)),
       tap((sources) => this._sourcesSubject$.next(sources)),
-    ).subscribe()
+    ).subscribe();
   }
 
   visualizeOutput(): void {

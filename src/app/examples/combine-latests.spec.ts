@@ -54,11 +54,11 @@ describe('CombineLatestExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -66,12 +66,12 @@ describe('CombineLatestExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[28, 58, 108, 158]]))
-        expect(positions[1]).toBeObservable(cold('0', [[18, 58, 118, 158]]))
+        expect(positions[0]).toBeObservable(cold('0', [[28, 58, 108, 158]]));
+        expect(positions[1]).toBeObservable(cold('0', [[18, 58, 118, 158]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
 
         expect(result$).toBeObservable(cold(rxjsOutput, values));
       });
@@ -85,9 +85,9 @@ describe('CombineLatestExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values)
+            expect(values).toEqual(values);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });
@@ -113,11 +113,11 @@ describe('CombineLatestExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -125,12 +125,12 @@ describe('CombineLatestExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 68, 78]]))
-        expect(positions[1]).toBeObservable(cold('0', [[8, 48, 78]]))
+        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 68, 78]]));
+        expect(positions[1]).toBeObservable(cold('0', [[8, 48, 78]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
 
         expect(result$).toBeObservable(cold(output, outputValues));
       });
@@ -144,9 +144,9 @@ describe('CombineLatestExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(outputValues)
+            expect(values).toEqual(outputValues);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });

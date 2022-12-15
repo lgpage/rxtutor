@@ -47,17 +47,17 @@ describe('MergeMapExample', () => {
 
       code = example.getCode();
       inputStreams = example.getInputStreams().large;
-    })
+    });
 
     describe('example', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -65,12 +65,12 @@ describe('MergeMapExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 58, 68, 158]]))
-        expect(positions[1]).toBeObservable(cold('0', [[8, 28, 38]]))
+        expect(positions[0]).toBeObservable(cold('0', [[18, 58, 68, 158]]));
+        expect(positions[1]).toBeObservable(cold('0', [[8, 28, 38]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
 
         expect(result$).toBeObservable(cold(output, outputValues));
       });
@@ -84,9 +84,9 @@ describe('MergeMapExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(outputValues)
+            expect(values).toEqual(outputValues);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });
@@ -112,11 +112,11 @@ describe('MergeMapExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -124,12 +124,12 @@ describe('MergeMapExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 48, 78]]))
-        expect(positions[1]).toBeObservable(cold('0', [[8, 28, 38]]))
+        expect(positions[0]).toBeObservable(cold('0', [[18, 48, 78]]));
+        expect(positions[1]).toBeObservable(cold('0', [[8, 28, 38]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
 
         expect(result$).toBeObservable(cold(output, values));
       });
@@ -143,9 +143,9 @@ describe('MergeMapExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values)
+            expect(values).toEqual(values);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });

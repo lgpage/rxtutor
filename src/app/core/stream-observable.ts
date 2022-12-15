@@ -22,7 +22,7 @@ export class StreamObservable<T> extends Observable<T> {
       return subscription;
     });
 
-    this._logger = logger
+    this._logger = logger;
     this._scheduler = scheduler;
   }
 

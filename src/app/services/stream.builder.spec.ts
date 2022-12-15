@@ -1,20 +1,14 @@
 import { cold } from 'jasmine-marbles';
 import { MockService } from 'ng-mocks';
 import { of } from 'rxjs';
-import { TestScheduler } from 'rxjs/testing';
 import { TestBed } from '@angular/core/testing';
 import { RuntimeService } from './runtime.service';
 import { StreamBuilderService } from './stream.builder';
 
 describe('StreamBuilder', () => {
-  let testScheduler: TestScheduler;
   let service: StreamBuilderService;
 
   beforeEach(() => {
-    testScheduler = new TestScheduler((actual, expected) => {
-      expect(actual).toEqual(expected);
-    });
-
     TestBed.configureTestingModule({
       providers: [
         { provide: RuntimeService, useValue: MockService(RuntimeService, { exampleSize$: of<'small' | 'large'>('large') }) },

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -84,7 +85,7 @@ export class ExecutorService {
           return output;
         });
       }),
-    )
+    );
   }
 
   getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {

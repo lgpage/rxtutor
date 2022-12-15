@@ -14,7 +14,7 @@ import {
 import { StreamObservable } from './stream-observable';
 import { FrameNotification } from './types';
 
-const defaultMaxFrame: number = 750;
+const defaultMaxFrame = 750;
 
 export interface RunHelpers {
   streamObservable: <T = string>(marbles: string, values?: any, errorValue?: unknown) => StreamObservable<T>;
@@ -91,7 +91,7 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
       materialize: <T>(obs$: Observable<T>) => this.materialize<T>(obs$),
       streamObservable: <T = string>(marbles: string, values?: any, errorValue?: unknown) =>
         this.createStreamObservable<T>(marbles, values, errorValue),
-    }
+    };
 
     try {
       const result = callback(helpers);

@@ -26,15 +26,15 @@ export class MergeMapExample implements Example {
         this._streamBuilder.inputStream([0, 2], 3, null, 'a'),
       ],
     };
-  };
+  }
 
   getCode(): string {
     return `function visualize({ mergeMap, map }, one$, two$) {
   return one$.pipe(
     mergeMap((a) => two$.pipe(
-      map((b) => \`\${a}\${b}\`)
+      map((b) => \`\${a}\${b}\`),
     )),
   );
 }`;
-  };
+  }
 }

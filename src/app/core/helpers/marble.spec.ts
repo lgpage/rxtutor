@@ -8,7 +8,7 @@ describe('getMarbleNotifications', () => {
     describe('without any values', () => {
       it('returns expected notifications', () => {
         const marbles = '-0--a-2|';
-        var result = getMarbleNotifications(marbles);
+        const result = getMarbleNotifications(marbles);
 
         expect(result).toEqual([
           createNextFrameNotification(10, '0'),
@@ -24,7 +24,7 @@ describe('getMarbleNotifications', () => {
         const marbles = '-0--1-2|';
         const values = 10;
 
-        var result = getMarbleNotifications(marbles, values);
+        const result = getMarbleNotifications(marbles, values);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 10),
@@ -40,7 +40,7 @@ describe('getMarbleNotifications', () => {
         const marbles = '-0--1-2|';
         const values = ['a', 'b', 'c'];
 
-        var result = getMarbleNotifications(marbles, values);
+        const result = getMarbleNotifications(marbles, values);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -60,7 +60,7 @@ describe('getMarbleNotifications', () => {
           c: 'C',
         };
 
-        var result = getMarbleNotifications(marbles, values);
+        const result = getMarbleNotifications(marbles, values);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'A'),
@@ -75,7 +75,7 @@ describe('getMarbleNotifications', () => {
       it('returns expected notifications', () => {
         const marbles = '-a 200ms b-c|';
 
-        var result = getMarbleNotifications(marbles);
+        const result = getMarbleNotifications(marbles);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -90,7 +90,7 @@ describe('getMarbleNotifications', () => {
       it('returns expected notifications', () => {
         const marbles = '-a-(bc)-(d|)';
 
-        var result = getMarbleNotifications(marbles);
+        const result = getMarbleNotifications(marbles);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -109,7 +109,7 @@ describe('getMarbleNotifications', () => {
         const marbles = '-a--b-#';
         const error = new Error('whoops');
 
-        var result = getMarbleNotifications(marbles, null, error);
+        const result = getMarbleNotifications(marbles, null, error);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -123,7 +123,7 @@ describe('getMarbleNotifications', () => {
       it('returns expected notifications', () => {
         const marbles = '-a--b-#';
 
-        var result = getMarbleNotifications(marbles);
+        const result = getMarbleNotifications(marbles);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -137,7 +137,7 @@ describe('getMarbleNotifications', () => {
       it('returns expected notifications', () => {
         const marbles = '-a-(bc)-(d#)';
 
-        var result = getMarbleNotifications(marbles);
+        const result = getMarbleNotifications(marbles);
 
         expect(result).toEqual([
           createNextFrameNotification(10, 'a'),
@@ -155,7 +155,7 @@ describe('getMarbleNotifications', () => {
         const marbles = '-0--1-2|';
         const values = ['a', 'b', 'c'];
 
-        var result = getMarbleNotifications(marbles, values, null, 1);
+        const result = getMarbleNotifications(marbles, values, null, 1);
 
         expect(result).toEqual([
           createNextFrameNotification(1, 'a'),
