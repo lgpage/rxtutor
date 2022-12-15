@@ -5,14 +5,17 @@ import { ConcatExample } from './examples/concat';
 import { DebounceTimeExample } from './examples/debounce-time';
 import { MergeMapExample } from './examples/merge-map';
 import { SandboxExample } from './examples/sandbox';
+import { StartWithExample } from './examples/start-with';
 import { ThrottleTimeExample } from './examples/throttle-time';
 
 export {
+  SandboxExample,
+
   CombineLatestExample,
   ConcatExample,
   DebounceTimeExample,
   MergeMapExample,
-  SandboxExample,
+  StartWithExample,
   ThrottleTimeExample,
 };
 
@@ -23,5 +26,6 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: ConcatExample, multi: true },
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
+  { provide: EXAMPLE, useClass: StartWithExample, multi: true },
   { provide: EXAMPLE, useClass: ThrottleTimeExample, multi: true },
 ];
