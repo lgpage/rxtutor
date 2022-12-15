@@ -6,6 +6,7 @@ import { DebounceTimeExample } from './examples/debounce-time';
 import { MergeMapExample } from './examples/merge-map';
 import { SandboxExample } from './examples/sandbox';
 import { ThrottleTimeExample } from './examples/throttle-time';
+import { WithLatestFromExample } from './examples/with-latest-from';
 
 export {
   CombineLatestExample,
@@ -14,6 +15,7 @@ export {
   MergeMapExample,
   SandboxExample,
   ThrottleTimeExample,
+  WithLatestFromExample,
 };
 
 export const exampleProviders: Provider[] = [
@@ -24,4 +26,5 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
   { provide: EXAMPLE, useClass: ThrottleTimeExample, multi: true },
+  { provide: EXAMPLE, useClass: WithLatestFromExample, multi: true },
 ];
