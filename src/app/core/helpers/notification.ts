@@ -15,7 +15,7 @@ export const observeNotification = <T>(notification: Notification<T>, observer: 
   }
 
   kind === 'N' ? observer.next?.(value!) : kind === 'E' ? observer.error?.(error) : observer.complete?.();
-}
+};
 
 export const createNextFrameNotification = <T = any>(frame: number, value: T): FrameNotification<T> =>
   ({ frame, notification: createNextNotification<T>(value) });
@@ -47,5 +47,5 @@ export const getStreamNodes = (notifications: FrameNotification[], frameSize: nu
     id: guid(),
     x: offset + (x.frame * dx / frameSize),
     symbol: getNotificationSymbol(x.notification, String.fromCharCode(startAsc + i)),
-  }))
-}
+  }));
+};

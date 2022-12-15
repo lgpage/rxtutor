@@ -54,15 +54,15 @@ describe('ConcatExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[2].marbles$).toBeObservable(cold('0', [
           { marbles: three.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -70,13 +70,13 @@ describe('ConcatExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 48]]))
-        expect(positions[1]).toBeObservable(cold('0', [[28, 38, 58]]))
-        expect(positions[2]).toBeObservable(cold('0', [[8, 18, 28, 38]]))
+        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 48]]));
+        expect(positions[1]).toBeObservable(cold('0', [[28, 38, 58]]));
+        expect(positions[2]).toBeObservable(cold('0', [[8, 18, 28, 38]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)]);
 
         expect(result$).toBeObservable(cold(output, values));
       });
@@ -90,9 +90,9 @@ describe('ConcatExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values)
+            expect(values).toEqual(values);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });
@@ -119,15 +119,15 @@ describe('ConcatExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[1].marbles$).toBeObservable(cold('0', [
           { marbles: two.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
 
         expect(inputStreams[2].marbles$).toBeObservable(cold('0', [
           { marbles: three.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -135,13 +135,13 @@ describe('ConcatExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[8, 28, 38]]))
-        expect(positions[1]).toBeObservable(cold('0', [[8, 28]]))
-        expect(positions[2]).toBeObservable(cold('0', [[8, 18, 28]]))
+        expect(positions[0]).toBeObservable(cold('0', [[8, 28, 38]]));
+        expect(positions[1]).toBeObservable(cold('0', [[8, 28]]));
+        expect(positions[2]).toBeObservable(cold('0', [[8, 18, 28]]));
       });
 
       it('returns expected observable', () => {
-        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)] as any);
+        const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)]);
 
         expect(result$).toBeObservable(cold(output, outputValues));
       });
@@ -155,9 +155,9 @@ describe('ConcatExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(outputValues)
+            expect(values).toEqual(outputValues);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });

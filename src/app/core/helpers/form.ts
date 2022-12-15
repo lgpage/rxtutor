@@ -10,4 +10,4 @@ export const getFormValue = <TValue = string, TControl extends { [K in keyof TCo
     distinctUntilChanged(),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
-}
+};

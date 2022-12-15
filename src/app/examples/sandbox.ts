@@ -16,7 +16,7 @@ export class SandboxExample implements Example {
       small: [this._streamBuilder.inputStream([1, 3, 6], 7)],
       large: [this._streamBuilder.inputStream([3, 6, 9, 12], 15)],
     };
-  };
+  }
 
   getCode(): string {
     return `function visualize({ map }, one$) {
@@ -24,5 +24,5 @@ export class SandboxExample implements Example {
     map((x) => x * 2),
   );
 }`;
-  };
+  }
 }

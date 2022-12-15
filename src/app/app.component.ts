@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   @HostBinding('class.dark-mode') get darkMode(): boolean {
     return this.darkModeControl.value;
-  };
+  }
 
   constructor(
     protected _router: Router,

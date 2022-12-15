@@ -35,7 +35,7 @@ describe('ThrottleTimeExample', () => {
   describe('desktop', () => {
     const one = '       -1-2---345-----|';
     const output = '    -A-----B-------|';
-    const outputValues = { A: '1', B: '3' }
+    const outputValues = { A: '1', B: '3' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -45,13 +45,13 @@ describe('ThrottleTimeExample', () => {
 
       code = example.getCode();
       inputStreams = example.getInputStreams().large;
-    })
+    });
 
     describe('example', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -59,7 +59,7 @@ describe('ThrottleTimeExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 78, 88, 98, 158]]))
+        expect(positions[0]).toBeObservable(cold('0', [[18, 38, 78, 88, 98, 158]]));
       });
     });
 
@@ -71,9 +71,9 @@ describe('ThrottleTimeExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(outputValues)
+            expect(values).toEqual(outputValues);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });
@@ -81,7 +81,7 @@ describe('ThrottleTimeExample', () => {
   describe('mobile', () => {
     const one = '   12-3---|';
     const output = 'A--B---|';
-    const outputValues = { A: '1', B: '3' }
+    const outputValues = { A: '1', B: '3' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -97,7 +97,7 @@ describe('ThrottleTimeExample', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
           { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
-        ]))
+        ]));
       });
 
       it('has expected source stream nodes', () => {
@@ -105,7 +105,7 @@ describe('ThrottleTimeExample', () => {
           map((nodes) => nodes.map((node) => node.x)),
         ));
 
-        expect(positions[0]).toBeObservable(cold('0', [[8, 18, 38, 78]]))
+        expect(positions[0]).toBeObservable(cold('0', [[8, 18, 38, 78]]));
       });
     });
 
@@ -117,9 +117,9 @@ describe('ThrottleTimeExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(outputValues)
+            expect(values).toEqual(outputValues);
           }),
-        ).subscribe(() => done())
+        ).subscribe(() => done());
       });
     });
   });

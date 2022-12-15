@@ -21,7 +21,7 @@ const addNodeValue = (symbol: string, marbleValues: { [symbol: string]: any }, n
   value.push(node.value);
   marbleValues[symbol] = value;
   return value;
-}
+};
 
 const canDisplayValueAsSmallString = (value: any): boolean =>
   (value === null)
@@ -81,4 +81,4 @@ export const getStreamMarbles = (nodes: StreamNode[], dx: number, offset: number
     error: null,
     canDisplayAsValue: hasValues && canDisplayAsValue,
   };
-}
+};

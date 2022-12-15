@@ -6,12 +6,12 @@ interface MarbleNotification<T = any> {
   notification?: NotificationType<T>;
   nextIndex?: number;
   grouped?: boolean;
-};
+}
 
 interface MarbleTimeProgression {
   advanceIndexBy: number;
   advanceFrameBy: number;
-};
+}
 
 const getMarbleValue = (values: any, key: string): any | undefined => {
   if (!values) {
@@ -31,11 +31,11 @@ const getMarbleValue = (values: any, key: string): any | undefined => {
   }
 
   return values[key] ?? key;
-}
+};
 
 const getNextMarbleFrame = (frame: number, advanceBy: number, frameSize: number, grouped?: boolean): number => {
-  return !!grouped ? frame : (advanceBy * frameSize) + frame;
-}
+  return grouped ? frame : (advanceBy * frameSize) + frame;
+};
 
 const getMarbleTimeProgression = (marbles: string[], index: number, frameSize: number): MarbleTimeProgression | null => {
   if (!marbles[index].match(/^[0-9]$/)) {
@@ -74,7 +74,7 @@ const getMarbleTimeProgression = (marbles: string[], index: number, frameSize: n
     advanceIndexBy: match[0].length - 1,
     advanceFrameBy: (duration / frameSize),
   };
-}
+};
 
 const getMarbleNotification = (
   marbles: string[],
@@ -126,7 +126,7 @@ const getMarbleNotification = (
       };
     }
   }
-}
+};
 
 export const getMarbleNotifications = (
   marbles: string,
@@ -135,14 +135,14 @@ export const getMarbleNotifications = (
   frameSize = 10,
 ): FrameNotification[] => {
   const characters = [...marbles];
-  const notifications: FrameNotification[] = []
+  const notifications: FrameNotification[] = [];
 
   let frame = 0;
   let grouped: boolean | undefined;
 
   for (let index = 0; index < characters.length; index++) {
-    let result = getMarbleNotification(characters, index, frame, frameSize, grouped, values, errorValue);
-    if (!!result?.notification) {
+    const result = getMarbleNotification(characters, index, frame, frameSize, grouped, values, errorValue);
+    if (result?.notification) {
       notifications.push({ frame, notification: result.notification });
     }
 
@@ -152,4 +152,4 @@ export const getMarbleNotifications = (
   }
 
   return notifications;
-}
+};

@@ -26,7 +26,7 @@ export class CombineLatestExample implements Example {
         this._streamBuilder.inputStream([1, 5, 11], 15, null, 'a'),
       ],
     };
-  };
+  }
 
   getCode(): string {
     return `function visualize({ combineLatest, map }, one$, two$) {
@@ -34,5 +34,5 @@ export class CombineLatestExample implements Example {
     map(([a, b]) => \`\${a}\${b}\`),
   );
 }`;
-  };
+  }
 }

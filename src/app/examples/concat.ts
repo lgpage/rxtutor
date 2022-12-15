@@ -28,11 +28,11 @@ export class ConcatExample implements Example {
         this._streamBuilder.inputStream([0, 1, 2], 3, null, '3'),
       ],
     };
-  };
+  }
 
   getCode(): string {
     return `function visualize({ concat }, one$, two$, three$) {
   return concat(one$, two$, three$);
 }`;
-  };
+  }
 }

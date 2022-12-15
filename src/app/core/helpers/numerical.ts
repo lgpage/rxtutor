@@ -17,7 +17,7 @@ export const linspace = (start: number, stop: number, num: number, endpoint = tr
   const div = endpoint ? (size - 1) : size;
   const step = (stop - start) / div;
   return [...Array(size).keys()].map((x) => start + step * x);
-}
+};
 
 export const distribute = (start: number, stop: number, num: number): number[] => {
   const result: number[] = [];
@@ -27,9 +27,9 @@ export const distribute = (start: number, stop: number, num: number): number[] =
   }
 
   return result;
-}
+};
 
 export const roundOff = (num: number, places: number) => {
   const x = Math.pow(10, places);
   return Math.round(num * x) / x;
-}
+};
