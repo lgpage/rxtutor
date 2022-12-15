@@ -22,14 +22,15 @@ interface SideNavExamples {
 })
 export class SideNavComponent implements OnInit {
   protected _sectionTitles: SectionTitles = {
-    creation: { section: 'Create Observables', sequence: 0 },
     combination: { section: 'Combine Observables', sequence: 1 },
-    transformation: { section: 'Transform Operators', sequence: 2 },
-    filtering: { section: 'Filter Operators', sequence: 3 },
-    conditional: { section: 'Conditional Operators', sequence: 4 },
-    mathematical: { section: 'Math Operators', sequence: 5 },
-    utility: { section: 'Utility Operators', sequence: 6 },
-    other: { section: 'Other', sequence: 7 },
+    conditional: { section: 'Conditional Operators', sequence: 2 },
+    creation: { section: 'Create Observables', sequence: 3 },
+    error: { section: 'Error Handling', sequence: 4 },
+    multicast: { section: 'Multicast Observable', sequence: 5 },
+    filtering: { section: 'Filter Operators', sequence: 6 },
+    transformation: { section: 'Transform Operators', sequence: 7 },
+    utility: { section: 'Utility Operators', sequence: 8 },
+    other: { section: 'Other', sequence: 9 },
   };
 
   @Output() selectedRoute = new EventEmitter<string>();
