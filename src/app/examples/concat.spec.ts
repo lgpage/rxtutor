@@ -38,7 +38,7 @@ describe('ConcatExample', () => {
     const three = ' 345|';
     const output = '-A-B--CD-EFG|';
 
-    const values = { A: '1', B: '2', C: 'a', D: 'b', E: '3', F: '4', G: '5' };
+    const outputValues = { A: '1', B: '2', C: 'a', D: 'b', E: '3', F: '4', G: '5' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -78,7 +78,7 @@ describe('ConcatExample', () => {
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)]);
 
-        expect(result$).toBeObservable(cold(output, values));
+        expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
 
@@ -90,7 +90,7 @@ describe('ConcatExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values);
+            expect(values).toEqual(outputValues);
           }),
         ).subscribe(() => done());
       });

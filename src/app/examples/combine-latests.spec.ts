@@ -38,7 +38,7 @@ describe('CombineLatestExample', () => {
     const output = '    --A--(BC)----DE---|';
     const rxjsOutput = '--A--(BC)-DE---|';
 
-    const values = { A: '1a', B: '2a', C: '2b', D: '3b', E: '3c' };
+    const outputValues = { A: '1a', B: '2a', C: '2b', D: '3b', E: '3c' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -73,7 +73,7 @@ describe('CombineLatestExample', () => {
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
 
-        expect(result$).toBeObservable(cold(rxjsOutput, values));
+        expect(result$).toBeObservable(cold(rxjsOutput, outputValues));
       });
     });
 
@@ -85,7 +85,7 @@ describe('CombineLatestExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values);
+            expect(values).toEqual(outputValues);
           }),
         ).subscribe(() => done());
       });

@@ -69,20 +69,20 @@ export class ExecutorService {
     return rx.combineLatest([code$, sources$]).pipe(
       rx.first(),
       rx.mergeMap(([code, sources]) => rx.combineLatest(sources.map((x) => x.marbles$)).pipe(
-        rx.map((marbles) => ({ code, marbles })),
+        rx.map((marbles) => ({ code, streamMarbles: marbles })),
       )),
-      rx.tap(({ code, marbles }) => this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { code, marbles })),
-      rx.map(({ code, marbles }) => {
+      rx.tap(({ code, streamMarbles }) => this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { code, marbles: streamMarbles })),
+      rx.map(({ code, streamMarbles }) => {
         const scheduler = new VisualizationScheduler(this._frameSize, this._logger);
 
         return scheduler.run(({ streamObservable, materialize }) => {
-          const streams = marbles.map(({ marbles, values, error }) => streamObservable(marbles, values, error));
-          const output = materialize(this.getFunctionResult(code, streams).pipe(
+          const streams = streamMarbles.map(({ marbles, values, error }) => streamObservable(marbles, values, error));
+          const notifications = materialize(this.getFunctionResult(code, streams).pipe(
             rx.tap((output) => this._logger.logDebug(`${this._name} >> getVisualizedOutput >> output$`, { output })),
           ));
 
-          this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { streams, output });
-          return output;
+          this._logger.logDebug(`${this._name} >> getVisualizedOutput`, { streams, notifications });
+          return notifications;
         });
       }),
     );

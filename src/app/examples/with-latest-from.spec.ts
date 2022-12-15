@@ -37,7 +37,7 @@ describe('WithLatestFromExample', () => {
     const two = '   a----b-|';
     const output = '--A-B---C------|';
 
-    const values = { A: '1a', B: '2a', C: '3b' };
+    const outputValues = { A: '1a', B: '2a', C: '3b' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -71,7 +71,7 @@ describe('WithLatestFromExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
-        expect(result$).toBeObservable(cold(output, values));
+        expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
 
@@ -83,7 +83,7 @@ describe('WithLatestFromExample', () => {
           first(),
           tap(({ marbles, values }) => {
             expect(marbles).toEqual(output.trim());
-            expect(values).toEqual(values);
+            expect(values).toEqual(outputValues);
           }),
         ).subscribe(() => done());
       });

@@ -17,7 +17,7 @@ export class LoggerService {
   constructor(
     @Inject(LOG_LEVEL) @Optional() logLevel: LogLevel | undefined,
   ) {
-    this._logLevel = logLevel === undefined ? LogLevel.Warning : logLevel;
+    this._logLevel = logLevel ?? this._logLevel;
   }
 
   protected shouldLog(messageLogLevel: LogLevel): boolean {
