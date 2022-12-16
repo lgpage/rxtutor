@@ -4,6 +4,7 @@ import { CatchErrorExample } from './examples/catch-error';
 import { CombineLatestExample } from './examples/combine-latest';
 import { ConcatExample } from './examples/concat';
 import { DebounceTimeExample } from './examples/debounce-time';
+import { FromExample } from './examples/from';
 import { MergeExample } from './examples/merge';
 import { MergeMapExample } from './examples/merge-map';
 import { OfExample } from './examples/of';
@@ -19,6 +20,7 @@ export {
   CombineLatestExample,
   ConcatExample,
   DebounceTimeExample,
+  FromExample,
   MergeExample,
   MergeMapExample,
   OfExample,
@@ -34,6 +36,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: CombineLatestExample, multi: true },
   { provide: EXAMPLE, useClass: ConcatExample, multi: true },
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
+  { provide: EXAMPLE, useClass: FromExample, multi: true },
   { provide: EXAMPLE, useClass: MergeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
   { provide: EXAMPLE, useClass: OfExample, multi: true },
