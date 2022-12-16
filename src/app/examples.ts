@@ -4,6 +4,7 @@ import { CatchErrorExample } from './examples/catch-error';
 import { CombineLatestExample } from './examples/combine-latest';
 import { ConcatExample } from './examples/concat';
 import { DebounceTimeExample } from './examples/debounce-time';
+import { DelayExample } from './examples/delay';
 import { DistinctUntilChangedExample } from './examples/distinct-until-changed';
 import { FilterExample } from './examples/filter';
 import { FromExample } from './examples/from';
@@ -25,6 +26,7 @@ export {
   CombineLatestExample,
   ConcatExample,
   DebounceTimeExample,
+  DelayExample,
   DistinctUntilChangedExample,
   FilterExample,
   FromExample,
@@ -32,8 +34,8 @@ export {
   MergeMapExample,
   OfExample,
   StartWithExample,
-  TakeUntilExample,
   TakeExample,
+  TakeUntilExample,
   TapExample,
   ThrottleTimeExample,
   WithLatestFromExample,
@@ -46,6 +48,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: CombineLatestExample, multi: true },
   { provide: EXAMPLE, useClass: ConcatExample, multi: true },
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
+  { provide: EXAMPLE, useClass: DelayExample, multi: true },
   { provide: EXAMPLE, useClass: DistinctUntilChangedExample, multi: true },
   { provide: EXAMPLE, useClass: FilterExample, multi: true },
   { provide: EXAMPLE, useClass: FromExample, multi: true },
@@ -53,8 +56,8 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
   { provide: EXAMPLE, useClass: OfExample, multi: true },
   { provide: EXAMPLE, useClass: StartWithExample, multi: true },
-  { provide: EXAMPLE, useClass: TakeUntilExample, multi: true },
   { provide: EXAMPLE, useClass: TakeExample, multi: true },
+  { provide: EXAMPLE, useClass: TakeUntilExample, multi: true },
   { provide: EXAMPLE, useClass: TapExample, multi: true },
   { provide: EXAMPLE, useClass: ThrottleTimeExample, multi: true },
   { provide: EXAMPLE, useClass: WithLatestFromExample, multi: true },
