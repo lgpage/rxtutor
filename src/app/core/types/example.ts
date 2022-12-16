@@ -1,14 +1,15 @@
 import { InjectionToken } from '@angular/core';
 import { InputStream } from '../../core';
 
-export type ExampleSection = 'creation'
+export type ExampleSection = 'combination'
   | 'conditional'
-  | 'combination'
+  | 'creation'
+  | 'error'
   | 'filtering'
-  | 'mathematical'
+  | 'multicast'
+  | 'other'
   | 'transformation'
-  | 'utility'
-  | 'other';
+  | 'utility';
 
 export interface ExampleInputs {
   small: InputStream[];

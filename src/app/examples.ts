@@ -1,5 +1,6 @@
 import { Provider } from '@angular/core';
 import { EXAMPLE, START_EXAMPLE } from './core';
+import { CatchErrorExample } from './examples/catch-error';
 import { CombineLatestExample } from './examples/combine-latest';
 import { ConcatExample } from './examples/concat';
 import { DebounceTimeExample } from './examples/debounce-time';
@@ -14,6 +15,7 @@ import { WithLatestFromExample } from './examples/with-latest-from';
 export {
   SandboxExample,
 
+  CatchErrorExample,
   CombineLatestExample,
   ConcatExample,
   DebounceTimeExample,
@@ -28,6 +30,7 @@ export {
 export const exampleProviders: Provider[] = [
   { provide: START_EXAMPLE, useClass: SandboxExample },
 
+  { provide: EXAMPLE, useClass: CatchErrorExample, multi: true },
   { provide: EXAMPLE, useClass: CombineLatestExample, multi: true },
   { provide: EXAMPLE, useClass: ConcatExample, multi: true },
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
