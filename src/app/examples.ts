@@ -7,6 +7,7 @@ import { DebounceTimeExample } from './examples/debounce-time';
 import { DelayExample } from './examples/delay';
 import { DistinctUntilChangedExample } from './examples/distinct-until-changed';
 import { FilterExample } from './examples/filter';
+import { FinalizeExample } from './examples/finalize';
 import { FromExample } from './examples/from';
 import { MergeExample } from './examples/merge';
 import { MergeMapExample } from './examples/merge-map';
@@ -29,6 +30,7 @@ export {
   DelayExample,
   DistinctUntilChangedExample,
   FilterExample,
+  FinalizeExample,
   FromExample,
   MergeExample,
   MergeMapExample,
@@ -51,6 +53,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: DelayExample, multi: true },
   { provide: EXAMPLE, useClass: DistinctUntilChangedExample, multi: true },
   { provide: EXAMPLE, useClass: FilterExample, multi: true },
+  { provide: EXAMPLE, useClass: FinalizeExample, multi: true },
   { provide: EXAMPLE, useClass: FromExample, multi: true },
   { provide: EXAMPLE, useClass: MergeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
