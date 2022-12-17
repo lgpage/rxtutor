@@ -3,9 +3,13 @@ import { Example, ExampleInputs, ExampleSection } from '../core';
 import { StreamBuilderService } from '../services';
 
 @Injectable()
-export class SandboxExample implements Example {
-  name = 'sandbox';
-  section: ExampleSection = 'other';
+export class MapExample implements Example {
+  name = 'map';
+  section: ExampleSection = 'transformation';
+  links = [
+    { label: 'Learn RxJS', url: 'https://www.learnrxjs.io/learn-rxjs/operators/transformation/map' },
+    { label: 'RxJS API', url: 'https://rxjs.dev/api/index/function/map' },
+  ];
 
   constructor(
     protected _streamBuilder: StreamBuilderService,
@@ -14,7 +18,7 @@ export class SandboxExample implements Example {
   getInputStreams(): ExampleInputs {
     return {
       small: [
-        this._streamBuilder.inputStream([1, 3, 6], 7)
+        this._streamBuilder.inputStream([0, 2, 4, 6], 7)
       ],
       large: [
         this._streamBuilder.inputStream([3, 6, 9, 12], 15)
@@ -25,7 +29,7 @@ export class SandboxExample implements Example {
   getCode(): string {
     return `function visualize({ map }, one$) {
   return one$.pipe(
-    map((x) => x * 2),
+    map((x) => \`\${2 * x}\`),
   );
 }`;
   }
