@@ -3,12 +3,12 @@ import { Example, ExampleInputs, ExampleSection } from '../core';
 import { StreamBuilderService } from '../services';
 
 @Injectable()
-export class MergeMapExample implements Example {
-  name = 'mergeMap';
+export class ConcatMapExample implements Example {
+  name = 'concatMap';
   section: ExampleSection = 'transformation';
   links = [
-    { label: 'Learn RxJS', url: 'https://www.learnrxjs.io/learn-rxjs/operators/transformation/mergemap' },
-    { label: 'RxJS API', url: 'https://rxjs.dev/api/index/function/mergeMap' },
+    { label: 'Learn RxJS', url: 'https://www.learnrxjs.io/learn-rxjs/operators/transformation/concatmap' },
+    { label: 'RxJS API', url: 'https://rxjs.dev/api/index/function/concatMap' },
   ];
 
   constructor(
@@ -29,9 +29,9 @@ export class MergeMapExample implements Example {
   }
 
   getCode(): string {
-    return `function visualize({ mergeMap, map }, one$, two$) {
+    return `function visualize({ concatMap, map }, one$, two$) {
   return one$.pipe(
-    mergeMap((a) => two$.pipe(
+    concatMap((a) => two$.pipe(
       map((b) => \`\${a}\${b}\`),
     )),
   );
