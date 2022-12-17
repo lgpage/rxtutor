@@ -9,6 +9,7 @@ import { DistinctUntilChangedExample } from './examples/distinct-until-changed';
 import { FilterExample } from './examples/filter';
 import { FinalizeExample } from './examples/finalize';
 import { FromExample } from './examples/from';
+import { MapExample } from './examples/map';
 import { MergeExample } from './examples/merge';
 import { MergeMapExample } from './examples/merge-map';
 import { OfExample } from './examples/of';
@@ -32,6 +33,7 @@ export {
   FilterExample,
   FinalizeExample,
   FromExample,
+  MapExample,
   MergeExample,
   MergeMapExample,
   OfExample,
@@ -55,6 +57,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: FilterExample, multi: true },
   { provide: EXAMPLE, useClass: FinalizeExample, multi: true },
   { provide: EXAMPLE, useClass: FromExample, multi: true },
+  { provide: EXAMPLE, useClass: MapExample, multi: true },
   { provide: EXAMPLE, useClass: MergeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
   { provide: EXAMPLE, useClass: OfExample, multi: true },
