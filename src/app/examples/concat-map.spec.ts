@@ -5,17 +5,17 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InputStream } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
-import { MergeMapExample } from './merge-map';
+import { ConcatMapExample } from './concat-map';
 
-describe('MergeMapExample', () => {
-  let example: MergeMapExample;
+describe('ConcatMapExample', () => {
+  let example: ConcatMapExample;
   let executorSvc: ExecutorService;
   let streamBuilderSvc: StreamBuilderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        MergeMapExample,
+        ConcatMapExample,
         ExecutorService,
         StreamBuilderService,
         { provide: MatSnackBar, useValue: MockService(MatSnackBar) },
@@ -23,7 +23,7 @@ describe('MergeMapExample', () => {
       ]
     });
 
-    example = TestBed.inject(MergeMapExample);
+    example = TestBed.inject(ConcatMapExample);
     executorSvc = TestBed.inject(ExecutorService);
     streamBuilderSvc = TestBed.inject(StreamBuilderService);
   });
@@ -35,9 +35,9 @@ describe('MergeMapExample', () => {
   describe('desktop', () => {
     const one = '   -12----34------|';
     const two = '   a-b|';
-    const output = '-ABCD--EFGH----|';
+    const output = '-A-BC-DE-FG-H--|';
 
-    const outputValues = { A: '1a', B: '2a', C: '1b', D: '2b', E: '3a', F: '4a', G: '3b', H: '4b' };
+    const outputValues = { A: '1a', B: '1b', C: '2a', D: '2b', E: '3a', F: '3b', G: '4a', H: '4b' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -71,7 +71,6 @@ describe('MergeMapExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
-
         expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
@@ -94,9 +93,9 @@ describe('MergeMapExample', () => {
   describe('mobile', () => {
     const one = '   -12----|';
     const two = '   a-b|';
-    const output = '-ABCD--|';
+    const output = '-A-BC-D|';
 
-    const outputValues = { A: '1a', B: '2a', C: '1b', D: '2b' };
+    const outputValues = { A: '1a', B: '1b', C: '2a', D: '2b' };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -130,7 +129,6 @@ describe('MergeMapExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
-
         expect(result$).toBeObservable(cold(output, outputValues));
       });
     });

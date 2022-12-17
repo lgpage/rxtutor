@@ -3,6 +3,7 @@ import { EXAMPLE, START_EXAMPLE } from './core';
 import { CatchErrorExample } from './examples/catch-error';
 import { CombineLatestExample } from './examples/combine-latest';
 import { ConcatExample } from './examples/concat';
+import { ConcatMapExample } from './examples/concat-map';
 import { DebounceTimeExample } from './examples/debounce-time';
 import { DelayExample } from './examples/delay';
 import { DistinctUntilChangedExample } from './examples/distinct-until-changed';
@@ -27,6 +28,7 @@ export {
   CatchErrorExample,
   CombineLatestExample,
   ConcatExample,
+  ConcatMapExample,
   DebounceTimeExample,
   DelayExample,
   DistinctUntilChangedExample,
@@ -51,6 +53,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: CatchErrorExample, multi: true },
   { provide: EXAMPLE, useClass: CombineLatestExample, multi: true },
   { provide: EXAMPLE, useClass: ConcatExample, multi: true },
+  { provide: EXAMPLE, useClass: ConcatMapExample, multi: true },
   { provide: EXAMPLE, useClass: DebounceTimeExample, multi: true },
   { provide: EXAMPLE, useClass: DelayExample, multi: true },
   { provide: EXAMPLE, useClass: DistinctUntilChangedExample, multi: true },
