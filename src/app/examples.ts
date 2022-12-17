@@ -14,6 +14,7 @@ import { SandboxExample } from './examples/sandbox';
 import { StartWithExample } from './examples/start-with';
 import { TakeExample } from './examples/take';
 import { TakeUntilExample } from './examples/take-until';
+import { TapExample } from './examples/tap';
 import { ThrottleTimeExample } from './examples/throttle-time';
 import { WithLatestFromExample } from './examples/with-latest-from';
 
@@ -33,6 +34,7 @@ export {
   StartWithExample,
   TakeUntilExample,
   TakeExample,
+  TapExample,
   ThrottleTimeExample,
   WithLatestFromExample,
 };
@@ -53,6 +55,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: StartWithExample, multi: true },
   { provide: EXAMPLE, useClass: TakeUntilExample, multi: true },
   { provide: EXAMPLE, useClass: TakeExample, multi: true },
+  { provide: EXAMPLE, useClass: TapExample, multi: true },
   { provide: EXAMPLE, useClass: ThrottleTimeExample, multi: true },
   { provide: EXAMPLE, useClass: WithLatestFromExample, multi: true },
 ];
