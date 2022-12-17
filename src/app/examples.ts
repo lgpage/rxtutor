@@ -15,6 +15,7 @@ import { MergeExample } from './examples/merge';
 import { MergeMapExample } from './examples/merge-map';
 import { OfExample } from './examples/of';
 import { SandboxExample } from './examples/sandbox';
+import { ScanExample } from './examples/scan';
 import { StartWithExample } from './examples/start-with';
 import { SwitchMapExample } from './examples/switch-map';
 import { TakeExample } from './examples/take';
@@ -40,6 +41,7 @@ export {
   MergeExample,
   MergeMapExample,
   OfExample,
+  ScanExample,
   StartWithExample,
   SwitchMapExample,
   TakeExample,
@@ -66,6 +68,7 @@ export const exampleProviders: Provider[] = [
   { provide: EXAMPLE, useClass: MergeExample, multi: true },
   { provide: EXAMPLE, useClass: MergeMapExample, multi: true },
   { provide: EXAMPLE, useClass: OfExample, multi: true },
+  { provide: EXAMPLE, useClass: ScanExample, multi: true },
   { provide: EXAMPLE, useClass: StartWithExample, multi: true },
   { provide: EXAMPLE, useClass: SwitchMapExample, multi: true },
   { provide: EXAMPLE, useClass: TakeExample, multi: true },

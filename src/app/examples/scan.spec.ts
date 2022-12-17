@@ -5,17 +5,17 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InputStream } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
-import { MapExample } from './map';
+import { ScanExample } from './scan';
 
-describe('MapExample', () => {
-  let example: MapExample;
+describe('ScanExample', () => {
+  let example: ScanExample;
   let executorSvc: ExecutorService;
   let streamBuilderSvc: StreamBuilderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        MapExample,
+        ScanExample,
         ExecutorService,
         StreamBuilderService,
         { provide: MatSnackBar, useValue: MockService(MatSnackBar) },
@@ -23,7 +23,7 @@ describe('MapExample', () => {
       ]
     });
 
-    example = TestBed.inject(MapExample);
+    example = TestBed.inject(ScanExample);
     executorSvc = TestBed.inject(ExecutorService);
     streamBuilderSvc = TestBed.inject(StreamBuilderService);
   });
@@ -35,7 +35,7 @@ describe('MapExample', () => {
   describe('desktop', () => {
     const one = '   ---1--2--3--4--|';
     const output = '---A--B--C--D--|';
-    const outputValues = { A: 2, B: 4, C: 6, D: 8 };
+    const outputValues = { A: 1, B: 3, C: 6, D: 10 };
 
     let code: string;
     let inputStreams: InputStream[];
@@ -86,7 +86,7 @@ describe('MapExample', () => {
   describe('mobile', () => {
     const one = '   1-2-3-4|';
     const output = 'A-B-C-D|';
-    const outputValues = { A: 2, B: 4, C: 6, D: 8 };
+    const outputValues = { A: 1, B: 3, C: 6, D: 10 };
 
     let code: string;
     let inputStreams: InputStream[];
