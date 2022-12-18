@@ -61,6 +61,11 @@ describe('DistinctUntilChangedExample', () => {
 
         expect(positions[0]).toBeObservable(cold('0', [[28, 58, 88, 118, 148, 158]]));
       });
+
+      it('returns expected observable', () => {
+        const result$ = executorSvc.getFunctionResult(code, [cold(one)]);
+        expect(result$).toBeObservable(cold(output, outputValues));
+      });
     });
 
     describe('output stream', () => {
@@ -106,6 +111,11 @@ describe('DistinctUntilChangedExample', () => {
         ));
 
         expect(positions[0]).toBeObservable(cold('0', [[8, 28, 48, 68, 78]]));
+      });
+
+      it('returns expected observable', () => {
+        const result$ = executorSvc.getFunctionResult(code, [cold(one)]);
+        expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
 

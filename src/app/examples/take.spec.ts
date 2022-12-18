@@ -61,6 +61,11 @@ describe('TakeExample', () => {
 
         expect(positions[0]).toBeObservable(cold('0', [[38, 68, 98, 128, 158]]));
       });
+
+      it('returns expected observable', () => {
+        const result$ = executorSvc.getFunctionResult(code, [cold(one)]);
+        expect(result$).toBeObservable(cold(output, outputValues));
+      });
     });
 
     describe('output stream', () => {
@@ -106,6 +111,11 @@ describe('TakeExample', () => {
         ));
 
         expect(positions[0]).toBeObservable(cold('0', [[8, 28, 48, 68, 78]]));
+      });
+
+      it('returns expected observable', () => {
+        const result$ = executorSvc.getFunctionResult(code, [cold(one)]);
+        expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
 

@@ -129,7 +129,6 @@ describe('MergeExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two)]);
-
         expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
