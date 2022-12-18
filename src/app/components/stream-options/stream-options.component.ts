@@ -5,7 +5,8 @@ import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@ang
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getFormValue, InputStream, range, StreamNode } from '../../core';
-import { LoggerService, StreamBuilderService } from '../../services';
+import { LoggerService } from '../../logger.service';
+import { StreamBuilderService } from '../../services';
 
 type CompleteType = 'C' | 'E' | null;
 

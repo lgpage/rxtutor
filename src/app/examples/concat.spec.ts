@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { ConcatExample } from './concat';
 
@@ -41,7 +41,7 @@ describe('ConcatExample', () => {
     const outputValues = { A: '1', B: '2', C: 'a', D: 'b', E: '3', F: '4', G: '5' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -106,7 +106,7 @@ describe('ConcatExample', () => {
     const outputValues = { A: '1', B: '2', C: 'a', D: '3', E: '4' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');

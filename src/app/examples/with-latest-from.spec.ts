@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { WithLatestFromExample } from './with-latest-from';
 
@@ -40,7 +40,7 @@ describe('WithLatestFromExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '3b' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -98,7 +98,7 @@ describe('WithLatestFromExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '3b' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');

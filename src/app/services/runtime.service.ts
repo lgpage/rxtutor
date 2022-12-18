@@ -1,7 +1,7 @@
 import { combineLatest, distinctUntilChanged, map, shareReplay, tap } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
-import { LoggerService } from '../services';
+import { LoggerService } from '../logger.service';
 
 export interface SimpleLayoutMatch {
   mediaSize: 'small' | 'large';  // < 800px - small; else large

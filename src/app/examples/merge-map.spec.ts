@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { MergeMapExample } from './merge-map';
 
@@ -40,7 +40,7 @@ describe('MergeMapExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '1b', D: '2b', E: '3a', F: '4a', G: '3b', H: '4b' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -99,7 +99,7 @@ describe('MergeMapExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '1b', D: '2b' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');

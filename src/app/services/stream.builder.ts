@@ -6,7 +6,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   distribute, FrameNotification, getStreamNodes, indexToX, InputStream, OutputStream, StreamNode,
 } from '../core';
-import { LoggerService, RuntimeService } from '../services';
+import { LoggerService } from '../logger.service';
+import { RuntimeService } from './runtime.service';
 
 @Injectable({ providedIn: 'root' })
 @UntilDestroy()

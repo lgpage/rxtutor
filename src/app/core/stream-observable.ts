@@ -1,5 +1,5 @@
 import { Observable, SchedulerLike, Subscriber, Subscription } from 'rxjs';
-import { LoggerService } from '../services';
+import { LoggerService } from '../logger.service';
 import { observeNotification } from './helpers';
 import { FrameNotification } from './types';
 

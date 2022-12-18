@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { MapExample } from './map';
 
@@ -38,7 +38,7 @@ describe('MapExample', () => {
     const outputValues = { A: 2, B: 4, C: 6, D: 8 };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -89,7 +89,7 @@ describe('MapExample', () => {
     const outputValues = { A: 2, B: 4, C: 6, D: 8 };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');

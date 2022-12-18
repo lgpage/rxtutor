@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { CombineLatestExample } from './combine-latest';
 
@@ -41,7 +41,7 @@ describe('CombineLatestExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '2b', D: '3b', E: '3c' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -100,7 +100,7 @@ describe('CombineLatestExample', () => {
     const outputValues = { A: '1a', B: '2a', C: '2b', D: '3b' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');

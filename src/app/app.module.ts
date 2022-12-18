@@ -29,8 +29,8 @@ import {
   StreamOptionsComponent,
 } from './components';
 import { exampleProviders } from './examples';
+import { LOG_LEVEL, LogLevel } from './logger.service';
 import { routes } from './routes';
-import { LOG_LEVEL, LogLevel } from './services/logger.service';
 
 @NgModule({
   imports: [
@@ -68,9 +68,9 @@ import { LOG_LEVEL, LogLevel } from './services/logger.service';
   ],
   providers: [
     ...exampleProviders,
+    { provide: LOG_LEVEL, useValue: environment.production ? LogLevel.Warning : LogLevel.Debug },
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
     { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
-    { provide: LOG_LEVEL, useValue: environment.production ? LogLevel.Warning : LogLevel.Debug },
   ],
   bootstrap: [AppComponent]
 })

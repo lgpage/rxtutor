@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, map, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { BufferTimeExample } from './buffer-time';
 
@@ -38,7 +38,7 @@ describe('BufferTimeExample', () => {
     const outputValues = { A: ['1'], B: ['2', '3'], C: ['4', '5'], D: [], E: [] };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');
@@ -84,7 +84,7 @@ describe('BufferTimeExample', () => {
     const outputValues = { A: ['1', '2'], B: ['3', '4'], C: [] };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('small');
