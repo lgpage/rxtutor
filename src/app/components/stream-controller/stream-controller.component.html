@@ -2,21 +2,18 @@
 <div class="options" *ngIf="(mediaSize$ | async) === 'large'">
   <button
     mat-icon-button
-    (click)="copyMarblesToClipboard()"
+    matTooltipPosition="before"
+    matTooltipClass="marbles-tooltip"
     aria-label="View marbles"
+    [matTooltip]="(marblesString$ | async)!"
+    (click)="copyMarblesToClipboard()"
   >
-    <mat-icon
-      [matTooltip]="(stream.marbles$ | async)!.marbles"
-      matTooltipPosition="after"
-      matTooltipClass="marbles-tooltip"
-    >
-      info
-    </mat-icon>
+    <mat-icon>info</mat-icon>
   </button>
   <button
     mat-icon-button
-    (click)="showOptions()"
     aria-label="View settings"
+    (click)="showOptions()"
     *ngIf="hasOptions$ | async"
   >
     <mat-icon>settings</mat-icon>

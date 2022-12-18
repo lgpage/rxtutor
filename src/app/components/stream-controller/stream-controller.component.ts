@@ -1,6 +1,6 @@
-import { first, map, of, tap } from 'rxjs';
+import { first, map, Observable, of, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stream } from '../../core';
@@ -13,13 +13,14 @@ import { StreamOptionsComponent } from '../stream-options/stream-options.compone
   styleUrls: ['./stream-controller.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class StreamControllerComponent {
-  @Input() stream: Stream = this._streamBuilder.defaultInputStream();
+export class StreamControllerComponent implements OnInit {
+  @Input() stream: Stream | undefined;
   @Input() canRemoveSource$ = of(false);
   @Input() hasOptions$ = of(false);
 
   @Output() removeStream = new EventEmitter<StreamControllerComponent>();
 
+  marblesString$: Observable<string> | undefined;
   mediaSize$ = this._runtimeSvc.mediaSize$;
 
   constructor(
@@ -32,12 +33,16 @@ export class StreamControllerComponent {
     protected _logger: LoggerService,
   ) { }
 
+  ngOnInit(): void {
+    this.marblesString$ = this.stream?.marbles$.pipe(map(({ marbles }) => marbles));
+  }
+
   openSnackBar(message: string, action?: string) {
     this._snackBar.open(message, action, { duration: 3000 });
   }
 
   copyMarblesToClipboard(): void {
-    this.stream.marbles$.pipe(
+    this.stream?.marbles$.pipe(
       first(),
       map((marbles) => {
         const hasValues = Object.values(marbles.values ?? {}).filter((x) => !!x).length >= 1;
