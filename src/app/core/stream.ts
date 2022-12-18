@@ -1,26 +1,12 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, first, map, shareReplay, tap } from 'rxjs/operators';
-import { LoggerService } from '../services';
+import { LoggerService } from '../logger.service';
 import { filterTruthy, getSnappedX, getStreamMarbles, xToIndex } from './helpers';
-import { StreamConfig, StreamMarbles, StreamNode } from './types';
+import { InputStreamLike, StreamConfig, StreamLike, StreamNode } from './types';
 
 export type Config = Omit<StreamConfig, 'frames'> & { frames: number };
 
-export interface IStream {
-  dx: number;
-  dy: number;
-  offset: number;
-  frames: number;
-
-  entities$: Observable<{ [id: string]: StreamNode }>;
-  nodes$: Observable<StreamNode[]>;
-  next$: Observable<StreamNode[]>;
-  terminate$: Observable<StreamNode | null>;
-  nodesToRender$: Observable<StreamNode[]>;
-  marbles$: Observable<StreamMarbles>;
-}
-
-export class Stream implements IStream {
+export class Stream implements StreamLike {
   protected _name = 'Stream';
   protected _logger: LoggerService | undefined;
   protected _nodesSubject$ = new BehaviorSubject<{ [id: string]: StreamNode } | null>(null);
@@ -103,7 +89,7 @@ export class Stream implements IStream {
   }
 }
 
-export class InputStream extends Stream implements IStream {
+export class InputStream extends Stream implements InputStreamLike {
   protected _name = 'InputStream';
   protected _logger: LoggerService | undefined;
 
@@ -124,7 +110,7 @@ export class InputStream extends Stream implements IStream {
   }
 }
 
-export class OutputStream extends Stream implements IStream {
+export class OutputStream extends Stream implements StreamLike {
   protected _updateSub: Subscription | undefined;
 
   constructor(config: Config, logger?: LoggerService) {

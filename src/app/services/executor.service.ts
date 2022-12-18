@@ -2,8 +2,8 @@
 import * as rx from 'rxjs';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FrameNotification, InputStream, OutputStream, range, VisualizationScheduler } from '../core';
-import { LoggerService } from './logger.service';
+import { FrameNotification, InputStreamLike, OutputStream, range, VisualizationScheduler } from '../core';
+import { LoggerService } from '../logger.service';
 import { StreamBuilderService } from './stream.builder';
 
 @Injectable({ providedIn: 'root' })
@@ -65,7 +65,7 @@ export class ExecutorService {
     return this.invoke(this.createCallable(jsCode, sources.length), sources);
   }
 
-  getVisualizedNodesUpdater(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): rx.Observable<FrameNotification[]> {
+  getVisualizedNodesUpdater(code$: rx.Observable<string>, sources$: rx.Observable<InputStreamLike[]>): rx.Observable<FrameNotification[]> {
     return rx.combineLatest([code$, sources$]).pipe(
       rx.first(),
       rx.mergeMap(([code, sources]) => rx.combineLatest(sources.map((x) => x.marbles$)).pipe(
@@ -88,7 +88,7 @@ export class ExecutorService {
     );
   }
 
-  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStream[]>): OutputStream {
+  getVisualizedOutput(code$: rx.Observable<string>, sources$: rx.Observable<InputStreamLike[]>): OutputStream {
     const nodesUpdater$ = this.getVisualizedNodesUpdater(code$, sources$);
     return this._streamBuilder.outputStream(nodesUpdater$, this._frameSize);
   }

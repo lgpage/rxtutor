@@ -1,20 +1,20 @@
 import { first, map, Observable, of, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Stream } from '../../core';
-import { InsightsService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
+import { StreamLike } from '../../core';
+import { LoggerService } from '../../logger.service';
+import { InsightsService, RuntimeService, StreamBuilderService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 
 @Component({
   selector: 'app-stream-controller',
   templateUrl: './stream-controller.component.html',
-  styleUrls: ['./stream-controller.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./stream-controller.component.scss']
 })
 export class StreamControllerComponent implements OnInit {
-  @Input() stream: Stream | undefined;
+  @Input() stream: StreamLike | undefined;
   @Input() canRemoveSource$ = of(false);
   @Input() hasOptions$ = of(false);
 

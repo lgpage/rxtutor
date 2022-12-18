@@ -3,7 +3,7 @@ import { MockService } from 'ng-mocks';
 import { first, of, tap } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InputStream } from '../core';
+import { InputStreamLike } from '../core';
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../services';
 import { FromExample } from './from';
 
@@ -37,7 +37,7 @@ describe('FromExample', () => {
     const outputValues = { A: 'a', B: 'b', C: 'c', D: 'd' };
 
     let code: string;
-    let inputStreams: InputStream[];
+    let inputStreams: InputStreamLike[];
 
     beforeEach(() => {
       streamBuilderSvc.setFrames('large');

@@ -4,8 +4,9 @@ import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/co
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { EXAMPLE, Example, getFormValue, InputStream, START_EXAMPLE, Stream } from '../../core';
-import { ExecutorService, LoggerService, RuntimeService, StreamBuilderService } from '../../services';
+import { Example, EXAMPLE, getFormValue, InputStreamLike, START_EXAMPLE, Stream } from '../../core';
+import { LoggerService } from '../../logger.service';
+import { ExecutorService, RuntimeService, StreamBuilderService } from '../../services';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
@@ -19,7 +20,7 @@ export class SandboxControllerComponent implements OnInit {
   protected _name = 'SandboxControllerComponent';
   protected _maxSources = 3;
 
-  protected _sourcesSubject$ = new BehaviorSubject<InputStream[]>([]);
+  protected _sourcesSubject$ = new BehaviorSubject<InputStreamLike[]>([]);
   protected _outputSubject$ = new BehaviorSubject<Stream | null>(null);
   protected _linksSubject$ = new BehaviorSubject<{ label: string; url: string }[] | undefined>([]);
 
@@ -71,7 +72,9 @@ export class SandboxControllerComponent implements OnInit {
   }
 
   protected renderExample(): void {
-    const examples = this._examples.reduce((p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample });
+    const examples = this._examples.reduce(
+      (p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample }
+    );
 
     const exampleToRender$ = this._route.paramMap.pipe(
       map((params) => params.get('exampleName') ?? this._startExample.name),
@@ -84,9 +87,13 @@ export class SandboxControllerComponent implements OnInit {
         const inputs = example.getInputStreams();
         const code = example.getCode();
 
+        this._logger.logDebug(`${this._name} >> exampleToRender$`, { code, inputs });
+
         this._linksSubject$.next(example.links);
         this._sourcesSubject$.next(size === 'small' ? inputs.small : inputs.large);
+
         this.formGroup.get('code')?.setValue(code);
+        this.formGroup.updateValueAndValidity();
       }),
       untilDestroyed(this),
     ).subscribe();

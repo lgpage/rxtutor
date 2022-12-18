@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { InputStream } from '../../core';
+import { InputStreamLike } from './stream';
 
 export type ExampleSection = 'combination'
   | 'conditional'
@@ -12,8 +12,8 @@ export type ExampleSection = 'combination'
   | 'utility';
 
 export interface ExampleInputs {
-  small: InputStream[];
-  large: InputStream[];
+  small: InputStreamLike[];
+  large: InputStreamLike[];
 }
 
 export interface Example {

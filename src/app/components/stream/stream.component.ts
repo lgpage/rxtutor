@@ -1,9 +1,9 @@
 import { distinctUntilChanged, map, Observable, shareReplay } from 'rxjs';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getBoundedX, InputStream, range, roundOff, Stream, StreamNode } from '../../core';
+import { getBoundedX, InputStream, range, roundOff, StreamLike, StreamNode } from '../../core';
 
-const isInputStream = (stream: Stream | undefined): stream is InputStream =>
+const isInputStream = (stream: StreamLike | undefined): stream is InputStream =>
   !!(stream as InputStream)?.updateNode;
 
 @Component({
@@ -14,7 +14,7 @@ const isInputStream = (stream: Stream | undefined): stream is InputStream =>
 export class StreamComponent implements OnInit {
   protected _node: StreamNode | null = null;
 
-  @Input() stream: Stream | undefined;
+  @Input() stream: StreamLike | undefined;
   @Input() color: 'primary' | 'accent' = 'accent';
 
   @ViewChild('svg') svg: ElementRef | undefined;

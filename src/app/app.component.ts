@@ -10,7 +10,8 @@ type Theme = 'light' | 'dark';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 @UntilDestroy()
 export class AppComponent implements OnInit {

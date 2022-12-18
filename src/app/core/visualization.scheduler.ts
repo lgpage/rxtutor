@@ -6,7 +6,7 @@ import { immediateProvider } from 'rxjs/internal/scheduler/immediateProvider';
 import { intervalProvider } from 'rxjs/internal/scheduler/intervalProvider';
 import { performanceTimestampProvider } from 'rxjs/internal/scheduler/performanceTimestampProvider';
 import { timeoutProvider } from 'rxjs/internal/scheduler/timeoutProvider';
-import { LoggerService } from '../services';
+import { LoggerService } from '../logger.service';
 import {
   createAnimator, createCompleteNotification, createDelegates, createErrorNotification, createNextNotification,
   getMarbleNotifications,
