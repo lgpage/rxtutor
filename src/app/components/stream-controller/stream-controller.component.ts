@@ -1,6 +1,6 @@
 import { first, map, Observable, of, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stream } from '../../core';
@@ -10,8 +10,7 @@ import { StreamOptionsComponent } from '../stream-options/stream-options.compone
 @Component({
   selector: 'app-stream-controller',
   templateUrl: './stream-controller.component.html',
-  styleUrls: ['./stream-controller.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./stream-controller.component.scss']
 })
 export class StreamControllerComponent implements OnInit {
   @Input() stream: Stream | undefined;

@@ -1,0 +1,12 @@
+.side-nav {
+  width: 240px;
+}
+
+:host ::ng-deep .mat-drawer-inner-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
