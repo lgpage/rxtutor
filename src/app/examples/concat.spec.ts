@@ -77,7 +77,6 @@ describe('ConcatExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)]);
-
         expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
@@ -142,7 +141,6 @@ describe('ConcatExample', () => {
 
       it('returns expected observable', () => {
         const result$ = executorSvc.getFunctionResult(code, [cold(one), cold(two), cold(three)]);
-
         expect(result$).toBeObservable(cold(output, outputValues));
       });
     });
