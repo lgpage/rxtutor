@@ -30,7 +30,7 @@ $dark-theme: mat.define-dark-theme(
 @include mat.all-component-themes($light-theme);
 @include svg-theme($light-theme);
 
-.dark-mode {
+@media (prefers-color-scheme: dark) {
   @include mat.all-component-colors($dark-theme);
   @include svg-theme($dark-theme);
 }
