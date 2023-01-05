@@ -3,8 +3,11 @@ import { SchedulerLike, Subscription } from 'rxjs';
 import { TimerHandle } from 'rxjs/internal/scheduler/timerHandle';
 import { getMarbleNotifications } from './marble';
 
-type SetHandler = (handler: () => void, timeout?: number, ...args: any[]) => TimerHandle;
-type ClearHandler = (handle: TimerHandle) => void;
+// Code adapted from https://github.com/ReactiveX/rxjs/tree/master/src/internal/testing
+
+export type SetHandler = (handler: () => void, timeout?: number, ...args: any[]) => TimerHandle;
+export type ClearHandler = (handle: TimerHandle) => void;
+export type ScheduleLookupType = 'immediate' | 'interval' | 'timeout';
 
 export interface AnimatorDelegate {
   requestAnimationFrame: (callback: FrameRequestCallback) => number;
@@ -12,7 +15,7 @@ export interface AnimatorDelegate {
 }
 
 export interface Animator {
-  animate: (marbles: string) => void;
+  animate: (marbles: string) => Map<number, FrameRequestCallback>;
   delegate: AnimatorDelegate;
 }
 
@@ -31,34 +34,35 @@ export interface IntervalDelegate {
   clearInterval: ClearHandler;
 }
 
+export interface ScheduleLookup {
+  due: number;
+  duration: number;
+  handle: TimerHandle;
+  handler: () => void;
+  subscription: Subscription;
+  type: ScheduleLookupType;
+}
+
 export interface Delegates {
   immediate: ImmediateDelegate;
   interval: IntervalDelegate;
   timeout: TimeoutDelegate;
+  scheduleLookup: Map<TimerHandle, ScheduleLookup>;
+  run: () => void;
 }
 
 export const createAnimator = (scheduler: SchedulerLike): Animator => {
   let lastHandle = 0;
   let map: Map<number, FrameRequestCallback>;
 
-  const delegate: AnimatorDelegate = {
-    requestAnimationFrame(callback: FrameRequestCallback) {
-      const handle = ++lastHandle;
-      map.set(handle, callback);
-      return handle;
-    },
-    cancelAnimationFrame(handle: number) {
-      map.delete(handle);
-    },
-  };
-
-  const animate = (marbles: string): void => {
+  const animate = (marbles: string): Map<number, FrameRequestCallback> => {
     if (/[|#]/.test(marbles)) {
       throw new Error('animate() must not complete or error');
     }
 
     map = new Map<number, FrameRequestCallback>();
     const messages = getMarbleNotifications(marbles);
+
     for (const message of messages) {
       scheduler.schedule(() => {
         const now = scheduler.now();
@@ -70,23 +74,26 @@ export const createAnimator = (scheduler: SchedulerLike): Animator => {
         }
       }, message.frame);
     }
+
+    return map;
+  };
+
+  const delegate: AnimatorDelegate = {
+    requestAnimationFrame(callback: FrameRequestCallback): number {
+      const handle = ++lastHandle;
+      map.set(handle, callback);
+      return handle;
+    },
+    cancelAnimationFrame(handle: number): void {
+      map.delete(handle);
+    },
   };
 
   return { animate, delegate };
 };
 
 export const createDelegates = (scheduler: SchedulerLike): Delegates => {
-  const scheduleLookup = new Map<
-    TimerHandle,
-    {
-      due: number;
-      duration: number;
-      handle: TimerHandle;
-      handler: () => void;
-      subscription: Subscription;
-      type: 'immediate' | 'interval' | 'timeout';
-    }
-  >();
+  const scheduleLookup = new Map<TimerHandle, ScheduleLookup>();
 
   const run = () => {
     const now = scheduler.now();
@@ -131,7 +138,7 @@ export const createDelegates = (scheduler: SchedulerLike): Delegates => {
   let lastHandle = 0;
 
   const immediate: ImmediateDelegate = {
-    setImmediate: (handler: () => void) => {
+    setImmediate: (handler: () => void): number => {
       const handle = ++lastHandle;
 
       scheduleLookup.set(handle, {
@@ -145,7 +152,7 @@ export const createDelegates = (scheduler: SchedulerLike): Delegates => {
 
       return handle;
     },
-    clearImmediate: (handle: TimerHandle) => {
+    clearImmediate: (handle: TimerHandle): void => {
       const value = scheduleLookup.get(handle);
 
       if (value) {
@@ -205,5 +212,5 @@ export const createDelegates = (scheduler: SchedulerLike): Delegates => {
     },
   };
 
-  return { immediate, interval, timeout };
+  return { immediate, interval, timeout, scheduleLookup, run };
 };

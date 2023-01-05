@@ -12,9 +12,9 @@ export const getBoundedX = (x: number, dx: number, frames: number, offset: numbe
 export const getSnappedX = (x: number, dx: number, frames: number, offset: number): number =>
   getBoundedX(offset + (dx / 2) + Math.round((x - offset - (dx / 2)) / dx) * dx, dx, frames, offset);
 
-export const linspace = (start: number, stop: number, num: number, endpoint = true): number[] => {
+export const linspace = (start: number, stop: number, num: number): number[] => {
   const size = Math.max(2, num);
-  const div = endpoint ? (size - 1) : size;
+  const div = (size - 1);
   const step = (stop - start) / div;
   return [...Array(size).keys()].map((x) => start + step * x);
 };

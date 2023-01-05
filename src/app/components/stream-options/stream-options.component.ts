@@ -4,7 +4,7 @@ import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getFormValue, InputStream, range, StreamNode } from '../../core';
+import { getFormValue, InputStream, range, StreamNode, xToIndex } from '../../core';
 import { LoggerService } from '../../logger.service';
 import { StreamBuilderService } from '../../services';
 
@@ -94,7 +94,6 @@ export class StreamOptionsComponent implements OnInit {
     const sizeChange$ = this.size$!.pipe(
       skip(1),
       withLatestFrom(this.start$!, this.complete$!),
-      tap(([size, start, complete]) => console.log('sizeChange', { size, start, complete })),
       map(([size, start, complete]): StreamUpdate => ({
         indexes: this._streamBuilder.getDistributedIndexes(size),
         start,
@@ -106,19 +105,19 @@ export class StreamOptionsComponent implements OnInit {
     const startOrCompleteChange$ = combineLatest([this.start$!, this.complete$!]).pipe(
       skip(1),
       withLatestFrom(this.stream.next$, this.stream.terminate$),
-      tap(([[start, complete], next, terminate]) => console.log('startOrCompleteChange', { start, complete, next, terminate })),
-      map(([[start, complete], next, terminate]): StreamUpdate => ({
-        indexes: next.map((n) => n.zIndex),
-        start,
-        complete,
-        terminateIndex: terminate?.zIndex ?? this._streamBuilder.defaultCompleteFrame,
-      })),
+      map(([[start, complete], next, terminate]): StreamUpdate => {
+        const indexes = next.map((n) => xToIndex(n.x, this.stream.dx, this.stream.offset));
+        const terminateIndex = terminate?.zIndex
+          ? xToIndex(terminate.x, this.stream.dx, this.stream.offset)
+          : this._streamBuilder.defaultCompleteFrame;
+
+        return { indexes, start, complete, terminateIndex };
+      }),
     );
 
     const adjustStartControlValue$ = this.type$!.pipe(
       skip(1),
       distinctUntilChanged(),
-      tap((type) => console.log('adjustStartControlValue', { type })),
       map((type) => type === 'numeric' ? '1' : 'a'),
       tap((start) => this.formGroup!.get('start')?.setValue(start)),
       untilDestroyed(this),

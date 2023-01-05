@@ -8,7 +8,7 @@ export interface StreamMarbles {
   canDisplayAsValue?: boolean;
 }
 
-export interface StreamNode extends Notification<string> {
+export interface StreamNode<T = any> extends Notification<T> {
   id: string;
   x: number;
   zIndex: number;

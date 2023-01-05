@@ -17,7 +17,7 @@ export class ExecutorService {
     protected _logger: LoggerService,
   ) { }
 
-  protected logError(message: string, error: unknown) {
+  protected logError(message: string, error: unknown): void {
     this._logger.logError(message, { error });
     this._snackBar.open(
       'Something went wrong, please see browser console for more details.',

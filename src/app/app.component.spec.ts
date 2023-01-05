@@ -117,12 +117,11 @@ describe('AppComponent', () => {
   describe('init', () => {
     let initSpy: jasmine.Spy;
     let setColorSchemeSpy: jasmine.Spy;
-    let storageGetValueSpy: jasmine.Spy;
 
     beforeEach(() => {
       initSpy = spyOn(exposed, 'init');
       setColorSchemeSpy = spyOn(exposed, 'setColorScheme');
-      storageGetValueSpy = spyOn(localStorageServiceMock, 'getValue').and.returnValue(undefined);
+      spyOn(localStorageServiceMock, 'getValue').and.returnValue(undefined);
     });
 
     describe('when system color scheme changes', () => {

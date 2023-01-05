@@ -1,7 +1,9 @@
-import { Observable, SchedulerLike, Subscriber, Subscription } from 'rxjs';
+import { Observable, PartialObserver, SchedulerLike, Subscriber, Subscription } from 'rxjs';
 import { LoggerService } from '../logger.service';
 import { observeNotification } from './helpers';
-import { FrameNotification } from './types';
+import { FrameNotification, Notification } from './types';
+
+// Code adapted from https://github.com/ReactiveX/rxjs/tree/master/src/internal/testing
 
 export class StreamObservable<T> extends Observable<T> {
   protected _name = 'StreamObservable';
@@ -26,13 +28,17 @@ export class StreamObservable<T> extends Observable<T> {
     this._scheduler = scheduler;
   }
 
-  scheduleMessages(subscriber: Subscriber<T>) {
+  protected observeNotification(notification: Notification<T>, observer: PartialObserver<T>): void {
+    observeNotification(notification, observer);
+  }
+
+  scheduleMessages(subscriber: Subscriber<T>): void {
     for (const message of this.messages) {
       subscriber.add(
         this._scheduler.schedule(
           (state) => {
             const { message: { notification }, subscriber: destination } = state!;
-            observeNotification(notification, destination);
+            this.observeNotification(notification, destination);
           },
           message.frame,
           { message, subscriber }

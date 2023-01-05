@@ -6,19 +6,22 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
 @Injectable({ providedIn: 'root' })
 export class InsightsService {
-  protected _angularPlugin: AngularPlugin | undefined;
   protected _appInsights: ApplicationInsights | undefined;
 
-  init(router: Router): void {
-    this._angularPlugin = new AngularPlugin();
-    this._appInsights = new ApplicationInsights({
+  protected createInsights(router: Router): ApplicationInsights {
+    const angularPlugin = new AngularPlugin();
+
+    return new ApplicationInsights({
       config: {
         connectionString: environment.appInsightsConnectionString,
-        extensions: [this._angularPlugin],
-        extensionConfig: { [this._angularPlugin.identifier]: { router } }
+        extensions: [angularPlugin],
+        extensionConfig: { [angularPlugin.identifier]: { router } }
       }
     });
+  }
 
+  init(router: Router): void {
+    this._appInsights = this.createInsights(router);
     this._appInsights.loadAppInsights();
   }
 

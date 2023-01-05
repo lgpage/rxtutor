@@ -14,6 +14,8 @@ import {
 import { StreamObservable } from './stream-observable';
 import { FrameNotification } from './types';
 
+// Code adapted from https://github.com/ReactiveX/rxjs/tree/master/src/internal/testing
+
 const defaultMaxFrame = 750;
 
 export interface RunHelpers {
@@ -29,16 +31,41 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
     super(VirtualAction, defaultMaxFrame);
   }
 
-  private materializeInnerObservable(obs$: Observable<any>, outerFrame: number): FrameNotification[] {
+  protected materializeInnerObservable(obs$: Observable<any>, outerFrame: number): FrameNotification[] {
     const messages: FrameNotification[] = [];
 
     obs$.subscribe({
       next: (value) => messages.push({ frame: this.frame - outerFrame, notification: createNextNotification(value) }),
-      error: (error: unknown) => messages.push({ frame: this.frame - outerFrame, notification: createErrorNotification(error) }),
       complete: () => messages.push({ frame: this.frame - outerFrame, notification: createCompleteNotification() }),
+      error: (error: unknown) => messages.push({ frame: this.frame - outerFrame, notification: createErrorNotification(error) }),
     });
 
     return messages;
+  }
+
+  protected runSetup(): void {
+    this.maxFrames = Infinity;
+
+    const animator = createAnimator(this);
+    const delegates = createDelegates(this);
+
+    animationFrameProvider.delegate = animator.delegate;
+    dateTimestampProvider.delegate = this;
+    immediateProvider.delegate = delegates.immediate;
+    intervalProvider.delegate = delegates.interval;
+    performanceTimestampProvider.delegate = this;
+    timeoutProvider.delegate = delegates.timeout;
+  }
+
+  protected runTearDown(prevMaxFrames: number): void {
+    this.maxFrames = prevMaxFrames;
+
+    animationFrameProvider.delegate = undefined;
+    dateTimestampProvider.delegate = undefined;
+    immediateProvider.delegate = undefined;
+    intervalProvider.delegate = undefined;
+    performanceTimestampProvider.delegate = undefined;
+    timeoutProvider.delegate = undefined;
   }
 
   parseMarbles(marbles: string, values?: Record<string, any>, errorValue?: unknown): FrameNotification[] {
@@ -73,39 +100,21 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
   }
 
   run<R>(callback: (helpers: RunHelpers) => R): R {
-    const prevMaxFrames = this.maxFrames;
-
-    this.maxFrames = Infinity;
-
-    const animator = createAnimator(this);
-    const delegates = createDelegates(this);
-
-    animationFrameProvider.delegate = animator.delegate;
-    dateTimestampProvider.delegate = this;
-    immediateProvider.delegate = delegates.immediate;
-    intervalProvider.delegate = delegates.interval;
-    performanceTimestampProvider.delegate = this;
-    timeoutProvider.delegate = delegates.timeout;
-
+    const maxFrames = this.maxFrames;
     const helpers: RunHelpers = {
       materialize: <T>(obs$: Observable<T>) => this.materialize<T>(obs$),
       streamObservable: <T = string>(marbles: string, values?: any, errorValue?: unknown) =>
         this.createStreamObservable<T>(marbles, values, errorValue),
     };
 
+    this.runSetup();
+
     try {
       const result = callback(helpers);
       this.flush();
       return result;
     } finally {
-      this.maxFrames = prevMaxFrames;
-
-      animationFrameProvider.delegate = undefined;
-      dateTimestampProvider.delegate = undefined;
-      immediateProvider.delegate = undefined;
-      intervalProvider.delegate = undefined;
-      performanceTimestampProvider.delegate = undefined;
-      timeoutProvider.delegate = undefined;
+      this.runTearDown(maxFrames);
     }
   }
 }
