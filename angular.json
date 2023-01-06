@@ -35,14 +35,23 @@
             ],
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css",
+              "./node_modules/codemirror/lib/codemirror.css",
+              "./node_modules/codemirror/theme/material.css",
               "src/styles.scss"
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -107,6 +116,8 @@
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css",
+              "./node_modules/codemirror/lib/codemirror.css",
+              "./node_modules/codemirror/theme/material.css",
               "src/styles.scss"
             ],
             "scripts": []
