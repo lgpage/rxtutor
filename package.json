@@ -30,7 +30,7 @@
     "@ctrl/ngx-codemirror": "^6.0.0",
     "@microsoft/applicationinsights-angularplugin-js": "^3.0.0",
     "@microsoft/applicationinsights-web": "^2.8.9",
-    "@ngneat/until-destroy": "^9.2.2",
+    "@ngneat/until-destroy": "^9.2.3",
     "bootstrap": "^5.2.3",
     "codemirror": "^5.65.10",
     "github-fork-ribbon-css": "~0.2.3",
