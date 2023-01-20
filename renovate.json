@@ -18,5 +18,6 @@
     "before 6am"
   ],
   "configMigration": true,
+  "rangeStrategy": "bump",
   "dependencyDashboardTitle": "chore(deps): dependency dashboard"
 }
