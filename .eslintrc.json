@@ -62,7 +62,6 @@
               // Index signature
               "signature",
               // Fields
-              "private-abstract-field",
               "private-static-field",
               "private-decorated-field",
               "private-instance-field",
@@ -88,7 +87,6 @@
               "public-constructor",
               "constructor",
               // Methods
-              "private-abstract-method",
               "private-static-method",
               "private-decorated-method",
               "private-instance-method",
