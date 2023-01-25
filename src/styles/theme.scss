@@ -1,7 +1,7 @@
 @use "@angular/material" as mat;
 
 @import "@angular/material/theming";
-@import './mixins.scss';
+@import "./mixins.scss";
 
 @include mat.core();
 
@@ -30,7 +30,7 @@ $dark-theme: mat.define-dark-theme(
 @include mat.all-component-themes($light-theme);
 @include svg-theme($light-theme);
 
-@media (prefers-color-scheme: dark) {
+.dark-mode {
   @include mat.all-component-colors($dark-theme);
   @include svg-theme($dark-theme);
 }

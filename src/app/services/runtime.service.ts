@@ -9,12 +9,15 @@ export interface SimpleLayoutMatch {
   orientation: 'portrait' | 'landscape';
 }
 
+export type ColorScheme = 'light' | 'dark';
+
 @Injectable({ providedIn: 'root' })
 export class RuntimeService {
   protected _name = 'RuntimeService';
   protected _size$ = this._breakpointObserver.observe('(max-width: 799px)');
   protected _orientation$ = this._breakpointObserver.observe('(orientation: landscape)');
   protected _exampleSize$ = this._breakpointObserver.observe('(max-width: 1023px)');
+  protected _darkScheme$ = this._breakpointObserver.observe('(prefers-color-scheme: dark)');
 
   layoutMatch$ = combineLatest([this._size$, this._orientation$, this._exampleSize$]).pipe(
     map(([size, orientation, exampleSize]): SimpleLayoutMatch => {
@@ -36,6 +39,12 @@ export class RuntimeService {
   mediaSize$ = this.layoutMatch$.pipe(map((layout) => layout.mediaSize));
   orientation$ = this.layoutMatch$.pipe(map((layout) => layout.orientation));
   exampleSize$ = this.layoutMatch$.pipe(map((layout) => layout.exampleSize));
+
+  systemColorScheme$ = this._darkScheme$.pipe(
+    map((darkScheme): ColorScheme => darkScheme.matches ? 'dark' : 'light'),
+    distinctUntilChanged(),
+    shareReplay({ refCount: true, bufferSize: 1 }),
+  );
 
   constructor(
     protected _breakpointObserver: BreakpointObserver,
