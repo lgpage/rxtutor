@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     this._insightsSvc.init(this._router);
   }
 
-  private setColorScheme(colorScheme: ColorScheme | null, systemColorScheme: ColorScheme): void {
+  protected setColorScheme(colorScheme: ColorScheme | null, systemColorScheme: ColorScheme): void {
     const newColorScheme = colorScheme ?? systemColorScheme;
 
     if (newColorScheme == 'dark') {
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     this.darkModeControl.setValue(newColorScheme == 'dark');
   }
 
-  ngOnInit(): void {
+  protected init(): void {
     const toggleSystemColorScheme$ = this._runtimeSvc.systemColorScheme$.pipe(
       distinctUntilChanged(),
       tap((systemColorScheme) => this.setColorScheme(
@@ -72,5 +72,9 @@ export class AppComponent implements OnInit {
 
     toggleColorScheme$.subscribe();
     toggleSystemColorScheme$.subscribe();
+  }
+
+  ngOnInit(): void {
+    this.init();
   }
 }
