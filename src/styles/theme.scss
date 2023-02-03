@@ -1,7 +1,7 @@
 @use "@angular/material" as mat;
 
 @import "@angular/material/theming";
-@import './mixins.scss';
+@import "./mixins.scss";
 
 @include mat.core();
 

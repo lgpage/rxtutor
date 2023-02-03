@@ -1,12 +1,10 @@
-import { tap } from 'rxjs';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { FormControl, NonNullableFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { InsightsService, LocalStorageService, RuntimeService } from './services';
-
-type Theme = 'light' | 'dark';
+import { ColorScheme, InsightsService, LocalStorageService, RuntimeService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +13,6 @@ type Theme = 'light' | 'dark';
 })
 @UntilDestroy()
 export class AppComponent implements OnInit {
-  protected _defaultTheme: Theme = 'light';
   protected _themeStorageKey = 'rxTutorTheme';
 
   darkModeControl: FormControl<boolean> = this._formBuilder.control(false);
@@ -36,21 +33,48 @@ export class AppComponent implements OnInit {
     this._insightsSvc.init(this._router);
   }
 
-  ngOnInit(): void {
-    this.darkModeControl.valueChanges.pipe(
-      tap((darkMode) => {
-        const theme: Theme = darkMode ? 'dark' : 'light';
-        this._storageSvc.saveValue(this._themeStorageKey, theme);
-        if (darkMode) {
-          this._overlayContainer.getContainerElement().classList.add('dark-mode');
-        } else {
-          this._overlayContainer.getContainerElement().classList.remove('dark-mode');
-        }
-      }),
-      untilDestroyed(this),
-    ).subscribe();
+  protected setColorScheme(colorScheme: ColorScheme | null, systemColorScheme: ColorScheme): void {
+    const newColorScheme = colorScheme ?? systemColorScheme;
 
-    const theme = this._storageSvc.getValue(this._themeStorageKey) as Theme;
-    this.darkModeControl.setValue(theme === 'dark');
+    if (newColorScheme == 'dark') {
+      document.documentElement.classList.add("dark-mode");
+      document.documentElement.style.setProperty('color-scheme', 'dark');
+    } else {
+      document.documentElement.classList.remove("dark-mode");
+      document.documentElement.style.setProperty('color-scheme', 'light');
+    }
+
+    if (systemColorScheme == newColorScheme) {
+      this._storageSvc.removeEntry(this._themeStorageKey);
+    } else {
+      this._storageSvc.saveValue(this._themeStorageKey, newColorScheme);
+    }
+
+    this.darkModeControl.setValue(newColorScheme == 'dark');
+  }
+
+  protected init(): void {
+    const toggleSystemColorScheme$ = this._runtimeSvc.systemColorScheme$.pipe(
+      distinctUntilChanged(),
+      tap((systemColorScheme) => this.setColorScheme(
+        this._storageSvc.getValue(this._themeStorageKey) as (ColorScheme | null),
+        systemColorScheme
+      )),
+      untilDestroyed(this),
+    );
+
+    const toggleColorScheme$ = this.darkModeControl.valueChanges.pipe(
+      distinctUntilChanged(),
+      withLatestFrom(this._runtimeSvc.systemColorScheme$),
+      tap(([darkMode, systemColorScheme]) => this.setColorScheme(darkMode ? 'dark' : 'light', systemColorScheme)),
+      untilDestroyed(this),
+    );
+
+    toggleColorScheme$.subscribe();
+    toggleSystemColorScheme$.subscribe();
+  }
+
+  ngOnInit(): void {
+    this.init();
   }
 }
