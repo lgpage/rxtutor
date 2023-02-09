@@ -1,10 +1,16 @@
 export const range = (size: number): number[] => [...Array(size).keys()].map((x) => x);
 
-export const indexToX = (index: number, dx: number, offset: number) =>
+export const indexToX = (index: number, dx: number, offset: number): number =>
   offset + (dx / 2) + (dx * index);
 
-export const xToIndex = (x: number, dx: number, offset: number) =>
+export const xToIndex = (x: number, dx: number, offset: number): number =>
   Math.round((x - offset - (dx / 2)) / dx);
+
+export const xToFrame = (x: number, dx: number, offset: number, frameSize: number): number =>
+  Math.round(frameSize * (x - offset) / dx);
+
+export const frameToX = (frame: number, dx: number, offset: number, frameSize: number): number =>
+  offset + (frame * dx / frameSize);
 
 export const getBoundedX = (x: number, dx: number, frames: number, offset: number): number =>
   Math.max(offset + (dx / 2), Math.min((dx * (frames - 1)) + offset + (dx / 2), x));

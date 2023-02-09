@@ -77,11 +77,11 @@ describe('StreamOptionsComponent', () => {
   describe('initial stream', () => {
     it('has expected values', () => {
       expect(stream.nodes$).toBeObservable(cold('0', [[
-        { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2 },
-        { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 58, index: 5 },
-        { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 88, index: 8 },
-        { id: jasmine.any(String), zIndex: 3, symbol: '4', kind: 'N', x: 118, index: 11 },
-        { id: jasmine.any(String), zIndex: 4, symbol: '5', kind: 'N', x: 148, index: 14 },
+        { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2, value: '1' },
+        { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 58, index: 5, value: '2' },
+        { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 88, index: 8, value: '3' },
+        { id: jasmine.any(String), zIndex: 3, symbol: '4', kind: 'N', x: 118, index: 11, value: '4' },
+        { id: jasmine.any(String), zIndex: 4, symbol: '5', kind: 'N', x: 148, index: 14, value: '5' },
         { id: jasmine.any(String), zIndex: 5, symbol: '|', kind: 'C', x: 158, index: 15 },
       ]]));
     });
@@ -94,9 +94,9 @@ describe('StreamOptionsComponent', () => {
         fixture.detectChanges();
 
         expect(stream.nodes$).toBeObservable(cold('0', [[
-          { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2 },
-          { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 78, index: 7 },
-          { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 128, index: 12 },
+          { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2, value: '1' },
+          { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 78, index: 7, value: '2' },
+          { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 128, index: 12, value: '3' },
           { id: jasmine.any(String), zIndex: 3, symbol: '|', kind: 'C', x: 158, index: 15 },
         ]]));
       });
@@ -108,11 +108,11 @@ describe('StreamOptionsComponent', () => {
         fixture.detectChanges();
 
         expect(stream.nodes$).toBeObservable(cold('0', [[
-          { id: jasmine.any(String), zIndex: 0, symbol: '3', kind: 'N', x: 28, index: 2 },
-          { id: jasmine.any(String), zIndex: 1, symbol: '4', kind: 'N', x: 58, index: 5 },
-          { id: jasmine.any(String), zIndex: 2, symbol: '5', kind: 'N', x: 88, index: 8 },
-          { id: jasmine.any(String), zIndex: 3, symbol: '6', kind: 'N', x: 118, index: 11 },
-          { id: jasmine.any(String), zIndex: 4, symbol: '7', kind: 'N', x: 148, index: 14 },
+          { id: jasmine.any(String), zIndex: 0, symbol: '3', kind: 'N', x: 28, index: 2, value: '3' },
+          { id: jasmine.any(String), zIndex: 1, symbol: '4', kind: 'N', x: 58, index: 5, value: '4' },
+          { id: jasmine.any(String), zIndex: 2, symbol: '5', kind: 'N', x: 88, index: 8, value: '5' },
+          { id: jasmine.any(String), zIndex: 3, symbol: '6', kind: 'N', x: 118, index: 11, value: '6' },
+          { id: jasmine.any(String), zIndex: 4, symbol: '7', kind: 'N', x: 148, index: 14, value: '7' },
           { id: jasmine.any(String), zIndex: 5, symbol: '|', kind: 'C', x: 158, index: 15 },
         ]]));
       });
@@ -124,11 +124,11 @@ describe('StreamOptionsComponent', () => {
         fixture.detectChanges();
 
         expect(stream.nodes$).toBeObservable(cold('0', [[
-          { id: jasmine.any(String), zIndex: 0, symbol: 'a', kind: 'N', x: 28, index: 2 },
-          { id: jasmine.any(String), zIndex: 1, symbol: 'b', kind: 'N', x: 58, index: 5 },
-          { id: jasmine.any(String), zIndex: 2, symbol: 'c', kind: 'N', x: 88, index: 8 },
-          { id: jasmine.any(String), zIndex: 3, symbol: 'd', kind: 'N', x: 118, index: 11 },
-          { id: jasmine.any(String), zIndex: 4, symbol: 'e', kind: 'N', x: 148, index: 14 },
+          { id: jasmine.any(String), zIndex: 0, symbol: 'a', kind: 'N', x: 28, index: 2, value: 'a' },
+          { id: jasmine.any(String), zIndex: 1, symbol: 'b', kind: 'N', x: 58, index: 5, value: 'b' },
+          { id: jasmine.any(String), zIndex: 2, symbol: 'c', kind: 'N', x: 88, index: 8, value: 'c' },
+          { id: jasmine.any(String), zIndex: 3, symbol: 'd', kind: 'N', x: 118, index: 11, value: 'd' },
+          { id: jasmine.any(String), zIndex: 4, symbol: 'e', kind: 'N', x: 148, index: 14, value: 'e' },
           { id: jasmine.any(String), zIndex: 5, symbol: '|', kind: 'C', x: 158, index: 15 },
         ]]));
       });
@@ -140,11 +140,11 @@ describe('StreamOptionsComponent', () => {
         fixture.detectChanges();
 
         expect(stream.nodes$).toBeObservable(cold('0', [[
-          { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2 },
-          { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 58, index: 5 },
-          { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 88, index: 8 },
-          { id: jasmine.any(String), zIndex: 3, symbol: '4', kind: 'N', x: 118, index: 11 },
-          { id: jasmine.any(String), zIndex: 4, symbol: '5', kind: 'N', x: 148, index: 14 },
+          { id: jasmine.any(String), zIndex: 0, symbol: '1', kind: 'N', x: 28, index: 2, value: '1' },
+          { id: jasmine.any(String), zIndex: 1, symbol: '2', kind: 'N', x: 58, index: 5, value: '2' },
+          { id: jasmine.any(String), zIndex: 2, symbol: '3', kind: 'N', x: 88, index: 8, value: '3' },
+          { id: jasmine.any(String), zIndex: 3, symbol: '4', kind: 'N', x: 118, index: 11, value: '4' },
+          { id: jasmine.any(String), zIndex: 4, symbol: '5', kind: 'N', x: 148, index: 14, value: '5' },
           { id: jasmine.any(String), zIndex: 5, symbol: '#', kind: 'E', x: 158, index: 15 },
         ]]));
       });

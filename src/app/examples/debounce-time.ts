@@ -17,12 +17,8 @@ export class DebounceTimeExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([0, 1, 3], 7),
-      ],
-      large: [
-        this._streamBuilder.inputStream([1, 3, 7, 8, 9], 15),
-      ],
+      large: [this._streamBuilder.inputStream({ marbles: '-1-2---345-----|' })],
+      small: [this._streamBuilder.inputStream({ marbles: '12-3---|' })],
     };
   }
 

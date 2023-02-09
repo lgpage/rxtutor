@@ -17,12 +17,8 @@ export class StartWithExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([1, 3, 6], 7),
-      ],
-      large: [
-        this._streamBuilder.inputStream([2, 4, 8], 15),
-      ],
+      large: [this._streamBuilder.inputStream({ marbles: '--1-2---3------|' })],
+      small: [this._streamBuilder.inputStream({ marbles: '-1-2--3|' })],
     };
   }
 

@@ -17,15 +17,15 @@ export class ConcatExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([0, 2], 3),
-        this._streamBuilder.inputStream([0], 2, null, 'a'),
-        this._streamBuilder.inputStream([0, 1], 2, null, '3'),
-      ],
       large: [
-        this._streamBuilder.inputStream([1, 3], 4),
-        this._streamBuilder.inputStream([2, 3], 5, null, 'a'),
-        this._streamBuilder.inputStream([0, 1, 2], 3, null, '3'),
+        this._streamBuilder.inputStream({ marbles: '-1-2|' }),
+        this._streamBuilder.inputStream({ marbles: '--ab-|' }),
+        this._streamBuilder.inputStream({ marbles: '345|' }),
+      ],
+      small: [
+        this._streamBuilder.inputStream({ marbles: '1-2|' }),
+        this._streamBuilder.inputStream({ marbles: 'a-|' }),
+        this._streamBuilder.inputStream({ marbles: '34|' }),
       ],
     };
   }

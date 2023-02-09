@@ -21,7 +21,7 @@ describe('StreamObservable', () => {
   let stream$: StreamObservable<unknown>;
 
   beforeEach(() => {
-    message = { frame: 1, notification: { kind: 'N', value: 'A' } };
+    message = { frame: 1, notification: { kind: 'N', value: 'A', symbol: 'a' } };
 
     schedulerSpy = jasmine.createSpyObj<SchedulerLike>('SchedulerLike', ['schedule']);
     loggerSpy = jasmine.createSpyObj<LoggerService>('LoggerService', ['logDebug']);

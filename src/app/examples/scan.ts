@@ -17,12 +17,8 @@ export class ScanExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([0, 2, 4, 6], 7)
-      ],
-      large: [
-        this._streamBuilder.inputStream([3, 6, 9, 12], 15)
-      ],
+      large: [this._streamBuilder.inputStream({ marbles: '---1--2--3--4--|' })],
+      small: [this._streamBuilder.inputStream({ marbles: '1-2-3-4|' })],
     };
   }
 

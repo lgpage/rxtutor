@@ -1,5 +1,5 @@
 import { StreamMarbles, StreamNode } from '../types';
-import { getNotificationSymbol, isNextNotification } from './notification';
+import { isNextNotification } from './notification';
 import { range, xToIndex } from './numerical';
 
 const addNodeValue = (symbol: string, marbleValues: { [symbol: string]: any }, node: StreamNode): any => {
@@ -53,7 +53,7 @@ export const getStreamMarbles = (streamNodes: StreamNode[], dx: number, offset: 
     const single = nodes.length === 1;
     if (single) {
       const node = nodes[0];
-      const symbol = getNotificationSymbol(node, node.symbol);
+      const symbol = node.symbol;
       const value = addNodeValue(symbol, values, node);
       canDisplayAsValue = canDisplayAsValue && canDisplayValueAsSmallString(value);
 
@@ -63,7 +63,7 @@ export const getStreamMarbles = (streamNodes: StreamNode[], dx: number, offset: 
 
     characters.push('(');
     for (const node of nodes) {
-      const symbol = getNotificationSymbol(node, node.symbol);
+      const symbol = node.symbol;
       const value = addNodeValue(symbol, values, node);
       canDisplayAsValue = canDisplayAsValue && canDisplayValueAsSmallString(value);
 

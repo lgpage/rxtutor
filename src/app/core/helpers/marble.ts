@@ -115,7 +115,7 @@ const getMarbleNotification = (
       return { nextFrame: getNextFrame(1) };
 
     default: {
-      const notification = createNextNotification(getMarbleValue(values, marble));
+      const notification = createNextNotification(getMarbleValue(values, marble), marble);
       const timeProgression = getMarbleTimeProgression(marbles, index, frameSize);
 
       if (!timeProgression) {

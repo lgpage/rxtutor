@@ -38,8 +38,8 @@ describe('VisualizationScheduler', () => {
       const result = exposed.materializeInnerObservable(of(10), 2);
 
       expect(result).toEqual([
-        { frame: 3, notification: { kind: 'N', value: 10 } },
-        { frame: 3, notification: { kind: 'C' } },
+        { frame: 3, notification: { kind: 'N', value: 10, symbol: 'A' } },
+        { frame: 3, notification: { kind: 'C', symbol: '|' } },
       ]);
     });
 
@@ -56,7 +56,7 @@ describe('VisualizationScheduler', () => {
 
         const result = exposed.materializeInnerObservable(obs$, 2);
 
-        expect(result).toEqual([{ frame: 3, notification: { kind: 'E', error } }]);
+        expect(result).toEqual([{ frame: 3, notification: { kind: 'E', symbol: '#', error } }]);
       });
     });
   });
@@ -66,9 +66,9 @@ describe('VisualizationScheduler', () => {
       const result$ = scheduler.createStreamObservable('-A-BC', { A: 1, B: 2, C: 3 });
 
       expect(result$.messages).toEqual([
-        { frame: 1, notification: { kind: 'N', value: 1 } },
-        { frame: 3, notification: { kind: 'N', value: 2 } },
-        { frame: 4, notification: { kind: 'N', value: 3 } },
+        { frame: 1, notification: { kind: 'N', value: 1, symbol: 'A' } },
+        { frame: 3, notification: { kind: 'N', value: 2, symbol: 'B' } },
+        { frame: 4, notification: { kind: 'N', value: 3, symbol: 'C' } },
       ]);
     });
   });
@@ -81,8 +81,8 @@ describe('VisualizationScheduler', () => {
       scheduler.flush();
 
       expect(result).toEqual([
-        { frame: 5, notification: { kind: 'N', value: 10 } },
-        { frame: 5, notification: { kind: 'C' } },
+        { frame: 5, notification: { kind: 'N', value: 10, symbol: 'A' } },
+        { frame: 5, notification: { kind: 'C', symbol: '|' } },
       ]);
     });
 
@@ -100,7 +100,7 @@ describe('VisualizationScheduler', () => {
         const result = exposed.materialize(obs$);
         scheduler.flush();
 
-        expect(result).toEqual([{ frame: 5, notification: { kind: 'E', error } }]);
+        expect(result).toEqual([{ frame: 5, notification: { kind: 'E', symbol: '#', error } }]);
       });
     });
   });

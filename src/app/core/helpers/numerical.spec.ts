@@ -1,4 +1,6 @@
-import { distribute, getBoundedX, getSnappedX, indexToX, linspace, range, roundOff, xToIndex } from './numerical';
+import {
+  distribute, frameToX, getBoundedX, getSnappedX, indexToX, linspace, range, roundOff, xToFrame, xToIndex,
+} from './numerical';
 
 describe('range', () => {
   it('returns expected result', () => {
@@ -48,6 +50,26 @@ describe('xToIndex', () => {
 
     result = xToIndex(60, 10, 5);
     expect(result).toEqual(5);
+  });
+});
+
+describe('frameToX', () => {
+  it('returns expected result', () => {
+    let result = frameToX(5, 10, 0, 1);
+    expect(result).toEqual(50);
+
+    result = frameToX(5, 10, 5, 1);
+    expect(result).toEqual(55);
+  });
+});
+
+describe('xToFrame', () => {
+  it('returns expected result', () => {
+    let result = xToFrame(55, 10, 0, 1);
+    expect(result).toEqual(6);
+
+    result = xToFrame(60, 10, 5, 1);
+    expect(result).toEqual(6);
   });
 });
 
