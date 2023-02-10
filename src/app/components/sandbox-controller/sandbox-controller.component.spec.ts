@@ -56,10 +56,11 @@ describe('SandboxControllerComponent', () => {
         { provide: ExecutorService, useValue: executorServiceSpy },
         { provide: StreamBuilderService, useValue: streamBuilderServiceSpy },
         {
-          provide: RuntimeService, useValue: MockService(RuntimeService, {
-            exampleSize$: of<'small' | 'large'>('large'),
-            mediaSize$: of<'small' | 'large'>('large'),
-          })
+          provide: RuntimeService,
+          useValue: MockService(RuntimeService, {
+            exampleSize$: of('large'),
+            mediaSize$: of('large'),
+          } as Partial<RuntimeService>)
         },
       ]
     }).compileComponents();

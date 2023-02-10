@@ -29,7 +29,10 @@ describe('StreamOptionsComponent', () => {
         StreamOptionsComponent,
       ],
       providers: [
-        { provide: RuntimeService, useValue: MockService(RuntimeService, { exampleSize$: of<'small' | 'large'>('large') }) },
+        {
+          provide: RuntimeService,
+          useValue: MockService(RuntimeService, { exampleSize$: of('large') } as Partial<RuntimeService>)
+        },
       ]
     }).compileComponents();
   }));

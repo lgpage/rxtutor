@@ -19,7 +19,10 @@ describe('MergeExample', () => {
         ExecutorService,
         StreamBuilderService,
         { provide: MatSnackBar, useValue: MockService(MatSnackBar) },
-        { provide: RuntimeService, useValue: MockService(RuntimeService, { exampleSize$: of<'small' | 'large'>('large') }) },
+        {
+          provide: RuntimeService,
+          useValue: MockService(RuntimeService, { exampleSize$: of('large') } as Partial<RuntimeService>)
+        },
       ]
     });
 

@@ -49,7 +49,10 @@ describe('StreamControllerComponent', () => {
         { provide: MatSnackBar, useValue: matSnackBarSpy },
         { provide: Clipboard, useValue: clipboardSpy },
         { provide: InsightsService, useValue: insightsServiceSpy },
-        { provide: RuntimeService, useValue: MockService(RuntimeService, { mediaSize$: of<'small' | 'large'>('large') }) },
+        {
+          provide: RuntimeService,
+          useValue: MockService(RuntimeService, { mediaSize$: of('large') } as Partial<RuntimeService>)
+        },
       ]
     }).compileComponents();
   }));

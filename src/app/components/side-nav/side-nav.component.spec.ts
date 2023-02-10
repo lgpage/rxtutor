@@ -37,10 +37,11 @@ describe('SideNavComponent', () => {
         ...exampleSpies.map((example) => ({ provide: EXAMPLE, useValue: example, multi: true })),
         { provide: Router, useValue: routerSpy },
         {
-          provide: RuntimeService, useValue: MockService(RuntimeService, {
-            orientation$: of<'landscape' | 'portrait'>('landscape'),
-            mediaSize$: of<'small' | 'large'>('large'),
-          })
+          provide: RuntimeService,
+          useValue: MockService(RuntimeService, {
+            orientation$: of('landscape'),
+            mediaSize$: of('large'),
+          } as Partial<RuntimeService>)
         },
       ]
     }).compileComponents();
