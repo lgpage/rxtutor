@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StreamLike } from '../../core';
 import { LoggerService } from '../../logger.service';
-import { InsightsService, RuntimeService, StreamBuilderService } from '../../services';
+import { InsightsService, RuntimeService } from '../../services';
 import { StreamOptionsComponent } from '../stream-options/stream-options.component';
 
 @Component({
@@ -24,7 +24,6 @@ export class StreamControllerComponent implements OnInit {
   mediaSize$ = this._runtimeSvc.mediaSize$;
 
   constructor(
-    protected _streamBuilder: StreamBuilderService,
     protected _clipboard: Clipboard,
     protected _snackBar: MatSnackBar,
     protected _dialog: MatDialog,

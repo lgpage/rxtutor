@@ -1,6 +1,8 @@
 import { FrameNotification, NotificationType } from '../types';
 import { createCompleteNotification, createErrorNotification, createNextNotification } from './notification';
 
+// Code adapted from https://github.com/ReactiveX/rxjs/tree/master/src/internal/testing
+
 interface MarbleNotification<T = any> {
   nextFrame: number;
   notification?: NotificationType<T>;

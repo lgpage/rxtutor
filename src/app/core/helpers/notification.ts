@@ -8,7 +8,7 @@ export const createNextNotification = <T = any>(value: T): NextNotification<T> =
 export const createCompleteNotification = (): CompleteNotification => ({ kind: 'C' });
 export const createErrorNotification = (error?: unknown): ErrorNotification => ({ kind: 'E', error });
 
-export const observeNotification = <T>(notification: Notification<T>, observer: PartialObserver<T>) => {
+export const observeNotification = <T>(notification: Notification<T>, observer: PartialObserver<T>): void => {
   const { kind, value, error } = notification;
   if (typeof kind !== 'string') {
     throw new TypeError('Invalid notification, missing "kind"');
@@ -38,10 +38,10 @@ export const isErrorNotification = (notification: Notification): notification is
 export const getNotificationSymbol = (notification: Notification, display: string): string =>
   isCompleteNotification(notification) ? '|' : isErrorNotification(notification) ? '#' : display;
 
-export const getStreamNodes = (notifications: FrameNotification[], frameSize: number, dx: number, offset: number): StreamNode[] => {
+export const getStreamNodes = <T = any>(notifications: FrameNotification[], frameSize: number, dx: number, offset: number): StreamNode<T>[] => {
   const startAsc = 'A'.charCodeAt(0);
 
-  return notifications.map((x, i): StreamNode => ({
+  return notifications.map((x, i): StreamNode<T> => ({
     ...x.notification,
     zIndex: i,
     id: guid(),

@@ -71,7 +71,7 @@ describe('getMarbleNotifications', () => {
       });
     });
 
-    describe('with time progression', () => {
+    describe('with ms time progression', () => {
       it('returns expected notifications', () => {
         const marbles = '-a 200ms b-c|';
 
@@ -82,6 +82,36 @@ describe('getMarbleNotifications', () => {
           createNextFrameNotification(220, 'b'),
           createNextFrameNotification(240, 'c'),
           createCompleteFrameNotification(250),
+        ]);
+      });
+    });
+
+    describe('with s time progression', () => {
+      it('returns expected notifications', () => {
+        const marbles = '-a 2s b-c|';
+
+        const result = getMarbleNotifications(marbles);
+
+        expect(result).toEqual([
+          createNextFrameNotification(10, 'a'),
+          createNextFrameNotification(2020, 'b'),
+          createNextFrameNotification(2040, 'c'),
+          createCompleteFrameNotification(2050),
+        ]);
+      });
+    });
+
+    describe('with m time progression', () => {
+      it('returns expected notifications', () => {
+        const marbles = '-a 2m b-c|';
+
+        const result = getMarbleNotifications(marbles);
+
+        expect(result).toEqual([
+          createNextFrameNotification(10, 'a'),
+          createNextFrameNotification((60 * 2000) + 20, 'b'),
+          createNextFrameNotification((60 * 2000) + 40, 'c'),
+          createCompleteFrameNotification((60 * 2000) + 50),
         ]);
       });
     });
