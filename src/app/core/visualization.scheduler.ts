@@ -32,10 +32,15 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
   }
 
   protected materializeInnerObservable(obs$: Observable<any>, outerFrame: number): FrameNotification[] {
+    let iter = 0;
+    const startAsc = 'A'.charCodeAt(0);
     const messages: FrameNotification[] = [];
 
     obs$.subscribe({
-      next: (value) => messages.push({ frame: this.frame - outerFrame, notification: createNextNotification(value) }),
+      next: (value) => {
+        const symbol = String.fromCharCode(startAsc + iter++);
+        messages.push({ frame: this.frame - outerFrame, notification: createNextNotification(value, symbol) });
+      },
       complete: () => messages.push({ frame: this.frame - outerFrame, notification: createCompleteNotification() }),
       error: (error: unknown) => messages.push({ frame: this.frame - outerFrame, notification: createErrorNotification(error) }),
     });
@@ -83,13 +88,16 @@ export class VisualizationScheduler extends VirtualTimeScheduler {
   }
 
   materialize<T>(obs$: Observable<T>): FrameNotification[] {
+    let iter = 0;
+    const startAsc = 'A'.charCodeAt(0);
     const messages: FrameNotification[] = [];
 
     this.schedule(() => {
       obs$.subscribe({
         next: (x) => {
+          const symbol = String.fromCharCode(startAsc + iter++);
           const value = x instanceof Observable ? this.materializeInnerObservable(x, this.frame) : x;
-          messages.push({ frame: this.frame, notification: createNextNotification(value) });
+          messages.push({ frame: this.frame, notification: createNextNotification(value, symbol) });
         },
         error: (error: unknown) => messages.push({ frame: this.frame, notification: createErrorNotification(error) }),
         complete: () => messages.push({ frame: this.frame, notification: createCompleteNotification() }),

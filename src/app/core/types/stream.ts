@@ -1,10 +1,13 @@
 import { Observable } from 'rxjs';
 import { Notification } from './notification';
 
-export interface StreamMarbles {
+export interface InputMarbles {
   marbles: string;
   values?: any;
   error?: unknown;
+}
+
+export interface StreamMarbles extends InputMarbles {
   canDisplayAsValue?: boolean;
 }
 

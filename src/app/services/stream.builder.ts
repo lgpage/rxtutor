@@ -4,7 +4,8 @@ import { v4 as guid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-  distribute, FrameNotification, getStreamNodes, indexToX, InputStream, OutputStream, StreamNode,
+  distribute, FrameNotification, getMarbleNotifications, getStreamNodes, indexToX, InputMarbles, InputStream,
+  OutputStream, StreamNode,
 } from '../core';
 import { LoggerService } from '../logger.service';
 import { RuntimeService } from './runtime.service';
@@ -17,6 +18,7 @@ export class StreamBuilderService {
   protected _framesSmall = 8;
   protected _framesLarges = 18;
   protected _frames = this._framesSmall;
+  protected _frameSize = 1;
 
   dx = 10;
   dy = 10;
@@ -24,6 +26,10 @@ export class StreamBuilderService {
 
   get frames(): number {
     return this._frames;
+  }
+
+  get frameSize(): number {
+    return this._frameSize;
   }
 
   get defaultCompleteFrame(): number {
@@ -44,7 +50,17 @@ export class StreamBuilderService {
     return x !== null && x !== undefined && !isNaN(+x);
   }
 
-  protected createNodes(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): StreamNode[] {
+  protected createNodes({ marbles, values, error }: InputMarbles): StreamNode[] {
+    const notifications = getMarbleNotifications(marbles, values, error, this.frameSize);
+    return getStreamNodes(notifications, this.frameSize, this.dx, this.dy);
+  }
+
+  protected indexesToNodes(
+    indexes: number[],
+    completeIndex?: number | null,
+    errorIndex?: number | null,
+    start?: string
+  ): StreamNode[] {
     const startAsc = (start ?? '1').charCodeAt(0);
 
     const getSymbol = (x: number) => {
@@ -52,9 +68,10 @@ export class StreamBuilderService {
       return next;
     };
 
-    const nodes: StreamNode[] = indexes.map((ind, i) =>
-      ({ id: guid(), zIndex: i, symbol: getSymbol(i), kind: 'N', x: indexToX(ind, this.dx, this.offset) })
-    );
+    const nodes: StreamNode[] = indexes.map((ind, i) => {
+      const symbol = getSymbol(i);
+      return { id: guid(), zIndex: i, symbol, kind: 'N', value: symbol, x: indexToX(ind, this.dx, this.offset) };
+    });
 
     const i = nodes.length;
 
@@ -83,27 +100,27 @@ export class StreamBuilderService {
     return distribute(0, this.defaultCompleteFrame - 1, size);
   }
 
-  inputStream(indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): InputStream {
+  inputStream(marbles: InputMarbles): InputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
-    const stream = new InputStream(config, this.createNodes(indexes, completeIndex, errorIndex, start), this._logger);
+    const stream = new InputStream(config, this.createNodes(marbles), this._logger);
     return stream;
   }
 
   defaultInputStream(): InputStream {
     if (this.frames === this._framesLarges) {
-      return this.inputStream([2, 5, 8, 11, 14], this.defaultCompleteFrame);
+      return this.inputStream({ marbles: '--1--2--3--4--5|' });
     }
 
-    return this.inputStream([1, 3, 6], this.defaultCompleteFrame);
+    return this.inputStream({ marbles: '-1-2--3|' });
   }
 
-  outputStream(updater$: Observable<FrameNotification[]>, frameSize: number): OutputStream {
+  outputStream(updater$: Observable<FrameNotification[]>): OutputStream {
     const config = { dx: this.dx, dy: this.dy, offset: this.offset, frames: this.frames };
     const stream = new OutputStream(config, this._logger);
 
     stream.setNodesUpdater(updater$.pipe(
       tap((notifications) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { notifications })),
-      map((notifications) => getStreamNodes(notifications, frameSize, this.dx, this.dy)),
+      map((notifications) => getStreamNodes(notifications, this.frameSize, this.dx, this.dy)),
       tap((nodes) => this._logger?.logDebug(`${this._name} >> setNodesUpdater >> updater$`, { nodes })),
     ));
 
@@ -111,6 +128,6 @@ export class StreamBuilderService {
   }
 
   adjustStream(stream: InputStream, indexes: number[], completeIndex?: number | null, errorIndex?: number | null, start?: string): void {
-    stream.setNodes(this.createNodes(indexes, completeIndex, errorIndex, start));
+    stream.setNodes(this.indexesToNodes(indexes, completeIndex, errorIndex, start));
   }
 }

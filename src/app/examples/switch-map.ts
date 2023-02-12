@@ -17,13 +17,13 @@ export class SwitchMapExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([1, 2, 4], 7),
-        this._streamBuilder.inputStream([0, 2], 3, null, 'a'),
-      ],
       large: [
-        this._streamBuilder.inputStream([1, 2, 7, 8], 15),
-        this._streamBuilder.inputStream([0, 2], 3, null, 'a'),
+        this._streamBuilder.inputStream({ marbles: '-12----34------|' }),
+        this._streamBuilder.inputStream({ marbles: 'a-b|' }),
+      ],
+      small: [
+        this._streamBuilder.inputStream({ marbles: '-12-3--|' }),
+        this._streamBuilder.inputStream({ marbles: 'a-b|' }),
       ],
     };
   }

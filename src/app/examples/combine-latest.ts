@@ -17,13 +17,13 @@ export class CombineLatestExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([1, 3, 6], 7),
-        this._streamBuilder.inputStream([0, 4], 7, null, 'a'),
-      ],
       large: [
-        this._streamBuilder.inputStream([2, 5, 10], 15),
-        this._streamBuilder.inputStream([1, 5, 11], 15, null, 'a'),
+        this._streamBuilder.inputStream({ marbles: '--1--2----3----|' }),
+        this._streamBuilder.inputStream({ marbles: '-a---b-----c---|' }),
+      ],
+      small: [
+        this._streamBuilder.inputStream({ marbles: '-1-2--3|' }),
+        this._streamBuilder.inputStream({ marbles: 'a---b--|' }),
       ],
     };
   }

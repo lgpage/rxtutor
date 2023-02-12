@@ -134,8 +134,8 @@ describe('ExecutorService', () => {
         rx.first(),
         rx.tap((notifications) => {
           expect(notifications).toEqual([
-            { frame: 0, notification: { kind: 'N', value: null } },
-            { frame: 0, notification: { kind: 'C' } },
+            { frame: 0, notification: { kind: 'N', value: null, symbol: 'A' } },
+            { frame: 0, notification: { kind: 'C', symbol: '|' } },
           ]);
         }),
       ).subscribe(() => done());

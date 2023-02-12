@@ -17,12 +17,8 @@ export class DistinctUntilChangedExample implements Example {
 
   getInputStreams(): ExampleInputs {
     return {
-      small: [
-        this._streamBuilder.inputStream([0, 2, 4, 6], 7)
-      ],
-      large: [
-        this._streamBuilder.inputStream([2, 5, 8, 11, 14], 15),
-      ],
+      large: [this._streamBuilder.inputStream({ marbles: '--1--2--3--4--5|' })],
+      small: [this._streamBuilder.inputStream({ marbles: '1-2-3-4|' })],
     };
   }
 

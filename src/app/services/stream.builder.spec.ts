@@ -54,7 +54,7 @@ describe('StreamBuilderService', () => {
 
         const result = service.defaultInputStream();
 
-        expect(inputStreamSpy).toHaveBeenCalledWith([1, 3, 6], service.defaultCompleteFrame);
+        expect(inputStreamSpy).toHaveBeenCalledWith({ marbles: '-1-2--3|' });
         expect(result).toBe(inputStreamMock);
       });
     });
@@ -65,7 +65,7 @@ describe('StreamBuilderService', () => {
 
         const result = service.defaultInputStream();
 
-        expect(inputStreamSpy).toHaveBeenCalledWith([2, 5, 8, 11, 14], service.defaultCompleteFrame);
+        expect(inputStreamSpy).toHaveBeenCalledWith({ marbles: '--1--2--3--4--5|' });
         expect(result).toBe(inputStreamMock);
       });
     });
@@ -76,31 +76,31 @@ describe('StreamBuilderService', () => {
       describe('with single per frame', () => {
         describe('does not complete', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([3, 5, 6, 9]);
+            const stream = service.inputStream({ marbles: '---1-23--4' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '---1-23--4',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3', 4: '4' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
 
         describe('completes', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([3, 5, 6], 7);
+            const stream = service.inputStream({ marbles: '---1-23|' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '---1-23|',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
 
         describe('only completes', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([], 7);
+            const stream = service.inputStream({ marbles: '-------|' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '-------|',
               values: null,
@@ -112,19 +112,19 @@ describe('StreamBuilderService', () => {
 
         describe('errors', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([3, 5, 6], null, 7);
+            const stream = service.inputStream({ marbles: '---1-23#' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '---1-23#',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
 
         describe('only errors', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([], null, 7);
+            const stream = service.inputStream({ marbles: '-------#' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '-------#',
               values: null,
@@ -138,36 +138,36 @@ describe('StreamBuilderService', () => {
       describe('with multiple per frame', () => {
         describe('does not complete', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([2, 4, 5, 5, 7]);
+            const stream = service.inputStream({ marbles: '--1-2(34)-5' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '--1-2(34)-5',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
 
         describe('completes', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([3, 5, 6], 6);
+            const stream = service.inputStream({ marbles: '---1-2(3|)' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '---1-2(3|)',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
 
         describe('errors', () => {
           it('should return the expected observable', () => {
-            const stream = service.inputStream([3, 5, 6], null, 6);
+            const stream = service.inputStream({ marbles: '---1-2(3#)' });
             expect(stream.marbles$).toBeObservable(cold('0', [{
               marbles: '---1-2(3#)',
-              values: null,
+              values: { 1: '1', 2: '2', 3: '3' },
               error: null,
-              canDisplayAsValue: false,
+              canDisplayAsValue: true,
             }]));
           });
         });
@@ -177,12 +177,12 @@ describe('StreamBuilderService', () => {
 
   describe('outputStream', () => {
     it('should return expected results', () => {
-      const not: FrameNotification = { frame: 2, notification: { kind: 'N', value: 10 } };
+      const not: FrameNotification = { frame: 2, notification: { kind: 'N', value: 10, symbol: 'A' } };
 
-      const stream = service.outputStream(of([not]), 10);
+      const stream = service.outputStream(of([not]));
 
       expect(stream.nodes$).toBeObservable(cold('0', [[
-        { kind: 'N', value: 10, zIndex: 0, x: 8, symbol: 'A', index: 0, id: jasmine.any(String) },
+        { kind: 'N', value: 10, zIndex: 0, x: 28, symbol: 'A', index: 2, id: jasmine.any(String) },
       ]]));
     });
   });

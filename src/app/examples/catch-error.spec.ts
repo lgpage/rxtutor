@@ -54,7 +54,7 @@ describe('CatchErrorExample', () => {
     describe('example', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
-          { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
+          { marbles: one.trim(), values: { 1: '1', 2: '2', 3: '3', 4: '4' }, error: null, canDisplayAsValue: true }
         ]));
       });
 
@@ -106,7 +106,7 @@ describe('CatchErrorExample', () => {
     describe('example', () => {
       it('has expected source stream marbles', () => {
         expect(inputStreams[0].marbles$).toBeObservable(cold('0', [
-          { marbles: one.trim(), values: null, error: null, canDisplayAsValue: false }
+          { marbles: one.trim(), values: { 1: '1', 2: '2', 3: '3', 4: '4' }, error: null, canDisplayAsValue: true }
         ]));
       });
 
