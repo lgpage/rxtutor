@@ -54,10 +54,6 @@ export class HashedExampleService {
   getExample(route: ActivatedRoute): Observable<Example | undefined> {
     return route.queryParams?.pipe(
       map((params) => {
-        if (!params) {
-          return undefined;
-        }
-
         const { marbles, code } = params;
         if (!marbles || !code) {
           return undefined;

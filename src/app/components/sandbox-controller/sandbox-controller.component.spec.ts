@@ -88,10 +88,14 @@ describe('SandboxControllerComponent', () => {
 
   describe('properties', () => {
     describe('links$', () => {
-      it('should include serialized url for current example', () => {
-        const router = TestBed.inject(Router);
-        const serializeUrlSpy = spyOn(router, 'serializeUrl').and.returnValue('/hashed');
+      let serializeUrlSpy: jasmine.Spy<(u: UrlTree) => string>;
 
+      beforeEach(() => {
+        const router = TestBed.inject(Router);
+        serializeUrlSpy = spyOn(router, 'serializeUrl').and.returnValue('/hashed');
+      });
+
+      it('should include serialized url for current example', () => {
         expect(component.links$).toBeObservable(cold('0', [[
           { label: 'Current example', url: '/hashed' },
           { label: 'label', url: 'url' },
@@ -99,6 +103,16 @@ describe('SandboxControllerComponent', () => {
 
         expect(hashedExampleSpy.getUrlTree).toHaveBeenCalledWith(component.code$, component.sources$);
         expect(serializeUrlSpy).toHaveBeenCalledWith(urlTree);
+      });
+
+      it('should handle undefined links in pipe', () => {
+        exampleSpy.links = undefined;
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        expect(component.links$).toBeObservable(cold('0', [[
+          { label: 'Current example', url: '/hashed' },
+        ]]));
       });
     });
 
