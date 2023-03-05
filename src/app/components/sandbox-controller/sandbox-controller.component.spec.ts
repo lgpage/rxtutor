@@ -12,6 +12,8 @@ import { Example, EXAMPLE, InputStream, InputStreamLike, OutputStream, START_EXA
 import { ExecutorService, RuntimeService, StreamBuilderService } from '../../services';
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
+import { HashedExampleService } from "../../services/hashed-example.service";
+import { ActivatedRoute, ParamMap, Router, UrlTree } from "@angular/router";
 
 describe('SandboxControllerComponent', () => {
   let component: SandboxControllerComponent;
@@ -21,11 +23,14 @@ describe('SandboxControllerComponent', () => {
   let streamBuilderServiceSpy: jasmine.SpyObj<StreamBuilderService>;
   let inputStreamSpy: jasmine.SpyObj<InputStreamLike>;
   let exampleSpy: jasmine.SpyObj<Example>;
+  let hashedExampleSpy: jasmine.SpyObj<HashedExampleService>;
+  let urlTree: UrlTree;
 
   beforeEach(waitForAsync(() => {
     inputStreamSpy = jasmine.createSpyObj<InputStreamLike>('InputStreamLike', ['updateNode']);
     executorServiceSpy = jasmine.createSpyObj<ExecutorService>('ExecutorService', ['getVisualizedOutput']);
     streamBuilderServiceSpy = jasmine.createSpyObj<StreamBuilderService>('StreamBuilderService', ['defaultInputStream']);
+    hashedExampleSpy = jasmine.createSpyObj<HashedExampleService>('ExampleHashService', ['getExample', 'getUrlTree']);
 
     exampleSpy = {
       ...jasmine.createSpyObj<Example>('Example', ['getInputStreams', 'getCode']),
@@ -62,6 +67,7 @@ describe('SandboxControllerComponent', () => {
             mediaSize$: of('large'),
           } as Partial<RuntimeService>)
         },
+        { provide: HashedExampleService, useValue: hashedExampleSpy },
       ]
     }).compileComponents();
   }));
@@ -69,6 +75,9 @@ describe('SandboxControllerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SandboxControllerComponent);
     component = fixture.componentInstance;
+
+    urlTree = { queryParams: {} } as UrlTree;
+    hashedExampleSpy.getUrlTree.and.returnValue(of(urlTree));
 
     fixture.detectChanges();
   });
@@ -78,6 +87,21 @@ describe('SandboxControllerComponent', () => {
   });
 
   describe('properties', () => {
+    describe('links$', () => {
+      it('should include serialized url for current example', () => {
+        const router = TestBed.inject(Router);
+        const serializeUrlSpy = spyOn(router, 'serializeUrl').and.returnValue('/hashed');
+
+        expect(component.links$).toBeObservable(cold('0', [[
+          { label: 'Current example', url: '/hashed' },
+          { label: 'label', url: 'url' },
+        ]]));
+
+        expect(hashedExampleSpy.getUrlTree).toHaveBeenCalledWith(component.code$, component.sources$);
+        expect(serializeUrlSpy).toHaveBeenCalledWith(urlTree);
+      });
+    });
+
     it('should be initialized as expected', () => {
       expect(component.codeMirrorOptions).toEqual({
         lineNumbers: true,
@@ -94,7 +118,6 @@ describe('SandboxControllerComponent', () => {
 
       expect(component.code$).toBeObservable(cold('0', ['code']));
       expect(component.output$).toBeObservable(cold('0', [null]));
-      expect(component.links$).toBeObservable(cold('0', [[{ label: 'label', url: 'url' }]]));
 
       expect(component.sources$).toBeObservable(cold('0', [[inputStreamSpy]]));
       expect(component.numberOfSources$).toBeObservable(cold('0', [1]));
@@ -139,6 +162,50 @@ describe('SandboxControllerComponent', () => {
 
       expect(executorServiceSpy.getVisualizedOutput).toHaveBeenCalledWith(component.code$, component.sources$);
       expect(component.output$).toBeObservable(cold('0', [outputStream]));
+    });
+  });
+
+  describe('when exampleName is "hashed"', () => {
+    let route: ActivatedRoute;
+    let paramMapSpy: jasmine.SpyObj<ParamMap>;
+
+    beforeEach(() => {
+      route = TestBed.inject(ActivatedRoute);
+      paramMapSpy = jasmine.createSpyObj<ParamMap>(['get']);
+      paramMapSpy.get.and.returnValue('hashed');
+      spyOnProperty(route, 'paramMap').and.returnValue(of(paramMapSpy));
+    });
+
+    describe('and HashedExampleService returns an example', () => {
+      it('should use example', () => {
+        const otherExample = {
+          ...exampleSpy,
+          getInputStreams: () => ({large: [], small: []}),
+          getCode: () => 'otherCode',
+          links: [],
+        };
+        hashedExampleSpy.getExample.and.returnValue(of(otherExample));
+
+        // Re-run ngOnInit
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        expect(component.code$).toBeObservable(cold('0', ['otherCode']));
+        expect(hashedExampleSpy.getExample).toHaveBeenCalledWith(route);
+      });
+    });
+
+    describe('and HashedExampleService returns undefined', () => {
+      it('should use default example', () => {
+        hashedExampleSpy.getExample.and.returnValue(of(undefined));
+
+        // Re-run ngOnInit
+        component.ngOnInit();
+        fixture.detectChanges();
+
+        expect(component.code$).toBeObservable(cold('0', ['code']));
+        expect(hashedExampleSpy.getExample).toHaveBeenCalledWith(route);
+      });
     });
   });
 });

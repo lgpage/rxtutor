@@ -1,12 +1,12 @@
-import { BehaviorSubject, combineLatest, merge, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, mergeMap, of } from 'rxjs';
 import { distinctUntilChanged, first, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Example, EXAMPLE, getFormValue, InputStreamLike, START_EXAMPLE, Stream } from '../../core';
 import { LoggerService } from '../../logger.service';
-import { ExecutorService, RuntimeService, StreamBuilderService } from '../../services';
+import { ExecutorService, HashedExampleService, RuntimeService, StreamBuilderService } from '../../services';
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
@@ -38,7 +38,14 @@ export class SandboxControllerComponent implements OnInit {
 
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged());
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  links$ = this._linksSubject$.asObservable();
+  links$ = this._linksSubject$.asObservable().pipe(
+    mergeMap((links) => this._hashedExampleSvc.getUrlTree(this.code$, this.sources$).pipe(
+      map((urlTree) => [
+        { label: 'Current example', url: this._router.serializeUrl(urlTree) },
+        ...(links ?? []),
+      ])
+    )),
+  );
 
   numberOfSources$ = this.sources$.pipe(
     map((sources) => sources.length ?? 0),
@@ -62,10 +69,12 @@ export class SandboxControllerComponent implements OnInit {
     @Inject(START_EXAMPLE) protected _startExample: Example,
     @Inject(MAX_SOURCES) @Optional() maxSources: number | undefined,
     protected _route: ActivatedRoute,
+    protected _router: Router,
     protected _formBuilder: FormBuilder,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
     protected _runtimeSvc: RuntimeService,
+    protected _hashedExampleSvc: HashedExampleService,
     protected _logger: LoggerService,
   ) {
     this._maxSources = maxSources ?? this._maxSources;
@@ -73,12 +82,13 @@ export class SandboxControllerComponent implements OnInit {
 
   protected renderExample(): void {
     const examples = this._examples.reduce(
-      (p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample }
+      (p, c) => ({...p, [c.name]: c}), {[this._startExample.name]: this._startExample}
     );
 
     const exampleToRender$ = this._route.paramMap.pipe(
       map((params) => params.get('exampleName') ?? this._startExample.name),
-      map((name) => examples[name]),
+      mergeMap((name) => name !== 'hashed' ? of(examples[name]) : this._hashedExampleSvc.getExample(this._route)),
+      map((example) => example ?? this._startExample),
     );
 
     exampleToRender$.pipe(
