@@ -7,6 +7,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Example, EXAMPLE, getFormValue, InputStreamLike, START_EXAMPLE, Stream } from '../../core';
 import { LoggerService } from '../../logger.service';
 import { ExecutorService, HashedExampleService, RuntimeService, StreamBuilderService } from '../../services';
+import { RouteNames, RouteParamKeys } from "app-constants";
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
@@ -86,8 +87,8 @@ export class SandboxControllerComponent implements OnInit {
     );
 
     const exampleToRender$ = this._route.paramMap.pipe(
-      map((params) => params.get('exampleName') ?? this._startExample.name),
-      mergeMap((name) => name !== 'hashed' ? of(examples[name]) : this._hashedExampleSvc.getExample(this._route)),
+      map((params) => params.get(RouteParamKeys.ExampleName) ?? this._startExample.name),
+      mergeMap((name) => name !== RouteNames.SharedExample ? of(examples[name]) : this._hashedExampleSvc.getExample(this._route)),
       map((example) => example ?? this._startExample),
     );
 

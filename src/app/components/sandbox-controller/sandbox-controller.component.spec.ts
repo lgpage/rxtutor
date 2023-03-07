@@ -14,6 +14,7 @@ import { StreamControllerComponent } from '../stream-controller/stream-controlle
 import { SandboxControllerComponent } from './sandbox-controller.component';
 import { HashedExampleService } from "../../services/hashed-example.service";
 import { ActivatedRoute, ParamMap, Router, UrlTree } from "@angular/router";
+import { RouteNames, RouteParamKeys } from "app-constants";
 
 describe('SandboxControllerComponent', () => {
   let component: SandboxControllerComponent;
@@ -179,14 +180,14 @@ describe('SandboxControllerComponent', () => {
     });
   });
 
-  describe('when exampleName is "hashed"', () => {
+  describe(`when ${RouteParamKeys.ExampleName} is "${RouteNames.SharedExample}"`, () => {
     let route: ActivatedRoute;
     let paramMapSpy: jasmine.SpyObj<ParamMap>;
 
     beforeEach(() => {
       route = TestBed.inject(ActivatedRoute);
       paramMapSpy = jasmine.createSpyObj<ParamMap>(['get']);
-      paramMapSpy.get.and.returnValue('hashed');
+      paramMapSpy.get.and.returnValue(RouteNames.SharedExample);
       spyOnProperty(route, 'paramMap').and.returnValue(of(paramMapSpy));
     });
 
