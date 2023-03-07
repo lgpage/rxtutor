@@ -82,7 +82,7 @@ export class SandboxControllerComponent implements OnInit {
 
   protected renderExample(): void {
     const examples = this._examples.reduce(
-      (p, c) => ({...p, [c.name]: c}), {[this._startExample.name]: this._startExample}
+      (p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample },
     );
 
     const exampleToRender$ = this._route.paramMap.pipe(
