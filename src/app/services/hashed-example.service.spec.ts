@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { HashedExampleService } from './hashed-example.service';
 import { InputStreamLike } from "../core/types/stream";
 import { noop, Observable, of, tap } from "rxjs";
