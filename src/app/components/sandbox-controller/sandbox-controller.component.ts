@@ -14,7 +14,7 @@ export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 @Component({
   selector: 'app-sandbox-controller',
   templateUrl: './sandbox-controller.component.html',
-  styleUrls: ['./sandbox-controller.component.scss']
+  styleUrls: ['./sandbox-controller.component.scss'],
 })
 @UntilDestroy()
 export class SandboxControllerComponent implements OnInit {
@@ -28,7 +28,7 @@ export class SandboxControllerComponent implements OnInit {
   codeMirrorOptions = {
     lineNumbers: true,
     theme: 'material',
-    mode: 'text/typescript'
+    mode: 'text/typescript',
   };
 
   formGroup = this._formBuilder.group<{ code: FormControl<string | null> }>({
@@ -39,14 +39,7 @@ export class SandboxControllerComponent implements OnInit {
 
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged());
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  links$ = this._linksSubject$.asObservable().pipe(
-    mergeMap((links) => this._hashedExampleSvc.getUrlTree(this.code$, this.sources$).pipe(
-      map((urlTree) => [
-        { label: 'Current example', url: this._router.serializeUrl(urlTree) },
-        ...(links ?? []),
-      ])
-    )),
-  );
+  links$ = this._linksSubject$.asObservable();
 
   numberOfSources$ = this.sources$.pipe(
     map((sources) => sources.length ?? 0),

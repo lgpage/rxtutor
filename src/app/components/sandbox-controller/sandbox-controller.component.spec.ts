@@ -13,7 +13,7 @@ import { ExecutorService, RuntimeService, StreamBuilderService } from '../../ser
 import { StreamControllerComponent } from '../stream-controller/stream-controller.component';
 import { SandboxControllerComponent } from './sandbox-controller.component';
 import { HashedExampleService } from "../../services/hashed-example.service";
-import { ActivatedRoute, ParamMap, Router, UrlTree } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 import { RouteNames, RouteParamKeys } from "app-constants";
 
 describe('SandboxControllerComponent', () => {
@@ -25,7 +25,6 @@ describe('SandboxControllerComponent', () => {
   let inputStreamSpy: jasmine.SpyObj<InputStreamLike>;
   let exampleSpy: jasmine.SpyObj<Example>;
   let hashedExampleSpy: jasmine.SpyObj<HashedExampleService>;
-  let urlTree: UrlTree;
 
   beforeEach(waitForAsync(() => {
     inputStreamSpy = jasmine.createSpyObj<InputStreamLike>('InputStreamLike', ['updateNode']);
@@ -66,19 +65,16 @@ describe('SandboxControllerComponent', () => {
           useValue: MockService(RuntimeService, {
             exampleSize$: of('large'),
             mediaSize$: of('large'),
-          } as Partial<RuntimeService>)
+          } as Partial<RuntimeService>),
         },
         { provide: HashedExampleService, useValue: hashedExampleSpy },
-      ]
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SandboxControllerComponent);
     component = fixture.componentInstance;
-
-    urlTree = { queryParams: {} } as UrlTree;
-    hashedExampleSpy.getUrlTree.and.returnValue(of(urlTree));
 
     fixture.detectChanges();
   });
@@ -89,30 +85,9 @@ describe('SandboxControllerComponent', () => {
 
   describe('properties', () => {
     describe('links$', () => {
-      let serializeUrlSpy: jasmine.Spy<(u: UrlTree) => string>;
-
-      beforeEach(() => {
-        const router = TestBed.inject(Router);
-        serializeUrlSpy = spyOn(router, 'serializeUrl').and.returnValue('/hashed');
-      });
-
-      it('should include serialized url for current example', () => {
+      it('should use example links', () => {
         expect(component.links$).toBeObservable(cold('0', [[
-          { label: 'Current example', url: '/hashed' },
           { label: 'label', url: 'url' },
-        ]]));
-
-        expect(hashedExampleSpy.getUrlTree).toHaveBeenCalledWith(component.code$, component.sources$);
-        expect(serializeUrlSpy).toHaveBeenCalledWith(urlTree);
-      });
-
-      it('should handle undefined links in pipe', () => {
-        exampleSpy.links = undefined;
-        component.ngOnInit();
-        fixture.detectChanges();
-
-        expect(component.links$).toBeObservable(cold('0', [[
-          { label: 'Current example', url: '/hashed' },
         ]]));
       });
     });
@@ -121,7 +96,7 @@ describe('SandboxControllerComponent', () => {
       expect(component.codeMirrorOptions).toEqual({
         lineNumbers: true,
         theme: 'material',
-        mode: 'text/typescript'
+        mode: 'text/typescript',
       });
 
       expect(component.formGroup).toBeInstanceOf(FormGroup);
@@ -195,7 +170,7 @@ describe('SandboxControllerComponent', () => {
       it('should use example', () => {
         const otherExample = {
           ...exampleSpy,
-          getInputStreams: () => ({large: [], small: []}),
+          getInputStreams: () => ({ large: [], small: [] }),
           getCode: () => 'otherCode',
           links: [],
         };
