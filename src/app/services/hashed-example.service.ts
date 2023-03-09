@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, UrlTree } from "@angular/router";
 import { Example } from "../core/types/example";
 import { map } from "rxjs/operators";
 import { StreamBuilderService } from "./stream.builder";
+import { RouteNames } from "app-constants";
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,7 @@ export class HashedExampleService {
     };
   }
 
-  getUrlTree(code$: Observable<string>, streams$: Observable<InputStreamLike[]>): Observable<UrlTree> {
+  getUrl(code$: Observable<string>, streams$: Observable<InputStreamLike[]>): Observable<string> {
     const hashedMarbles$ = streams$.pipe(
       mergeMap((streams) => combineLatest(streams.map((stream) => stream.marbles$))),
       map((allMarbles) => allMarbles.map(({ marbles }) => ({ marbles }))),
@@ -47,7 +48,11 @@ export class HashedExampleService {
 
     return combineLatest([hashedMarbles$, hashedCode$]).pipe(
       map(([{ marbles }, { code }]) => ({ marbles, code })),
-      map((queryParams) => this._router.createUrlTree(['/hashed'], { queryParams }))
+      map((queryParams) => this._router.createUrlTree(
+        [`/${RouteNames.SharedExample}`],
+        { queryParams },
+      )),
+      map((urlTree) => this._router.serializeUrl(urlTree)),
     );
   }
 

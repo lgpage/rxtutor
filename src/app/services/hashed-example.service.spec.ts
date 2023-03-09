@@ -8,6 +8,7 @@ import { InputStream } from "../core/stream";
 import { Example } from "../core/types/example";
 import { RouterTestingModule } from "@angular/router/testing";
 import { map } from "rxjs/operators";
+import { RouteNames } from "app-constants";
 
 describe('HashedExampleService', () => {
   let service: HashedExampleService;
@@ -32,22 +33,24 @@ describe('HashedExampleService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getUrlTree', () => {
-    it('should return a url tree', (done) => {
+  describe('getUrl', () => {
+    it('should return a serialized url tree', (done) => {
       const code$ = of('code');
       const streams$ = of([
         { marbles$: of({ marbles: 'marbles1', values: 'ignored' }) } as InputStreamLike,
         { marbles$: of({ marbles: 'marbles2' }) } as InputStreamLike,
       ] as InputStreamLike[]);
       const routerUrlTreeSpy = spyOn(router, 'createUrlTree').and.returnValue({ queryParams: {} } as UrlTree);
+      const routerSerializeUrlSpy = spyOn(router, 'serializeUrl').and.returnValue('url');
 
-      service.getUrlTree(code$, streams$).subscribe((urlTree) => {
-        expect(urlTree).toEqual({ queryParams: { } } as UrlTree);
+      service.getUrl(code$, streams$).subscribe((url) => {
+        expect(url).toEqual('url');
         const expectedQueryParams ={
           marbles: btoa(JSON.stringify([{ marbles: 'marbles1' }, { marbles: 'marbles2' }])),
           code: btoa('code'),
         };
-        expect(routerUrlTreeSpy).toHaveBeenCalledWith(['/hashed'], { queryParams: expectedQueryParams });
+        expect(routerUrlTreeSpy).toHaveBeenCalledWith([`/${RouteNames.SharedExample}`], { queryParams: expectedQueryParams });
+        expect(routerSerializeUrlSpy).toHaveBeenCalledWith({ queryParams: {} } as UrlTree);
         done();
       });
     });
