@@ -15,6 +15,7 @@ import { SandboxControllerComponent } from './sandbox-controller.component';
 import { HashedExampleService } from "../../services/hashed-example.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { RouteNames, RouteParamKeys } from "app-constants";
+import { ShareButtonComponent } from "../share-button/share-button.component";
 
 describe('SandboxControllerComponent', () => {
   let component: SandboxControllerComponent;
@@ -31,6 +32,7 @@ describe('SandboxControllerComponent', () => {
     executorServiceSpy = jasmine.createSpyObj<ExecutorService>('ExecutorService', ['getVisualizedOutput']);
     streamBuilderServiceSpy = jasmine.createSpyObj<StreamBuilderService>('StreamBuilderService', ['defaultInputStream']);
     hashedExampleSpy = jasmine.createSpyObj<HashedExampleService>('ExampleHashService', ['getExample', 'getUrl']);
+    hashedExampleSpy.getUrl.and.returnValue(cold('0', ['url']));
 
     exampleSpy = {
       ...jasmine.createSpyObj<Example>('Example', ['getInputStreams', 'getCode']),
@@ -52,6 +54,7 @@ describe('SandboxControllerComponent', () => {
       ],
       declarations: [
         SandboxControllerComponent,
+        MockComponent(ShareButtonComponent),
         MockComponent(StreamControllerComponent),
         MockComponent(CodemirrorComponent),
       ],
@@ -89,6 +92,13 @@ describe('SandboxControllerComponent', () => {
         expect(component.links$).toBeObservable(cold('0', [[
           { label: 'label', url: 'url' },
         ]]));
+      });
+    });
+
+    describe('shareUrl$', () => {
+      it('should be result of hashedExampleService.getUrl', () => {
+        expect(component.shareUrl$).toBeObservable(cold('0', ['url']));
+        expect(hashedExampleSpy.getUrl).toHaveBeenCalledWith(component.code$, component.sources$);
       });
     });
 

@@ -2,7 +2,7 @@ import { BehaviorSubject, combineLatest, merge, mergeMap, of } from 'rxjs';
 import { distinctUntilChanged, first, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Example, EXAMPLE, getFormValue, InputStreamLike, START_EXAMPLE, Stream } from '../../core';
 import { LoggerService } from '../../logger.service';
@@ -41,6 +41,8 @@ export class SandboxControllerComponent implements OnInit {
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
   links$ = this._linksSubject$.asObservable();
 
+  shareUrl$ = this._hashedExampleSvc.getUrl(this.code$, this.sources$);
+
   numberOfSources$ = this.sources$.pipe(
     map((sources) => sources.length ?? 0),
     distinctUntilChanged(),
@@ -63,7 +65,6 @@ export class SandboxControllerComponent implements OnInit {
     @Inject(START_EXAMPLE) protected _startExample: Example,
     @Inject(MAX_SOURCES) @Optional() maxSources: number | undefined,
     protected _route: ActivatedRoute,
-    protected _router: Router,
     protected _formBuilder: FormBuilder,
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
