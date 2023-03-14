@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from "../logger.service";
 import { InputMarbles, InputStreamLike } from "../core/types/stream";
-import { combineLatest, mergeMap, Observable, of } from "rxjs";
-import { ActivatedRoute, Router, UrlTree } from "@angular/router";
+import { combineLatest, mergeMap, Observable, of, tap } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Example } from "../core/types/example";
 import { map } from "rxjs/operators";
 import { StreamBuilderService } from "./stream.builder";
@@ -53,10 +53,12 @@ export class HashedExampleService {
         { queryParams },
       )),
       map((urlTree) => this._router.serializeUrl(urlTree)),
+      tap((url) => this._logger.logDebug(this._name, 'getUrl', 'url', url)),
     );
   }
 
   getExample(route: ActivatedRoute): Observable<Example | undefined> {
+    this._logger.logDebug(this._name, 'getExample', 'route', route);
     return route.queryParams?.pipe(
       map((params) => {
         const { marbles, code } = params;
