@@ -54,8 +54,8 @@ describe('ShareButtonComponent', () => {
 
       expect(clipboardSvc.copy).toHaveBeenCalledWith(`${currentOrigin}/url-path?query=string`);
       expect(snackBarSvc.open).toHaveBeenCalledWith(
-        'Copied URL for current example to clipboard',
-        'Close',
+        'Current example URL copied to clipboard',
+        'Ok',
         { duration: 3000 },
       );
     });

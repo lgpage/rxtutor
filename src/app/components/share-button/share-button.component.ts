@@ -39,8 +39,8 @@ export class ShareButtonComponent {
       tap((url) => this._logger.logDebug(this._name, 'Copying URL to clipboard', { url })),
       tap((url) => this._clipboard.copy(url)),
       tap(() => this._snackBar.open(
-        'Copied URL for current example to clipboard',
-        'Close',
+        'Current example URL copied to clipboard',
+        'Ok',
         { duration: 3000 },
       )),
     ).subscribe();
