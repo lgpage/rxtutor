@@ -16,7 +16,6 @@
     <button
       *ngIf="canAddSource$ | async"
       mat-icon-button
-      matTooltip="Add input stream"
       aria-label="Add input stream"
       (click)="addInputStream()"
     >
@@ -41,7 +40,6 @@
         mat-raised-button
         color="primary"
         aria-label="Visualize output stream"
-        matTooltip="Visualize output stream from code block below"
         (click)="visualizeOutput()"
       >
         Visualize Output Stream

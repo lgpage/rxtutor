@@ -11,7 +11,6 @@ import { DOCUMENT } from "@angular/common";
   template: `
     <button
       mat-icon-button
-      matTooltip="URL to current example"
       aria-label="URL to current example"
       (click)="copyToClipboard()"
     >
