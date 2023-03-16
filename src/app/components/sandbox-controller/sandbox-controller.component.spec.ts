@@ -93,6 +93,17 @@ describe('SandboxControllerComponent', () => {
           { label: 'label', url: 'url' },
         ]]));
       });
+
+      describe('when example links are empty', () => {
+        beforeEach(() => {
+          exampleSpy.links = [];
+          component.ngOnInit();
+        });
+
+        it('should be undefined', () => {
+          expect(component.links$).toBeObservable(cold('0', [undefined]));
+        });
+      });
     });
 
     describe('shareUrl$', () => {

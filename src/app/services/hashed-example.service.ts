@@ -24,7 +24,7 @@ export class HashedExampleService {
     const inputStreams = marbles.map((m) => this._streamBuilder.inputStream(m));
     return {
       name: 'Hashed Example',
-      links: [],
+      links: undefined,
       section: 'other',
       getCode: () => code,
       getInputStreams: () => ({

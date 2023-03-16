@@ -39,7 +39,9 @@ export class SandboxControllerComponent implements OnInit {
 
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged());
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  links$ = this._linksSubject$.asObservable();
+  links$ = this._linksSubject$.asObservable().pipe(
+    map((links) => !!links && links.length === 0 ? undefined : links),
+  );
 
   shareUrl$ = this._hashedExampleSvc.getUrl(this.code$, this.sources$);
 

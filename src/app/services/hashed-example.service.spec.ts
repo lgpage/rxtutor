@@ -152,10 +152,9 @@ describe('HashedExampleService', () => {
     });
 
     describe('links', () => {
-      it('should return an empty array', (done) => {
+      it('should return undefined', (done) => {
         example$.subscribe((example) => {
-          const links = example.links;
-          expect(links).toEqual([]);
+          expect(example.links).toEqual(undefined);
           done();
         });
       });
