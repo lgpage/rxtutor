@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoggerService } from '../../logger.service';
 import { first, map } from "rxjs/operators";
 import { DOCUMENT } from "@angular/common";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-share-button',
@@ -27,21 +28,23 @@ export class ShareButtonComponent {
   constructor(
     @Inject(DOCUMENT) private _document: Document,
     private _clipboard: Clipboard,
-    private _snackBar: MatSnackBar,
     private _logger: LoggerService,
+    private _router: Router,
+    private _snackBar: MatSnackBar,
   ) { }
 
   copyToClipboard() {
     this.url$.pipe(
       first(),
-      map((url) => `${this._document.location.origin}${url}`),
-      tap((url) => this._logger.logDebug(this._name, 'Copying URL to clipboard', { url })),
-      tap((url) => this._clipboard.copy(url)),
+      map((url) => ({ absoluteUrl: `${this._document.location.origin}${url}`, url })),
+      tap((urls) => this._logger.logDebug(this._name, 'Copying URL to clipboard', { urls })),
+      tap(({ absoluteUrl }) => this._clipboard.copy(absoluteUrl)),
       tap(() => this._snackBar.open(
         'Current example URL copied to clipboard',
         'Ok',
         { duration: 3000 },
       )),
+      tap(({ url }) => this._router.navigateByUrl(url)),
     ).subscribe();
   }
 }
