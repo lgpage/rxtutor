@@ -11,26 +11,21 @@
   </div>
 </div>
 
-<ng-container *ngIf="canAddSource$ | async; else hrule">
-  <div class="row">
-    <div class="col d-flex justify-content-center">
-      <button
-        mat-icon-button
-        matTooltip="Add input stream"
-        aria-label="Add input stream"
-        (click)="addInputStream()"
-      >
-        <mat-icon>add_box</mat-icon>
-      </button>
-    </div>
+<div class="row">
+  <div class="col d-flex justify-content-center">
+    <button
+      *ngIf="canAddSource$ | async"
+      mat-icon-button
+      aria-label="Add input stream"
+      (click)="addInputStream()"
+    >
+      <mat-icon>add_box</mat-icon>
+    </button>
+    <app-share-button [url$]="shareUrl$"></app-share-button>
   </div>
+</div>
 
-  <hr class="mt-0" />
-</ng-container>
-
-<ng-template #hrule>
-  <hr />
-</ng-template>
+<hr class="mt-0" />
 
 <div class="row">
   <div class="col" *ngIf="output$ | async; else visualize; let output">
@@ -45,7 +40,6 @@
         mat-raised-button
         color="primary"
         aria-label="Visualize output stream"
-        matTooltip="Visualize output stream from code block below"
         (click)="visualizeOutput()"
       >
         Visualize Output Stream

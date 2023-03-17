@@ -25,7 +25,12 @@ import { ApplicationinsightsAngularpluginErrorService } from '@microsoft/applica
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import {
-  FaqComponent, SandboxControllerComponent, SideNavComponent, StreamComponent, StreamControllerComponent,
+  FaqComponent,
+  SandboxControllerComponent,
+  ShareButtonComponent,
+  SideNavComponent,
+  StreamComponent,
+  StreamControllerComponent,
   StreamOptionsComponent,
 } from './components';
 import { exampleProviders } from './examples';
@@ -65,6 +70,7 @@ import { routes } from './routes';
     StreamComponent,
     StreamControllerComponent,
     StreamOptionsComponent,
+    ShareButtonComponent,
   ],
   providers: [
     ...exampleProviders,
@@ -72,6 +78,6 @@ import { routes } from './routes';
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
     { provide: ErrorHandler, useClass: ApplicationinsightsAngularpluginErrorService },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

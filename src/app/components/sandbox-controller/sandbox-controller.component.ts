@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, merge, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, mergeMap, of } from 'rxjs';
 import { distinctUntilChanged, first, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Component, Inject, InjectionToken, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -6,14 +6,15 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Example, EXAMPLE, getFormValue, InputStreamLike, START_EXAMPLE, Stream } from '../../core';
 import { LoggerService } from '../../logger.service';
-import { ExecutorService, RuntimeService, StreamBuilderService } from '../../services';
+import { ExecutorService, HashedExampleService, RuntimeService, StreamBuilderService } from '../../services';
+import { RouteNames, RouteParamKeys } from "app-constants";
 
 export const MAX_SOURCES = new InjectionToken<number>('Max number of sources.');
 
 @Component({
   selector: 'app-sandbox-controller',
   templateUrl: './sandbox-controller.component.html',
-  styleUrls: ['./sandbox-controller.component.scss']
+  styleUrls: ['./sandbox-controller.component.scss'],
 })
 @UntilDestroy()
 export class SandboxControllerComponent implements OnInit {
@@ -27,7 +28,7 @@ export class SandboxControllerComponent implements OnInit {
   codeMirrorOptions = {
     lineNumbers: true,
     theme: 'material',
-    mode: 'text/typescript'
+    mode: 'text/typescript',
   };
 
   formGroup = this._formBuilder.group<{ code: FormControl<string | null> }>({
@@ -38,7 +39,11 @@ export class SandboxControllerComponent implements OnInit {
 
   sources$ = this._sourcesSubject$.asObservable().pipe(distinctUntilChanged());
   output$ = this._outputSubject$.asObservable().pipe(distinctUntilChanged());
-  links$ = this._linksSubject$.asObservable();
+  links$ = this._linksSubject$.asObservable().pipe(
+    map((links) => !!links && links.length === 0 ? undefined : links),
+  );
+
+  shareUrl$ = this._hashedExampleSvc.getUrl(this.code$, this.sources$);
 
   numberOfSources$ = this.sources$.pipe(
     map((sources) => sources.length ?? 0),
@@ -66,6 +71,7 @@ export class SandboxControllerComponent implements OnInit {
     protected _executorSvc: ExecutorService,
     protected _streamBuilder: StreamBuilderService,
     protected _runtimeSvc: RuntimeService,
+    protected _hashedExampleSvc: HashedExampleService,
     protected _logger: LoggerService,
   ) {
     this._maxSources = maxSources ?? this._maxSources;
@@ -73,12 +79,13 @@ export class SandboxControllerComponent implements OnInit {
 
   protected renderExample(): void {
     const examples = this._examples.reduce(
-      (p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample }
+      (p, c) => ({ ...p, [c.name]: c }), { [this._startExample.name]: this._startExample },
     );
 
     const exampleToRender$ = this._route.paramMap.pipe(
-      map((params) => params.get('exampleName') ?? this._startExample.name),
-      map((name) => examples[name]),
+      map((params) => params.get(RouteParamKeys.ExampleName) ?? this._startExample.name),
+      mergeMap((name) => name !== RouteNames.SharedExample ? of(examples[name]) : this._hashedExampleSvc.getExample(this._route)),
+      map((example) => example ?? this._startExample),
     );
 
     exampleToRender$.pipe(
