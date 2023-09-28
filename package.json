@@ -28,7 +28,7 @@
     "@angular/platform-browser-dynamic": "^15.2.9",
     "@angular/router": "^15.2.9",
     "@ctrl/ngx-codemirror": "^6.1.0",
-    "@microsoft/applicationinsights-angularplugin-js": "^3.0.3",
+    "@microsoft/applicationinsights-angularplugin-js": "^14.0.0",
     "@microsoft/applicationinsights-web": "^2.8.16",
     "@ngneat/until-destroy": "^9.2.3",
     "bootstrap": "^5.3.2",
