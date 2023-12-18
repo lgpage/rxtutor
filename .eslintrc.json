@@ -59,9 +59,7 @@
           "error",
           {
             "default": [
-              // Index signature
               "signature",
-              // Fields
               "private-static-field",
               "private-decorated-field",
               "private-instance-field",
@@ -81,12 +79,10 @@
               "instance-field",
               "decorated-field",
               "field",
-              // Constructors
               "private-constructor",
               "protected-constructor",
               "public-constructor",
               "constructor",
-              // Methods
               "private-static-method",
               "private-decorated-method",
               "private-instance-method",
