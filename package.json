@@ -16,6 +16,9 @@
     "view:stats": "webpack-bundle-analyzer ./dist/rxtutor/stats.json"
   },
   "private": true,
+  "engines": {
+    "node": "^18.13.0"
+  },
   "dependencies": {
     "@angular/animations": "^17.0.7",
     "@angular/cdk": "^16.2.12",
