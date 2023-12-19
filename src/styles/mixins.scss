@@ -1,33 +1,35 @@
+@use "@angular/material" as mat;
+
 @mixin svg-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
+  $primary: mat.get-theme-color($theme, primary, default);
+  $accent: mat.get-theme-color($theme, accent, default);
+  $warn: mat.get-theme-color($theme, warn, default);
 
   svg.stream {
     g.node {
       > circle {
         &.primary {
-          fill: mat-color($primary);
+          fill: $primary;
         }
 
         &.accent {
-          fill: mat-color($accent);
+          fill: $accent;
         }
       }
 
       > line {
         &.complete {
           &.primary {
-            stroke: mat-color($accent);
+            stroke: $accent;
           }
 
           &.accent {
-            stroke: mat-color($primary);
+            stroke: $primary;
           }
         }
 
         &.error {
-          stroke: mat-color($warn);
+          stroke: $warn;
         }
       }
     }
