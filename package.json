@@ -67,7 +67,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-mocks": "^14.12.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "webpack-bundle-analyzer": "^4.10.1"
   }
 }
