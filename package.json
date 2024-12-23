@@ -54,7 +54,7 @@
     "@compodoc/compodoc": "^1.1.26",
     "@types/codemirror": "^5.60.15",
     "@types/jasmine": "^5.1.5",
-    "@types/uuid": "^9.0.7",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",
