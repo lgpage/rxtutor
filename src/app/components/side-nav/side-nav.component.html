@@ -1,4 +1,13 @@
-<h2 class="p-2 text-center hover" (click)="goToHome()">RxJS Tutor</h2>
+<h2
+  role="button"
+  tabindex="0"
+  aria-label="Go to home page"
+  class="p-2 text-center hover"
+  (click)="goToHome()"
+  (keyup)="goToHome()"
+>
+  RxJS Tutor
+</h2>
 
 <mat-accordion>
   <mat-expansion-panel *ngFor="let group of groupedExamples">
@@ -9,8 +18,10 @@
     <mat-nav-list class="p-0 ms-2">
       <div
         mat-list-item
-        class="hover py-1 ml-2"
+        role="button"
+        tabindex="0"
         (click)="goToExample(example)"
+        (keyup)="goToExample(example)"
         *ngFor="let example of group.examples"
       >
         {{ example.name }}
