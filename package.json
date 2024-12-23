@@ -69,5 +69,8 @@
     "ng-mocks": "^14.13.1",
     "typescript": "^5.2.2",
     "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
