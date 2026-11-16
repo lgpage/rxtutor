@@ -29,5 +29,7 @@
   ],
   "configMigration": true,
   "rangeStrategy": "bump",
-  "dependencyDashboardTitle": "chore(deps): dependency dashboard"
+  "dependencyDashboard": {
+    "title": "chore(deps): dependency dashboard"
+  }
 }
